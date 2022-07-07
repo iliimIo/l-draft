@@ -3,6 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 import { Base } from 'src/common/base/entities/base.entity'
 import { Categories } from 'src/categories/entities/categories.entity'
 import { Group } from 'src/group/entities/group.entity'
+import { Type } from 'src/type/entities/type.entity'
 
 @Entity('award')
 export class Award extends Base {
@@ -23,6 +24,10 @@ export class Award extends Base {
   @ManyToOne(() => Group, (group) => group.award)
   @JoinColumn({ name: 'group_id' })
   group: Group
+
+  @ManyToOne(() => Type, (type) => type.award)
+  @JoinColumn({ name: 'type_id' })
+  type: Type
 
   // ---------- end relation ----------//
 }
