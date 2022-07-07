@@ -4,6 +4,10 @@ import { configValidationSchema } from './config.schema'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { DatabaseModule } from './database/database.module'
+import { CategoriesModule } from './categories/categories.module';
+import { TypeModule } from './type/type.module';
+import { ExchangeRateModule } from './exchange-rate/exchange-rate.module';
+import { LottoModule } from './lotto/lotto.module';
 
 @Module({
   imports: [
@@ -12,7 +16,11 @@ import { DatabaseModule } from './database/database.module'
       isGlobal: true,
       validationSchema: configValidationSchema
     }),
-    DatabaseModule
+    DatabaseModule,
+    CategoriesModule,
+    TypeModule,
+    ExchangeRateModule,
+    LottoModule
   ],
   controllers: [AppController],
   providers: [AppService]
