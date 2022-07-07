@@ -7,6 +7,7 @@ import { configValidationSchema } from './config.schema'
 import { CategoriesModule } from './categories/categories.module'
 import { TypeModule } from './type/type.module'
 import { GroupModule } from './group/group.module';
+import { AwardModule } from './award/award.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { GroupModule } from './group/group.module';
     DatabaseModule,
     CategoriesModule,
     TypeModule,
-    GroupModule
+    GroupModule,
+    AwardModule
   ],
   controllers: [AppController],
   providers: [AppService]
