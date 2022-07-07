@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany } from 'typeorm'
 import { Base } from 'src/common/base/entities/base.entity'
+import { Award } from 'src/award/entities/award.entity'
 
 @Entity('group')
 export class Group extends Base {
@@ -15,4 +16,12 @@ export class Group extends Base {
   @ApiProperty()
   @Column({ nullable: true })
   logo: string
+
+  // ---------- start relation ----------//
+
+  @OneToMany(() => Award, (award) => award.group)
+  @JoinColumn({ name: 'award_id' })
+  award: Award[]
+
+  // ---------- end relation ----------//
 }
