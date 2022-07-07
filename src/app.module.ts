@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
-import { configValidationSchema } from './config.schema'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { DatabaseModule } from './database/database.module'
-import { CategoriesModule } from './categories/categories.module';
-import { TypeModule } from './type/type.module';
-import { ExchangeRateModule } from './exchange-rate/exchange-rate.module';
-import { LottoModule } from './lotto/lotto.module';
+import { ConfigModule } from '@nestjs/config'
+import { configValidationSchema } from './config.schema'
+import { CategoriesModule } from './categories/categories.module'
+import { TypeModule } from './type/type.module'
+import { GroupModule } from './group/group.module';
 
 @Module({
   imports: [
@@ -19,8 +18,7 @@ import { LottoModule } from './lotto/lotto.module';
     DatabaseModule,
     CategoriesModule,
     TypeModule,
-    ExchangeRateModule,
-    LottoModule
+    GroupModule
   ],
   controllers: [AppController],
   providers: [AppService]

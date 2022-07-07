@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, OmitType } from '@nestjs/swagger'
 import { IsInt, IsOptional, IsString } from 'class-validator'
 
 export class ResponseAndDataDto<IData> {
