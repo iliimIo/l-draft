@@ -19,7 +19,9 @@ export class CategoriesRepository extends Repository<Categories> {
         'categories.name',
         'categories.code',
         'categories.isActive',
-        'categories.createdAt'
+        'categories.createdAt',
+        'categories.updatedAt',
+        'categories.deletedAt'
       ])
 
       if (id) {
