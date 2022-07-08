@@ -6,8 +6,9 @@ import { ConfigModule } from '@nestjs/config'
 import { configValidationSchema } from './config.schema'
 import { CategoriesModule } from './categories/categories.module'
 import { TypeModule } from './type/type.module'
-import { GroupModule } from './group/group.module';
-import { AwardModule } from './award/award.module';
+import { GroupModule } from './group/group.module'
+import { AwardModule } from './award/award.module'
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { AwardModule } from './award/award.module';
     CategoriesModule,
     TypeModule,
     GroupModule,
-    AwardModule
+    AwardModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService]

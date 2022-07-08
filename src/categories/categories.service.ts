@@ -95,9 +95,16 @@ export class CategoriesService {
       searchCategoriesDto.name = createCategoriesDto.name
 
       const categories = await this.findOne(searchCategoriesDto)
-
       if (categories) {
-        throw new ConflictException('Categories already exist')
+        throw new ConflictException('Categories name already exist')
+      }
+
+      const searchCategoriesCodeDto = new SearchCategoriesDto()
+      searchCategoriesCodeDto.code = createCategoriesDto.code
+
+      const categoriesCode = await this.findOne(searchCategoriesCodeDto)
+      if (categoriesCode) {
+        throw new ConflictException('Categories code already exist')
       }
 
       return await this.categoriesRepository.save(createCategoriesDto)
@@ -122,12 +129,25 @@ export class CategoriesService {
         throw new NotFoundException('Categories not found')
       }
 
-      const searchCategoriesNameDto = new SearchCategoriesDto()
-      searchCategoriesNameDto.name = updateCategoriesDto.name
-      const categoriesNameDto = await this.findOne(searchCategoriesNameDto)
+      if (updateCategoriesDto.name) {
+        const searchCategoriesNameDto = new SearchCategoriesDto()
+        searchCategoriesNameDto.name = updateCategoriesDto.name
+        const categoriesNameDto = await this.findOne(searchCategoriesNameDto)
 
-      if (categoriesNameDto) {
-        throw new ConflictException('Categories already exist')
+        if (categoriesNameDto) {
+          throw new ConflictException('Categories name already exist')
+        }
+      }
+
+      if (updateCategoriesDto.code) {
+        const searchCategoriesCodeDto = new SearchCategoriesDto()
+        searchCategoriesCodeDto.code = updateCategoriesDto.code
+
+        const categoriesCode = await this.findOne(searchCategoriesCodeDto)
+
+        if (categoriesCode) {
+          throw new ConflictException('Categories code already exist')
+        }
       }
 
       return await this.categoriesRepository.update(categories.id, {
