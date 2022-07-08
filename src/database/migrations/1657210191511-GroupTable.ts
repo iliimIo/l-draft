@@ -37,6 +37,11 @@ export class GroupTable1657210191511 implements MigrationInterface {
             isUnique: false
           },
           {
+            name: 'is_public',
+            type: 'boolean',
+            default: true
+          },
+          {
             name: 'is_active',
             type: 'boolean',
             default: true

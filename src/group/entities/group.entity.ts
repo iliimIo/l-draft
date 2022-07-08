@@ -17,6 +17,10 @@ export class Group extends Base {
   @Column({ nullable: true })
   logo: string
 
+  @ApiProperty()
+  @Column({ name: 'is_public', default: true, nullable: true })
+  isPublic: boolean
+
   // ---------- start relation ----------//
 
   @OneToMany(() => Award, (award) => award.group)

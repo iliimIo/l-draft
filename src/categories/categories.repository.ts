@@ -25,7 +25,7 @@ export class CategoriesRepository extends Repository<Categories> {
           'categories.updatedAt',
           'categories.deletedAt'
         ])
-        .andWhere('categories.isPublic =:isPublic', { isPublic: true })
+        .where('categories.isActive =:isActive', { isActive: true })
 
       if (id) {
         query.andWhere('categories.id =:id', { id })
@@ -40,7 +40,11 @@ export class CategoriesRepository extends Repository<Categories> {
       }
 
       if (isPublic) {
-        query.andWhere('categories.isPublic =:isPublic', { isPublic })
+        if (isPublic.toString() === 'true') {
+          query.andWhere('categories.isPublic =:isPublic', { isPublic: true })
+        } else {
+          query.andWhere('categories.isPublic =:isPublic', { isPublic: false })
+        }
       }
 
       if (search) {
