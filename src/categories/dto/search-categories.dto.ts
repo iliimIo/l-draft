@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer'
 import { ApiProperty, PickType } from '@nestjs/swagger'
-import { IsOptional, IsString } from 'class-validator'
+import { IsBoolean, IsOptional, IsString } from 'class-validator'
 
 import { BaseSearchDto } from 'src/common/base/dto/search.dto'
 
@@ -22,4 +22,10 @@ export class SearchCategoriesDto extends PickType(BaseSearchDto, ['page', 'limit
   @IsString()
   @Type(() => String)
   code: string
+
+  @ApiProperty({ type: Boolean })
+  @IsOptional()
+  @IsBoolean()
+  @Type(() => Boolean)
+  isPublic: boolean
 }

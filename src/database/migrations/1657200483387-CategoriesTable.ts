@@ -30,6 +30,11 @@ export class CategoriesTable1657200483387 implements MigrationInterface {
             isUnique: true
           },
           {
+            name: 'is_public',
+            type: 'boolean',
+            default: true
+          },
+          {
             name: 'is_active',
             type: 'boolean',
             default: true

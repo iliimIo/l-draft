@@ -12,17 +12,20 @@ export class CategoriesRepository extends Repository<Categories> {
    * @param searchCategoriesDto SearchCategoriesDto
    */
   async getAllAndPagination(searchCategoriesDto: SearchCategoriesDto) {
-    const { id, name, code, search, page, limit, sort, isDelete } = searchCategoriesDto
+    const { id, name, code, isPublic, search, page, limit, sort, isDelete } = searchCategoriesDto
     try {
-      const query = this.createQueryBuilder('categories').select([
-        'categories.id',
-        'categories.name',
-        'categories.code',
-        'categories.isActive',
-        'categories.createdAt',
-        'categories.updatedAt',
-        'categories.deletedAt'
-      ])
+      const query = this.createQueryBuilder('categories')
+        .select([
+          'categories.id',
+          'categories.name',
+          'categories.code',
+          'categories.isPublic',
+          'categories.isActive',
+          'categories.createdAt',
+          'categories.updatedAt',
+          'categories.deletedAt'
+        ])
+        .andWhere('categories.isPublic =:isPublic', { isPublic: true })
 
       if (id) {
         query.andWhere('categories.id =:id', { id })
@@ -34,6 +37,10 @@ export class CategoriesRepository extends Repository<Categories> {
 
       if (code) {
         query.andWhere('categories.code =:code', { code })
+      }
+
+      if (isPublic) {
+        query.andWhere('categories.isPublic =:isPublic', { isPublic })
       }
 
       if (search) {
@@ -53,6 +60,49 @@ export class CategoriesRepository extends Repository<Categories> {
         .limit(Number(limit || 10))
         .addOrderBy('categories.createdAt', sort == 'DESC' ? 'DESC' : 'ASC')
         .getManyAndCount()
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw new InternalServerErrorException()
+    }
+  }
+
+  /**
+   * Get One
+   * @param searchCategoriesDto
+   */
+  async getOne(searchCategoriesDto: SearchCategoriesDto) {
+    const { id, name, code, isPublic } = searchCategoriesDto
+    try {
+      const query = this.createQueryBuilder('categories')
+        .select([
+          'categories.id',
+          'categories.name',
+          'categories.code',
+          'categories.isPublic',
+          'categories.isActive',
+          'categories.createdAt',
+          'categories.updatedAt',
+          'categories.deletedAt'
+        ])
+        .where('categories.isActive =:isActive', { isActive: true })
+
+      if (id) {
+        query.andWhere('categories.id =:id', { id })
+      }
+
+      if (name) {
+        query.andWhere('categories.name =:name', { name })
+      }
+
+      if (code) {
+        query.andWhere('categories.code =:code', { code })
+      }
+
+      if (isPublic) {
+        query.andWhere('categories.isPublic =:isPublic', { isPublic })
+      }
+
+      return await query.getOne()
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw new InternalServerErrorException()
