@@ -1,11 +1,12 @@
 import { Controller, Get, HttpException, HttpStatus, Param, Query, Res } from '@nestjs/common'
-import { ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger'
+import { ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { Response } from 'express'
 import { CategoriesService } from './categories.service'
 import { SearchCategoriesDto } from './dto/search-categories.dto'
 import { ResponseCategoriesListDto, ResponseCategoriesDto } from './dto/response-categories.dto'
 import { ResponseDto } from 'src/common/base/dto/response.dto'
 
+@ApiTags('categories')
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}

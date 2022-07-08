@@ -1,11 +1,12 @@
 import { Controller, Get, HttpException, HttpStatus, Param, Query, Res } from '@nestjs/common'
-import { ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger'
+import { ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { Response } from 'express'
 import { GroupService } from './group.service'
 import { ResponseGroupListDto, ResponseGroupDto } from './dto/response-group.dto'
 import { SearchGroupDto } from './dto/search-group.dto'
 import { ResponseDto } from 'src/common/base/dto/response.dto'
 
+@ApiTags('group')
 @Controller('group')
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
