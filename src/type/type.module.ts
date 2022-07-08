@@ -9,6 +9,7 @@ import { AuthModule } from 'src/auth/auth.module'
 @Module({
   imports: [TypeOrmModule.forFeature([TypeRepository]), forwardRef(() => AuthModule)],
   controllers: [TypeController, TypeManagementController],
-  providers: [TypeService]
+  providers: [TypeService],
+  exports: [TypeService]
 })
 export class TypeModule {}

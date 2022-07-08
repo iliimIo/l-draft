@@ -9,10 +9,10 @@ import { Type } from 'src/type/entities/type.entity'
 export class Award extends Base {
   @ApiProperty()
   @Column({ nullable: false })
-  number: number
+  number: string
 
   @ApiProperty()
-  @Column({ name: 'period_date', unique: true, nullable: false })
+  @Column({ name: 'period_date', unique: false, nullable: false })
   periodDate: Date
 
   // ---------- start relation ----------//

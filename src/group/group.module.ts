@@ -9,6 +9,7 @@ import { AuthModule } from 'src/auth/auth.module'
 @Module({
   imports: [TypeOrmModule.forFeature([GroupRepository]), forwardRef(() => AuthModule)],
   controllers: [GroupController, GroupManagementController],
-  providers: [GroupService]
+  providers: [GroupService],
+  exports: [GroupService]
 })
 export class GroupModule {}

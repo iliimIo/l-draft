@@ -17,15 +17,15 @@ export class AwardTable1657212510691 implements MigrationInterface {
           },
           {
             name: 'number',
-            type: 'integer',
-            default: 0,
+            type: 'varchar',
+            length: '255',
             isNullable: false
           },
           {
             name: 'period_date',
             type: 'timestamp',
             isNullable: false,
-            isUnique: true
+            isUnique: false
           },
           {
             name: 'is_active',

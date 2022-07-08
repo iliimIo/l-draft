@@ -72,22 +72,13 @@ export class CategoriesRepository extends Repository<Categories> {
 
   /**
    * Get One
-   * @param searchCategoriesDto
+   * @param searchCategoriesDto SearchCategoriesDto
    */
   async getOne(searchCategoriesDto: SearchCategoriesDto) {
     const { id, name, code, isPublic } = searchCategoriesDto
     try {
       const query = this.createQueryBuilder('categories')
-        .select([
-          'categories.id',
-          'categories.name',
-          'categories.code',
-          'categories.isPublic',
-          'categories.isActive',
-          'categories.createdAt',
-          'categories.updatedAt',
-          'categories.deletedAt'
-        ])
+        .select(['categories'])
         .where('categories.isActive =:isActive', { isActive: true })
 
       if (id) {
