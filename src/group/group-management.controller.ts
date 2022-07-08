@@ -1,5 +1,5 @@
-import { ApiTags } from '@nestjs/swagger/dist/decorators'
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, Res } from '@nestjs/common'
+import { ApiBearerAuth, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger/dist/decorators'
+import { Body, Controller, Delete, HttpException, HttpStatus, Param, Patch, Post, Res, UseGuards } from '@nestjs/common'
 import { ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse } from '@nestjs/swagger'
 import { Response } from 'express'
 import { GroupService } from './group.service'
@@ -7,7 +7,17 @@ import { ResponseGroupDto } from './dto/response-group.dto'
 import { ResponseDto } from 'src/common/base/dto/response.dto'
 import { CreateGroupDto } from './dto/create-group.dto'
 import { UpdateGroupDto } from './dto/update-group.dto'
+import { AuthGuard } from '@nestjs/passport'
+import RoleGuard from 'src/common/guards/role.guard'
+import { Roles } from 'src/common/base/enum/role.enum'
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard(), RoleGuard([Roles.ADMIN]))
+@ApiUnauthorizedResponse({
+  description: 'Access token is expire',
+  status: HttpStatus.UNAUTHORIZED,
+  type: ResponseDto
+})
 @ApiTags('group-management')
 @Controller('group/management')
 export class GroupManagementController {
