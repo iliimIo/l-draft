@@ -24,6 +24,13 @@ import { UpdateAwardDto } from './dto/update-award.dto'
   status: HttpStatus.UNAUTHORIZED,
   type: ResponseDto
 })
+@ApiBearerAuth()
+@UseGuards(AuthGuard(), RoleGuard([Roles.ADMIN]))
+@ApiUnauthorizedResponse({
+  description: 'Access token is expire',
+  status: HttpStatus.UNAUTHORIZED,
+  type: ResponseDto
+})
 @ApiTags('award-management')
 @Controller('award/management')
 export class AwardManagementController {
