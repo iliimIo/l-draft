@@ -9,6 +9,12 @@ async function bootstrap() {
   })
 
   app.setGlobalPrefix('api/v1')
+  app.enableCors({
+    // origin: true,
+    origin: ['http://localhost:3000'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true
+  })
   app.useGlobalPipes(new ValidationPipe())
 
   const options = new DocumentBuilder()
