@@ -8,15 +8,6 @@ async function bootstrap() {
     logger: ['log', 'error', 'warn', 'debug', 'verbose']
   })
 
-  app.setGlobalPrefix('api/v1')
-  app.enableCors({
-    // origin: true,
-    origin: ['http://localhost:3000'],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    credentials: true
-  })
-  app.useGlobalPipes(new ValidationPipe())
-
   const options = new DocumentBuilder()
     .addBearerAuth()
     .setTitle('LOTTO')
@@ -26,6 +17,16 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, options)
   SwaggerModule.setup('document', app, document)
+
+  app.useGlobalPipes(new ValidationPipe())
+  app.enableCors({
+    // origin: true,
+    origin: ['http://localhost:3000'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true
+  })
+  app.setGlobalPrefix('api/v1')
+
   await app.listen(8002)
 }
 bootstrap()
