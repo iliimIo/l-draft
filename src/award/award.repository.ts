@@ -17,7 +17,9 @@ export class AwardRepository extends Repository<Award> {
       number,
       periodDate,
       categoriesId,
+      categoriesCode,
       groupId,
+      groupCode,
       typeId,
       startDate,
       endDate,
@@ -58,8 +60,16 @@ export class AwardRepository extends Repository<Award> {
         query.andWhere('categories.id =:categoriesId', { categoriesId })
       }
 
+      if (categoriesCode) {
+        query.andWhere('categories.code =:categoriesCode', { categoriesCode })
+      }
+
       if (groupId) {
         query.andWhere('group.id =:groupId', { groupId })
+      }
+
+      if (groupCode) {
+        query.andWhere('group.code =:groupCode', { groupCode })
       }
 
       if (typeId) {
@@ -67,9 +77,7 @@ export class AwardRepository extends Repository<Award> {
       }
 
       if (search) {
-        query.andWhere('award.name LIKE :search', {
-          search: `%${search}%`
-        })
+        query.andWhere('award.number LIKE :search', { search: `%${search}%` })
       }
 
       if (Boolean(isDelete)) {
@@ -95,7 +103,7 @@ export class AwardRepository extends Repository<Award> {
       return await query
         .offset((Number(page || 1) - 1) * Number(limit || 10))
         .limit(Number(limit || 10))
-        .addOrderBy('award.createdAt', sort == 'DESC' ? 'DESC' : 'ASC')
+        .addOrderBy('award.periodDate', sort == 'DESC' ? 'DESC' : 'ASC')
         .getManyAndCount()
     } catch (error) {
       this.logger.error(JSON.stringify(error))

@@ -52,7 +52,7 @@ export class AwardManagementController {
     type: ResponseDto
   })
   @Post()
-  public async status(@Res() res: Response, @Body() createAwardDto: CreateAwardDto) {
+  public async create(@Res() res: Response, @Body() createAwardDto: CreateAwardDto) {
     try {
       await this.awardService.create(createAwardDto)
       return res.status(HttpStatus.OK).json({
