@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, JoinColumn, OneToMany } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany, Index } from 'typeorm'
 import { Base } from 'src/common/base/entities/base.entity'
 import { Award } from 'src/award/entities/award.entity'
 
 @Entity('group')
+@Index('IDX_GROUP_ID')
 export class Group extends Base {
   @ApiProperty()
   @Column({ unique: true, nullable: false })

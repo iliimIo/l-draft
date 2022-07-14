@@ -52,7 +52,7 @@ export class AwardTable1657212510691 implements MigrationInterface {
     )
 
     await queryRunner.createIndex(
-      'type',
+      'award',
       new TableIndex({
         name: 'IDX_AWARD_ID',
         columnNames: ['id']
