@@ -63,7 +63,9 @@ export class AwardService {
         for (const group of groupList) {
           const groupDto = new GroupDailyDto()
           groupDto.name = group.group_name
+          groupDto.periodDate = new Date()
           groupDto.code = group.group_code
+
           groupDto.awards = []
 
           const searchAwardDto = new SearchAwardDto()
@@ -78,6 +80,7 @@ export class AwardService {
             searchAwardDto.typeId = type.type_id
 
             const award = await this.findOne(searchAwardDto)
+            groupDto.periodDate = award.periodDate
 
             if (award) {
               const typeDto = new TypeDailyDto()

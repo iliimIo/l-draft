@@ -24,6 +24,9 @@ export class GroupDailyDto {
   @ApiProperty({ type: String })
   code: string
 
+  @ApiProperty({ type: Date })
+  periodDate: Date
+
   @ApiProperty({ type: () => AwardDailyDto, isArray: true })
   awards: AwardDailyDto[]
 }
