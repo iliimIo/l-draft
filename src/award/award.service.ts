@@ -7,6 +7,8 @@ import { GroupService } from 'src/group/group.service'
 import { TypeService } from 'src/type/type.service'
 import { Award } from './entities/award.entity'
 import { UpdateAwardDto } from './dto/update-award.dto'
+import { formatDate } from '../common/utils/date'
+import { AwardsDailyDateDto, AwardDto, TypeDto } from 'src/group/dto/response-group-daily.dto'
 
 @Injectable()
 export class AwardService {
@@ -36,9 +38,9 @@ export class AwardService {
   }
 
   /**
-   * Find daily award
+   * Find daily categories award
    */
-  public async dailyAwards(groupCode: string) {
+  public async dailyCategoriesAwards(groupCode: string) {
     try {
       const searchAwardDto = new SearchAwardDto()
       searchAwardDto.groupCode = groupCode
@@ -51,6 +53,50 @@ export class AwardService {
         searchAwardAndTypeDto.groupCode = groupCode
         const award = await this.findOne(searchAwardAndTypeDto)
         awards.push(award)
+      }
+
+      return awards
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw error
+    }
+  }
+
+  /**
+   * Find daily date award
+   */
+  public async dailyDateAwards(groupCode: string) {
+    try {
+      const searchAwardDto = new SearchAwardDto()
+      searchAwardDto.groupCode = groupCode
+      const dateAwards = await this.awardRepository.getDateAwards(searchAwardDto)
+
+      const awards = []
+      for (const dateAward of dateAwards) {
+        const searchAwardAndDateDto = new SearchAwardDto()
+        searchAwardAndDateDto.periodDate = formatDate(dateAward.periodDate)
+        searchAwardAndDateDto.groupCode = groupCode
+        searchAwardAndDateDto.limit = '1000'
+        searchAwardAndDateDto.page = '1'
+
+        const awardsDailyDateDto = new AwardsDailyDateDto()
+        awardsDailyDateDto.periodDate = dateAward.periodDate
+        awardsDailyDateDto.awards = []
+
+        const [data] = await this.awardRepository.getAllAndPagination(searchAwardAndDateDto)
+        for (const award of data) {
+          const typeDto = new TypeDto()
+          typeDto.name = award.type.name
+
+          const awardDto = new AwardDto()
+          awardDto.number = award.number
+          awardDto.periodDate = award.periodDate
+          awardDto.type = typeDto
+
+          awardsDailyDateDto.awards.push(awardDto)
+        }
+
+        awards.push(awardsDailyDateDto)
       }
 
       return awards

@@ -1,13 +1,17 @@
-import { ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common'
+import { ConflictException, forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { GroupRepository } from './group.repository'
+import { AwardService } from 'src/award/award.service'
 import { SearchGroupDto } from './dto/search-group.dto'
 import { CreateGroupDto } from './dto/create-group.dto'
 import { UpdateGroupDto } from './dto/update-group.dto'
+import { GroupsDailyDto } from './dto/response-group-daily.dto'
 
 @Injectable()
 export class GroupService {
   private readonly logger = new Logger(GroupService.name)
+  @Inject(forwardRef(() => AwardService))
+  private awardService: AwardService
 
   constructor(
     @InjectRepository(GroupRepository)
@@ -22,6 +26,26 @@ export class GroupService {
     try {
       const [group, total] = await this.groupRepository.getAllAndPagination(searchGroupDto)
       return { data: group, total }
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw error
+    }
+  }
+
+  /**
+   * Find daily awards
+   * @param searchGroupDto SearchGroupDto
+   */
+  public async dailyAwards(searchGroupDto: SearchGroupDto) {
+    try {
+      const group = await this.groupRepository.getOne(searchGroupDto)
+      const dateAwards = await this.awardService.dailyDateAwards(searchGroupDto.code)
+
+      const groupDailyDto = new GroupsDailyDto()
+      groupDailyDto.name = group.name
+      groupDailyDto.code = group.code
+      groupDailyDto.awardsDaily = dateAwards
+      return { data: groupDailyDto }
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error

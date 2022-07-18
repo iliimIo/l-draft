@@ -134,6 +134,26 @@ export class AwardRepository extends Repository<Award> {
   }
 
   /**
+   * Get date award
+   * @param searchAwardDto SearchAwardDto
+   */
+  async getDateAwards(searchAwardDto: SearchAwardDto) {
+    const { groupCode } = searchAwardDto
+    try {
+      return this.createQueryBuilder('award')
+        .select(['award.id', 'award.periodDate'])
+        .leftJoin('award.group', 'group')
+        .where('award.isActive =:isActive', { isActive: true })
+        .andWhere('group.code =:groupCode', { groupCode })
+        .distinctOn(['award.periodDate'])
+        .getMany()
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw new InternalServerErrorException()
+    }
+  }
+
+  /**
    * Get One
    * @param searchAwardDto SearchAwardDto
    */

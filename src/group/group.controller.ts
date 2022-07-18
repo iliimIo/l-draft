@@ -5,6 +5,7 @@ import { GroupService } from './group.service'
 import { ResponseGroupListDto, ResponseGroupDto } from './dto/response-group.dto'
 import { SearchGroupDto } from './dto/search-group.dto'
 import { ResponseDto } from 'src/common/base/dto/response.dto'
+import { ResponseGroupDailyDto } from './dto/response-group-daily.dto'
 
 @ApiTags('group')
 @Controller('group')
@@ -30,6 +31,36 @@ export class GroupController {
         message: `Can get group list`,
         data,
         total
+      })
+    } catch (error) {
+      throw new HttpException(
+        {
+          statusCode: error.response.statusCode,
+          message: error.response.message
+        },
+        error.status
+      )
+    }
+  }
+
+  @ApiOkResponse({
+    type: ResponseGroupDailyDto,
+    description: 'Get group daily list',
+    status: HttpStatus.OK
+  })
+  @ApiInternalServerErrorResponse({
+    description: `Can't get group daily`,
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    type: ResponseDto
+  })
+  @Get('daily')
+  public async daily(@Res() res: Response, @Query() searchGroupDto: SearchGroupDto) {
+    try {
+      const { data } = await this.groupService.dailyAwards(searchGroupDto)
+      return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
+        message: `Can get group daily list`,
+        data
       })
     } catch (error) {
       throw new HttpException(

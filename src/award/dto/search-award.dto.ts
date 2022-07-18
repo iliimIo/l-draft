@@ -21,7 +21,7 @@ export class SearchAwardDto extends PickType(BaseSearchDto, ['page', 'limit', 's
   @IsOptional()
   @IsString()
   @Type(() => String)
-  periodDate: string
+  periodDate: string | Date
 
   @ApiProperty({ type: String })
   @IsOptional()

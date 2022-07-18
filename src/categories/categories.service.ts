@@ -53,7 +53,7 @@ export class CategoriesService {
           groupDto.logo = group.logo
           groupDto.awards = []
 
-          const awardList = await this.awardService.dailyAwards(group.code)
+          const awardList = await this.awardService.dailyCategoriesAwards(group.code)
           if (awardList) {
             for (const award of awardList) {
               const typeDto = new TypeDto()
