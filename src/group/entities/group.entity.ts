@@ -31,7 +31,7 @@ export class Group extends Base {
 
   // ---------- end relation ----------//
   @Index('IDX_CATEGORIES_ID')
-  @ManyToOne(() => Categories, (categories) => categories)
+  @ManyToOne(() => Categories, (categories) => categories.group)
   @JoinColumn({ name: 'categories_id' })
   categories: Categories
 }

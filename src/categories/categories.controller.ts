@@ -5,6 +5,7 @@ import { CategoriesService } from './categories.service'
 import { SearchCategoriesDto } from './dto/search-categories.dto'
 import { ResponseCategoriesListDto, ResponseCategoriesDto } from './dto/response-categories.dto'
 import { ResponseDto } from 'src/common/base/dto/response.dto'
+import { ResponseCategoriesDailyDto } from './dto/response-categories-daily.dto'
 
 @ApiTags('categories')
 @Controller('categories')
@@ -30,6 +31,36 @@ export class CategoriesController {
         message: `Can get categories list`,
         data,
         total
+      })
+    } catch (error) {
+      throw new HttpException(
+        {
+          statusCode: error.response.statusCode,
+          message: error.response.message
+        },
+        error.status
+      )
+    }
+  }
+
+  @ApiOkResponse({
+    type: ResponseCategoriesDailyDto,
+    description: 'Get categories daily list',
+    status: HttpStatus.OK
+  })
+  @ApiInternalServerErrorResponse({
+    description: `Can't get categories daily`,
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    type: ResponseDto
+  })
+  @Get('daily')
+  public async daily(@Res() res: Response) {
+    try {
+      const { data } = await this.categoriesService.dailyAwards()
+      return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
+        message: `Can get categories daily list`,
+        data
       })
     } catch (error) {
       throw new HttpException(

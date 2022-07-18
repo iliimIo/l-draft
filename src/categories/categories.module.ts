@@ -5,9 +5,14 @@ import { CategoriesManagementController } from './categories-management.controll
 import { CategoriesService } from './categories.service'
 import { CategoriesRepository } from './categories.repository'
 import { AuthModule } from 'src/auth/auth.module'
+import { AwardModule } from 'src/award/award.module'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CategoriesRepository]), forwardRef(() => AuthModule)],
+  imports: [
+    TypeOrmModule.forFeature([CategoriesRepository]),
+    forwardRef(() => AuthModule),
+    forwardRef(() => AwardModule)
+  ],
   controllers: [CategoriesController, CategoriesManagementController],
   providers: [CategoriesService],
   exports: [CategoriesService]

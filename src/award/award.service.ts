@@ -38,70 +38,27 @@ export class AwardService {
   /**
    * Find daily award
    */
-  // public async daily() {
-  //   try {
-  //     const searchCategoriesDto = new SearchCategoriesDto()
-  //     searchCategoriesDto.page = '1'
-  //     searchCategoriesDto.limit = '10'
-  //     const categoriesList = await this.categoriesService.findAllAndPagination(searchCategoriesDto)
+  public async dailyAwards(groupCode: string) {
+    try {
+      const searchAwardDto = new SearchAwardDto()
+      searchAwardDto.groupCode = groupCode
+      const typeAwards = await this.awardRepository.getTypeAwards(searchAwardDto)
 
-  //     const daily = []
-  //     for (const categories of categoriesList.data) {
-  //       const categoriesDto = new CategoriesDailyDto()
-  //       categoriesDto.name = categories.name
-  //       categoriesDto.group = []
+      const awards = []
+      for (const typeAward of typeAwards) {
+        const searchAwardAndTypeDto = new SearchAwardDto()
+        searchAwardAndTypeDto.typeId = typeAward.type.id
+        searchAwardAndTypeDto.groupCode = groupCode
+        const award = await this.findOne(searchAwardAndTypeDto)
+        awards.push(award)
+      }
 
-  //       const searchAwardDto = new SearchAwardDto()
-  //       // searchAwardDto.categoriesId = categories.id
-  //       const groupList = await this.awardRepository.groupByCategory(searchAwardDto)
-
-  //       for (const group of groupList) {
-  //         const groupDto = new GroupDailyDto()
-  //         groupDto.name = group.group_name
-  //         groupDto.periodDate = new Date()
-  //         groupDto.code = group.group_code
-
-  //         groupDto.awards = []
-
-  //         const searchAwardDto = new SearchAwardDto()
-  //         // searchAwardDto.categoriesId = categories.id
-  //         searchAwardDto.groupId = group.group_id
-  //         const typeList = await this.awardRepository.groupByType(searchAwardDto)
-
-  //         for (const type of typeList) {
-  //           const searchAwardDto = new SearchAwardDto()
-  //           // searchAwardDto.categoriesId = categories.id
-  //           searchAwardDto.groupId = group.group_id
-  //           searchAwardDto.typeId = type.type_id
-
-  //           const award = await this.findOne(searchAwardDto)
-  //           groupDto.periodDate = award.periodDate
-
-  //           if (award) {
-  //             const typeDto = new TypeDailyDto()
-  //             typeDto.name = award.type.name
-  //             const awardDto = new AwardDailyDto()
-  //             awardDto.number = award.number
-  //             awardDto.periodDate = award.periodDate
-
-  //             awardDto.type = typeDto
-  //             groupDto.awards.push(awardDto)
-  //           }
-  //         }
-
-  //         if (groupDto.awards.length > 0) {
-  //           categoriesDto.group.push(groupDto)
-  //         }
-  //       }
-  //       daily.push(categoriesDto)
-  //     }
-
-  //     return { data: daily }
-  //   } catch (error) {
-  //     this.logger.error(JSON.stringify(error))
-  //     throw error
-  //   }
-  // }
+      return awards
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw error
+    }
+  }
 
   /**
    * Find one

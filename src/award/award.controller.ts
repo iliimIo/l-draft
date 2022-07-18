@@ -5,7 +5,6 @@ import { ResponseDto } from 'src/common/base/dto/response.dto'
 
 import { AwardService } from './award.service'
 import { ResponseAwardListDto, ResponseAwardDto } from './dto/response-award.dto'
-import { ResponseAwardDailyDto } from './dto/response-award-daily.dto'
 import { SearchAwardDto } from './dto/search-award.dto'
 
 @ApiTags('award')
@@ -32,36 +31,6 @@ export class AwardController {
         message: `Can get award list`,
         data,
         total
-      })
-    } catch (error) {
-      throw new HttpException(
-        {
-          statusCode: error.response.statusCode,
-          message: error.response.message
-        },
-        error.status
-      )
-    }
-  }
-
-  @ApiOkResponse({
-    type: ResponseAwardDailyDto,
-    description: 'Get award daily list',
-    status: HttpStatus.OK
-  })
-  @ApiInternalServerErrorResponse({
-    description: `Can't get award`,
-    status: HttpStatus.INTERNAL_SERVER_ERROR,
-    type: ResponseDto
-  })
-  @Get('daily')
-  public async daily(@Res() res: Response) {
-    try {
-      // const { data } = await this.awardService.daily()
-      return res.status(HttpStatus.OK).json({
-        statusCode: HttpStatus.OK,
-        message: `Can get award daily list`
-        // data
       })
     } catch (error) {
       throw new HttpException(

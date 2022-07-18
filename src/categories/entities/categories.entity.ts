@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, Index } from 'typeorm'
+import { Column, Entity, Index, JoinColumn, OneToMany } from 'typeorm'
 import { Base } from 'src/common/base/entities/base.entity'
+import { Group } from 'src/group/entities/group.entity'
 
 @Entity('categories')
 @Index('IDX_CATEGORIES_ID')
@@ -18,5 +19,8 @@ export class Categories extends Base {
   isPublic: boolean
 
   // ---------- start relation ----------//
+  @OneToMany(() => Group, (group) => group.categories)
+  @JoinColumn({ name: 'group_id' })
+  group: Group[]
   // ---------- end relation ----------//
 }

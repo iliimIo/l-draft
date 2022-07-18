@@ -16,6 +16,7 @@ import { TypeModule } from 'src/type/type.module'
     forwardRef(() => GroupModule)
   ],
   controllers: [AwardController, AwardManagementController],
-  providers: [AwardService]
+  providers: [AwardService],
+  exports: [AwardService]
 })
 export class AwardModule {}

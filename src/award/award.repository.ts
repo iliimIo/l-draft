@@ -112,11 +112,33 @@ export class AwardRepository extends Repository<Award> {
   }
 
   /**
+   * Get type award
+   * @param searchAwardDto SearchAwardDto
+   */
+  async getTypeAwards(searchAwardDto: SearchAwardDto) {
+    const { groupCode } = searchAwardDto
+    try {
+      return this.createQueryBuilder('award')
+        .select(['award.id', 'type.id', 'type.name'])
+        .leftJoin('award.group', 'group')
+        .leftJoin('group.categories', 'categories')
+        .leftJoin('award.type', 'type')
+        .where('award.isActive =:isActive', { isActive: true })
+        .andWhere('group.code =:groupCode', { groupCode })
+        .distinctOn(['type.name'])
+        .getMany()
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw new InternalServerErrorException()
+    }
+  }
+
+  /**
    * Get One
    * @param searchAwardDto SearchAwardDto
    */
   async getOne(searchAwardDto: SearchAwardDto) {
-    const { id, number, periodDate, categoriesId, groupId, typeId, startDate, endDate } = searchAwardDto
+    const { id, number, periodDate, categoriesId, groupCode, groupId, typeId, startDate, endDate } = searchAwardDto
     try {
       const query = this.createQueryBuilder('award')
         .select([
@@ -146,6 +168,10 @@ export class AwardRepository extends Repository<Award> {
 
       if (categoriesId) {
         query.andWhere('categories.id =:groupId', { categoriesId })
+      }
+
+      if (groupCode) {
+        query.andWhere('group.code =:groupCode', { groupCode })
       }
 
       if (groupId) {

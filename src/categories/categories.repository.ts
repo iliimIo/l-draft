@@ -71,6 +71,26 @@ export class CategoriesRepository extends Repository<Categories> {
   }
 
   /**
+   * Get categories daily
+   */
+  async getCategoriesDaily() {
+    try {
+      const query = this.createQueryBuilder('categories')
+        .select(['categories.name', 'categories.code', 'group.name', 'group.code', 'group.logo'])
+        .leftJoin('categories.group', 'group')
+        .leftJoin('group.award', 'award')
+        .leftJoin('award.type', 'type')
+        .where('categories.isActive =:isActive', { isActive: true })
+        .andWhere('group.isActive =:isActive', { isActive: true })
+
+      return await query.addOrderBy('categories.createdAt', 'DESC').getMany()
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw new InternalServerErrorException()
+    }
+  }
+
+  /**
    * Get One
    * @param searchCategoriesDto SearchCategoriesDto
    */
