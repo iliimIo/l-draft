@@ -16,11 +16,6 @@ export class CreateAwardDto {
   @ApiProperty({ type: String })
   @IsString()
   @Type(() => String)
-  categoriesId: string
-
-  @ApiProperty({ type: String })
-  @IsString()
-  @Type(() => String)
   typeId: string
 
   @ApiProperty({ type: String })

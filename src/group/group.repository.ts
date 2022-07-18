@@ -12,10 +12,12 @@ export class GroupRepository extends Repository<Group> {
    * @param searchGroupDto SearchGroupDto
    */
   async getAllAndPagination(searchGroupDto: SearchGroupDto) {
-    const { id, name, code, isPublic, search, page, limit, sort, isDelete } = searchGroupDto
+    const { id, name, code, categoriesCode, categoriesId, isPublic, search, page, limit, sort, isDelete } =
+      searchGroupDto
     try {
       const query = this.createQueryBuilder('group')
         .select(['group'])
+        .leftJoin('group.categories', 'categories')
         .where('group.isActive =:isActive', { isActive: true })
 
       if (id) {
@@ -28,6 +30,14 @@ export class GroupRepository extends Repository<Group> {
 
       if (code) {
         query.andWhere('group.code =:code', { code })
+      }
+
+      if (categoriesCode) {
+        query.andWhere('categories.code =:categoriesCode', { categoriesCode })
+      }
+
+      if (categoriesId) {
+        query.andWhere('categories.id =:categoriesId', { categoriesId })
       }
 
       if (isPublic) {
@@ -64,10 +74,11 @@ export class GroupRepository extends Repository<Group> {
    * @param searchGroupDto
    */
   async getOne(searchGroupDto: SearchGroupDto) {
-    const { id, name, code, isPublic } = searchGroupDto
+    const { id, name, code, categoriesCode, categoriesId, isPublic } = searchGroupDto
     try {
       const query = this.createQueryBuilder('group')
         .select(['group'])
+        .leftJoin('group.categories', 'categories')
         .where('group.isActive =:isActive', { isActive: true })
 
       if (id) {
@@ -80,6 +91,14 @@ export class GroupRepository extends Repository<Group> {
 
       if (code) {
         query.andWhere('group.code =:code', { code })
+      }
+
+      if (categoriesCode) {
+        query.andWhere('categories.code =:categoriesCode', { categoriesCode })
+      }
+
+      if (categoriesId) {
+        query.andWhere('categories.id =:categoriesId', { categoriesId })
       }
 
       if (isPublic) {

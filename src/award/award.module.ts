@@ -1,5 +1,4 @@
 import { GroupModule } from './../group/group.module'
-import { CategoriesModule } from './../categories/categories.module'
 import { Module, forwardRef } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { AwardManagementController } from './award-menegement.controller'
@@ -13,7 +12,6 @@ import { TypeModule } from 'src/type/type.module'
   imports: [
     TypeOrmModule.forFeature([AwardRepository]),
     forwardRef(() => AuthModule),
-    forwardRef(() => CategoriesModule),
     forwardRef(() => TypeModule),
     forwardRef(() => GroupModule)
   ],

@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, JoinColumn, OneToMany, Index } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany, Index, ManyToOne } from 'typeorm'
 import { Base } from 'src/common/base/entities/base.entity'
 import { Award } from 'src/award/entities/award.entity'
+import { Categories } from 'src/categories/entities/categories.entity'
 
 @Entity('group')
 @Index('IDX_GROUP_ID')
@@ -29,4 +30,8 @@ export class Group extends Base {
   award: Award[]
 
   // ---------- end relation ----------//
+  @Index('IDX_CATEGORIES_ID')
+  @ManyToOne(() => Categories, (categories) => categories)
+  @JoinColumn({ name: 'categories_id' })
+  categories: Categories
 }

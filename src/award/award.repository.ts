@@ -43,8 +43,8 @@ export class AwardRepository extends Repository<Award> {
           'type.id',
           'type.name'
         ])
-        .leftJoin('award.categories', 'categories')
         .leftJoin('award.group', 'group')
+        .leftJoin('group.categories', 'categories')
         .leftJoin('award.type', 'type')
         .where('award.isActive =:isActive', { isActive: true })
 
@@ -57,11 +57,11 @@ export class AwardRepository extends Repository<Award> {
       }
 
       if (categoriesId) {
-        query.andWhere('categories.id =:categoriesId', { categoriesId })
+        query.andWhere('categories.id =:groupId', { categoriesId })
       }
 
       if (categoriesCode) {
-        query.andWhere('categories.code =:categoriesCode', { categoriesCode })
+        query.andWhere('categories.code =:groupCode', { categoriesCode })
       }
 
       if (groupId) {
@@ -112,59 +112,6 @@ export class AwardRepository extends Repository<Award> {
   }
 
   /**
-   * Get all group category
-   * @param searchAwardDto SearchAwardDto
-   */
-  async groupByCategory(searchAwardDto: SearchAwardDto) {
-    const { categoriesId } = searchAwardDto
-    try {
-      const query = this.createQueryBuilder('award')
-        .select('group')
-        .leftJoin('award.categories', 'categories')
-        .leftJoin('award.group', 'group')
-        .where('award.isActive =:isActive', { isActive: true })
-
-      if (categoriesId) {
-        query.andWhere('categories.id =:categoriesId', { categoriesId })
-      }
-
-      return await query.groupBy('group.id').getRawMany()
-    } catch (error) {
-      this.logger.error(JSON.stringify(error))
-      throw new InternalServerErrorException()
-    }
-  }
-
-  /**
-   * Get all group type
-   * @param searchAwardDto SearchAwardDto
-   */
-  async groupByType(searchAwardDto: SearchAwardDto) {
-    const { categoriesId, groupId } = searchAwardDto
-    try {
-      const query = this.createQueryBuilder('award')
-        .select('type.id')
-        .leftJoin('award.categories', 'categories')
-        .leftJoin('award.group', 'group')
-        .leftJoin('award.type', 'type')
-        .where('award.isActive =:isActive', { isActive: true })
-
-      if (categoriesId) {
-        query.andWhere('categories.id =:categoriesId', { categoriesId })
-      }
-
-      if (groupId) {
-        query.andWhere('group.id =:groupId', { groupId })
-      }
-
-      return await query.groupBy('type.id').getRawMany()
-    } catch (error) {
-      this.logger.error(JSON.stringify(error))
-      throw new InternalServerErrorException()
-    }
-  }
-
-  /**
    * Get One
    * @param searchAwardDto SearchAwardDto
    */
@@ -184,8 +131,8 @@ export class AwardRepository extends Repository<Award> {
           'type.id',
           'type.name'
         ])
-        .leftJoin('award.categories', 'categories')
         .leftJoin('award.group', 'group')
+        .leftJoin('group.categories', 'categories')
         .leftJoin('award.type', 'type')
         .where('award.isActive =:isActive', { isActive: true })
 
@@ -198,7 +145,7 @@ export class AwardRepository extends Repository<Award> {
       }
 
       if (categoriesId) {
-        query.andWhere('categories.id =:categoriesId', { categoriesId })
+        query.andWhere('categories.id =:groupId', { categoriesId })
       }
 
       if (groupId) {

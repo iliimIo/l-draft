@@ -57,11 +57,11 @@ export class AwardController {
   @Get('daily')
   public async daily(@Res() res: Response) {
     try {
-      const { data } = await this.awardService.daily()
+      // const { data } = await this.awardService.daily()
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
-        message: `Can get award daily list`,
-        data
+        message: `Can get award daily list`
+        // data
       })
     } catch (error) {
       throw new HttpException(

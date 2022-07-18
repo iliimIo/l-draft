@@ -3,7 +3,7 @@ import { ResponseAndDataDto } from 'src/common/base/dto/response.dto'
 
 export class TypeDailyDto {
   @ApiProperty({ type: String })
-  name: String
+  name: string
 }
 
 export class AwardDailyDto {

@@ -23,6 +23,18 @@ export class SearchGroupDto extends PickType(BaseSearchDto, ['page', 'limit', 's
   @Type(() => String)
   code: string
 
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @IsString()
+  @Type(() => String)
+  categoriesCode: string
+
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @IsString()
+  @Type(() => String)
+  categoriesId: string
+
   @ApiProperty({ type: Boolean })
   @IsOptional()
   @IsBoolean()

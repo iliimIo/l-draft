@@ -20,4 +20,10 @@ export class UpdateGroupDto {
   @IsString()
   @Type(() => String)
   logo: string
+
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @IsString()
+  @Type(() => String)
+  categoriesId: string
 }

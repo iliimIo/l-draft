@@ -3,13 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { AwardRepository } from './award.repository'
 import { CreateAwardDto } from './dto/create-award.dto'
 import { SearchAwardDto } from './dto/search-award.dto'
-import { CategoriesService } from 'src/categories/categories.service'
 import { GroupService } from 'src/group/group.service'
 import { TypeService } from 'src/type/type.service'
 import { Award } from './entities/award.entity'
 import { UpdateAwardDto } from './dto/update-award.dto'
-import { SearchCategoriesDto } from 'src/categories/dto/search-categories.dto'
-import { CategoriesDailyDto, GroupDailyDto, AwardDailyDto, TypeDailyDto } from './dto/response-award-daily.dto'
 
 @Injectable()
 export class AwardService {
@@ -18,8 +15,6 @@ export class AwardService {
   constructor(
     @InjectRepository(AwardRepository)
     private awardRepository: AwardRepository,
-    @Inject(forwardRef(() => CategoriesService))
-    private categoriesService: CategoriesService,
     @Inject(forwardRef(() => GroupService))
     private groupService: GroupService,
     @Inject(forwardRef(() => TypeService))
@@ -43,78 +38,78 @@ export class AwardService {
   /**
    * Find daily award
    */
-  public async daily() {
-    try {
-      const searchCategoriesDto = new SearchCategoriesDto()
-      searchCategoriesDto.page = '1'
-      searchCategoriesDto.limit = '10'
-      const categoriesList = await this.categoriesService.findAllAndPagination(searchCategoriesDto)
+  // public async daily() {
+  //   try {
+  //     const searchCategoriesDto = new SearchCategoriesDto()
+  //     searchCategoriesDto.page = '1'
+  //     searchCategoriesDto.limit = '10'
+  //     const categoriesList = await this.categoriesService.findAllAndPagination(searchCategoriesDto)
 
-      const daily = []
-      for (const categories of categoriesList.data) {
-        const categoriesDto = new CategoriesDailyDto()
-        categoriesDto.name = categories.name
-        categoriesDto.group = []
+  //     const daily = []
+  //     for (const categories of categoriesList.data) {
+  //       const categoriesDto = new CategoriesDailyDto()
+  //       categoriesDto.name = categories.name
+  //       categoriesDto.group = []
 
-        const searchAwardDto = new SearchAwardDto()
-        searchAwardDto.categoriesId = categories.id
-        const groupList = await this.awardRepository.groupByCategory(searchAwardDto)
+  //       const searchAwardDto = new SearchAwardDto()
+  //       // searchAwardDto.categoriesId = categories.id
+  //       const groupList = await this.awardRepository.groupByCategory(searchAwardDto)
 
-        for (const group of groupList) {
-          const groupDto = new GroupDailyDto()
-          groupDto.name = group.group_name
-          groupDto.periodDate = new Date()
-          groupDto.code = group.group_code
+  //       for (const group of groupList) {
+  //         const groupDto = new GroupDailyDto()
+  //         groupDto.name = group.group_name
+  //         groupDto.periodDate = new Date()
+  //         groupDto.code = group.group_code
 
-          groupDto.awards = []
+  //         groupDto.awards = []
 
-          const searchAwardDto = new SearchAwardDto()
-          searchAwardDto.categoriesId = categories.id
-          searchAwardDto.groupId = group.group_id
-          const typeList = await this.awardRepository.groupByType(searchAwardDto)
+  //         const searchAwardDto = new SearchAwardDto()
+  //         // searchAwardDto.categoriesId = categories.id
+  //         searchAwardDto.groupId = group.group_id
+  //         const typeList = await this.awardRepository.groupByType(searchAwardDto)
 
-          for (const type of typeList) {
-            const searchAwardDto = new SearchAwardDto()
-            searchAwardDto.categoriesId = categories.id
-            searchAwardDto.groupId = group.group_id
-            searchAwardDto.typeId = type.type_id
+  //         for (const type of typeList) {
+  //           const searchAwardDto = new SearchAwardDto()
+  //           // searchAwardDto.categoriesId = categories.id
+  //           searchAwardDto.groupId = group.group_id
+  //           searchAwardDto.typeId = type.type_id
 
-            const award = await this.findOne(searchAwardDto)
-            groupDto.periodDate = award.periodDate
+  //           const award = await this.findOne(searchAwardDto)
+  //           groupDto.periodDate = award.periodDate
 
-            if (award) {
-              const typeDto = new TypeDailyDto()
-              typeDto.name = award.type.name
-              const awardDto = new AwardDailyDto()
-              awardDto.number = award.number
-              awardDto.periodDate = award.periodDate
+  //           if (award) {
+  //             const typeDto = new TypeDailyDto()
+  //             typeDto.name = award.type.name
+  //             const awardDto = new AwardDailyDto()
+  //             awardDto.number = award.number
+  //             awardDto.periodDate = award.periodDate
 
-              awardDto.type = typeDto
-              groupDto.awards.push(awardDto)
-            }
-          }
+  //             awardDto.type = typeDto
+  //             groupDto.awards.push(awardDto)
+  //           }
+  //         }
 
-          if (groupDto.awards.length > 0) {
-            categoriesDto.group.push(groupDto)
-          }
-        }
-        daily.push(categoriesDto)
-      }
+  //         if (groupDto.awards.length > 0) {
+  //           categoriesDto.group.push(groupDto)
+  //         }
+  //       }
+  //       daily.push(categoriesDto)
+  //     }
 
-      return { data: daily }
-    } catch (error) {
-      this.logger.error(JSON.stringify(error))
-      throw error
-    }
-  }
+  //     return { data: daily }
+  //   } catch (error) {
+  //     this.logger.error(JSON.stringify(error))
+  //     throw error
+  //   }
+  // }
 
   /**
    * Find one
-   * @param searchCategoriesDto SearchCategoriesDto
+   * @param searchAwardDto SearchAwardDto
    */
-  public async findOne(searchCategoriesDto: SearchAwardDto) {
+  public async findOne(searchAwardDto: SearchAwardDto) {
     try {
-      return await this.awardRepository.getOne(searchCategoriesDto)
+      return await this.awardRepository.getOne(searchAwardDto)
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error
@@ -147,16 +142,14 @@ export class AwardService {
    * @param createAwardDto CreateAwardDto
    */
   public async create(createAwardDto: CreateAwardDto) {
-    const { number, periodDate, categoriesId, groupId, typeId } = createAwardDto
+    const { number, periodDate, groupId, typeId } = createAwardDto
     try {
-      const categories = await this.categoriesService.findById(categoriesId)
       const group = await this.groupService.findById(groupId)
       const type = await this.typeService.findById(typeId)
 
       const award = new Award()
       award.number = number
       award.periodDate = new Date(periodDate)
-      award.categories = categories.data
       award.group = group.data
       award.type = type.data
 
@@ -173,7 +166,7 @@ export class AwardService {
    * @param updateAwardDto UpdateAwardDto
    */
   public async update(awardId: string, updateAwardDto: UpdateAwardDto) {
-    const { number, periodDate, categoriesId, groupId, typeId } = updateAwardDto
+    const { number, periodDate, groupId, typeId } = updateAwardDto
 
     try {
       const searchAwardDto = new SearchAwardDto()
@@ -185,11 +178,6 @@ export class AwardService {
       }
 
       const updateAward = new Award()
-
-      if (categoriesId) {
-        const categories = await this.categoriesService.findById(categoriesId)
-        updateAward.categories = categories.data
-      }
 
       if (groupId) {
         const group = await this.groupService.findById(groupId)

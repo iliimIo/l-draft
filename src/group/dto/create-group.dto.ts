@@ -18,4 +18,9 @@ export class CreateGroupDto {
   @IsString()
   @Type(() => String)
   logo: string
+
+  @ApiProperty({ type: String })
+  @IsString()
+  @Type(() => String)
+  categoriesId: string
 }

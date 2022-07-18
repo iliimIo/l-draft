@@ -19,12 +19,6 @@ export class UpdateAwardDto {
   @IsOptional()
   @IsString()
   @Type(() => String)
-  categoriesId: string
-
-  @ApiProperty({ type: String })
-  @IsOptional()
-  @IsString()
-  @Type(() => String)
   typeId: string
 
   @ApiProperty({ type: String })
