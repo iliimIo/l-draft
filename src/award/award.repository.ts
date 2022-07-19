@@ -2,6 +2,7 @@ import { EntityRepository, Repository } from 'typeorm'
 import { Award } from './entities/award.entity'
 import { SearchAwardDto } from './dto/search-award.dto'
 import { InternalServerErrorException, Logger } from '@nestjs/common'
+import { groupBy } from 'rxjs'
 
 @EntityRepository(Award)
 export class AwardRepository extends Repository<Award> {
@@ -138,15 +139,24 @@ export class AwardRepository extends Repository<Award> {
    * @param searchAwardDto SearchAwardDto
    */
   async getDateAwards(searchAwardDto: SearchAwardDto) {
-    const { groupCode } = searchAwardDto
+    const { groupCode, page, limit } = searchAwardDto
     try {
-      return this.createQueryBuilder('award')
-        .select(['award.id', 'award.periodDate'])
+      const query = await this.createQueryBuilder('award')
+        .select(['award.periodDate'])
         .leftJoin('award.group', 'group')
         .where('award.isActive =:isActive', { isActive: true })
         .andWhere('group.code =:groupCode', { groupCode })
         .distinctOn(['award.periodDate'])
-        .getMany()
+
+      if (page) {
+        query.offset(Number(page) || 1)
+      }
+
+      if (limit) {
+        query.limit(Number(limit) || 10)
+      }
+
+      return query.orderBy('award.periodDate', 'DESC').getRawMany()
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw new InternalServerErrorException()

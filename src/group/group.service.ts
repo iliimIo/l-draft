@@ -39,13 +39,17 @@ export class GroupService {
   public async dailyAwards(searchGroupDto: SearchGroupDto) {
     try {
       const group = await this.groupRepository.getOne(searchGroupDto)
-      const dateAwards = await this.awardService.dailyDateAwards(searchGroupDto.code)
+      const { awards, count } = await this.awardService.dailyDateAwards(
+        searchGroupDto.code,
+        searchGroupDto.page,
+        searchGroupDto.limit
+      )
 
       const groupDailyDto = new GroupsDailyDto()
       groupDailyDto.name = group.name
       groupDailyDto.code = group.code
-      groupDailyDto.awardsDaily = dateAwards
-      return { data: groupDailyDto }
+      groupDailyDto.awardsDaily = awards
+      return { data: groupDailyDto, total: count }
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error

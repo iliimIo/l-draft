@@ -38,6 +38,9 @@ export class GroupsDailyDto {
 }
 
 export class ResponseGroupDailyDto extends OmitType(ResponseAndDataDto, ['data'] as const) {
-  @ApiProperty({ type: GroupsDailyDto })
+  @ApiProperty({ type: () => GroupsDailyDto })
   data: GroupsDailyDto
+
+  @ApiProperty()
+  total: number
 }

@@ -56,11 +56,12 @@ export class GroupController {
   @Get('daily')
   public async daily(@Res() res: Response, @Query() searchGroupDto: SearchGroupDto) {
     try {
-      const { data } = await this.groupService.dailyAwards(searchGroupDto)
+      const { data, total } = await this.groupService.dailyAwards(searchGroupDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
         message: `Can get group daily list`,
-        data
+        data,
+        total
       })
     } catch (error) {
       throw new HttpException(

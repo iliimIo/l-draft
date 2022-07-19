@@ -65,22 +65,26 @@ export class AwardService {
   /**
    * Find daily date award
    */
-  public async dailyDateAwards(groupCode: string) {
+  public async dailyDateAwards(groupCode: string, page: string, limit: string) {
     try {
       const searchAwardDto = new SearchAwardDto()
       searchAwardDto.groupCode = groupCode
+      const total = await this.awardRepository.getDateAwards(searchAwardDto)
+
+      searchAwardDto.page = page
+      searchAwardDto.limit = limit
       const dateAwards = await this.awardRepository.getDateAwards(searchAwardDto)
 
       const awards = []
       for (const dateAward of dateAwards) {
         const searchAwardAndDateDto = new SearchAwardDto()
-        searchAwardAndDateDto.periodDate = formatDate(dateAward.periodDate)
+        searchAwardAndDateDto.periodDate = formatDate(dateAward.award_period_date)
         searchAwardAndDateDto.groupCode = groupCode
         searchAwardAndDateDto.limit = '1000'
         searchAwardAndDateDto.page = '1'
 
         const awardsDailyDateDto = new AwardsDailyDateDto()
-        awardsDailyDateDto.periodDate = dateAward.periodDate
+        awardsDailyDateDto.periodDate = dateAward.award_period_date
         awardsDailyDateDto.awards = []
 
         const [data] = await this.awardRepository.getAllAndPagination(searchAwardAndDateDto)
@@ -92,14 +96,12 @@ export class AwardService {
           awardDto.number = award.number
           awardDto.periodDate = award.periodDate
           awardDto.type = typeDto
-
           awardsDailyDateDto.awards.push(awardDto)
         }
-
         awards.push(awardsDailyDateDto)
       }
 
-      return awards
+      return { awards, count: total?.length }
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error
