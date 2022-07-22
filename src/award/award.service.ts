@@ -152,11 +152,21 @@ export class AwardService {
       const group = await this.groupService.findById(groupId)
       const type = await this.typeService.findById(typeId)
 
+      const searchAwardPeriodDateDto = new SearchAwardDto()
+      searchAwardPeriodDateDto.periodDate = periodDate
+      searchAwardPeriodDateDto.groupId = groupId
+      const awardPeriodDateNo = await this.awardRepository.getPeriodDateNo(searchAwardPeriodDateDto)
+
+      const searchAwardDto = new SearchAwardDto()
+      searchAwardDto.groupId = groupId
+      const awardNo = await this.awardRepository.getPeriodDateNo(searchAwardDto)
+
       const award = new Award()
       award.number = number
       award.periodDate = new Date(periodDate)
       award.group = group.data
       award.type = type.data
+      award.no = awardPeriodDateNo ? awardPeriodDateNo.no : awardNo ? awardNo.no + 1 : 1
 
       return await this.awardRepository.save(award)
     } catch (error) {

@@ -15,6 +15,10 @@ export class Award extends Base {
   @Column({ name: 'period_date', unique: false, nullable: false })
   periodDate: Date
 
+  @ApiProperty()
+  @Column({ nullable: false })
+  no: number
+
   // ---------- start relation ----------//
   @Index('IDX_GROUP_ID')
   @ManyToOne(() => Group, (group) => group.award)

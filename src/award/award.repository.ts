@@ -225,4 +225,52 @@ export class AwardRepository extends Repository<Award> {
       throw new InternalServerErrorException()
     }
   }
+
+  /**
+   * Get Period Date No
+   * @param searchAwardDto SearchAwardDto
+   */
+  async getPeriodDateNo(searchAwardDto: SearchAwardDto) {
+    const { periodDate, groupId, typeId } = searchAwardDto
+    try {
+      const query = this.createQueryBuilder('award')
+        .select([
+          'award',
+          'categories.id',
+          'categories.name',
+          'categories.code',
+          'group.id',
+          'group.name',
+          'group.code',
+          'group.logo',
+          'type.id',
+          'type.name'
+        ])
+        .leftJoin('award.group', 'group')
+        .leftJoin('group.categories', 'categories')
+        .leftJoin('award.type', 'type')
+        .where('award.isActive =:isActive', { isActive: true })
+        .orderBy('award.periodDate', 'DESC')
+
+      if (groupId) {
+        query.andWhere('group.id =:groupId', { groupId })
+      }
+
+      if (typeId) {
+        query.andWhere('type.id =:typeId', { typeId })
+      }
+
+      if (periodDate) {
+        query.andWhere('award.periodDate BETWEEN :startDate AND :endDate', {
+          startDate: new Date(`${periodDate} 00:00:00`),
+          endDate: new Date(`${periodDate} 23:59:59`)
+        })
+      }
+
+      return await query.getOne()
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw new InternalServerErrorException()
+    }
+  }
 }
