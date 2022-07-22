@@ -147,13 +147,13 @@ export class AwardRepository extends Repository<Award> {
         .andWhere('group.code =:groupCode', { groupCode })
         .distinctOn(['award.periodDate'])
 
-      if (page) {
-        query.offset(Number(page) - 1 || 1)
-      }
+      // if (page) {
+      //   query.offset(Number(page) || 1)
+      // }
 
-      if (limit) {
-        query.limit(Number(limit) || 10)
-      }
+      // if (limit) {
+      //   query.limit(Number(limit) || 10)
+      // }
 
       return query.orderBy('award.periodDate', 'DESC').addSelect('award.no').getRawMany()
     } catch (error) {

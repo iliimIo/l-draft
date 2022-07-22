@@ -9,7 +9,7 @@ import { Award } from './entities/award.entity'
 import { UpdateAwardDto } from './dto/update-award.dto'
 import { formatDate } from '../common/utils/date'
 import { AwardsDailyDateDto, AwardDto, TypeDto } from 'src/group/dto/response-group-daily.dto'
-
+import { generateNo } from '../common/utils/pagination'
 @Injectable()
 export class AwardService {
   private readonly logger = new Logger(AwardService.name)
@@ -76,33 +76,37 @@ export class AwardService {
       const dateAwards = await this.awardRepository.getDateAwards(searchAwardDto)
 
       const awards = []
-      for (const dateAward of dateAwards) {
-        const searchAwardAndDateDto = new SearchAwardDto()
-        searchAwardAndDateDto.periodDate = formatDate(dateAward.award_period_date)
-        searchAwardAndDateDto.groupCode = groupCode
-        searchAwardAndDateDto.limit = '1000'
-        searchAwardAndDateDto.page = '1'
+      for (const [i, dateAward] of dateAwards.entries()) {
+        const { min, max } = generateNo(total?.length, +limit, +page)
 
-        const awardsDailyDateDto = new AwardsDailyDateDto()
-        awardsDailyDateDto.periodDate = dateAward.award_period_date
-        awardsDailyDateDto.no = dateAward.award_no
-        awardsDailyDateDto.awards = []
+        if (i + 1 >= min && i + 1 <= max) {
+          const searchAwardAndDateDto = new SearchAwardDto()
+          searchAwardAndDateDto.periodDate = formatDate(dateAward.award_period_date)
+          searchAwardAndDateDto.groupCode = groupCode
+          searchAwardAndDateDto.limit = '1000'
+          searchAwardAndDateDto.page = '1'
 
-        const [data] = await this.awardRepository.getAllAndPagination(searchAwardAndDateDto)
-        for (const award of data) {
-          const typeDto = new TypeDto()
-          typeDto.name = award.type.name
+          const awardsDailyDateDto = new AwardsDailyDateDto()
+          awardsDailyDateDto.periodDate = dateAward.award_period_date
+          awardsDailyDateDto.no = dateAward.award_no
+          awardsDailyDateDto.awards = []
 
-          const awardDto = new AwardDto()
-          awardDto.number = award.number
-          awardDto.periodDate = award.periodDate
-          awardDto.type = typeDto
-          awardsDailyDateDto.awards.push(awardDto)
+          const [data] = await this.awardRepository.getAllAndPagination(searchAwardAndDateDto)
+          for (const award of data) {
+            const typeDto = new TypeDto()
+            typeDto.name = award.type.name
+
+            const awardDto = new AwardDto()
+            awardDto.number = award.number
+            awardDto.periodDate = award.periodDate
+            awardDto.type = typeDto
+            awardsDailyDateDto.awards.push(awardDto)
+          }
+          awards.push(awardsDailyDateDto)
         }
-        awards.push(awardsDailyDateDto)
       }
 
-      return { awards, count: total?.length - 1 }
+      return { awards, count: total?.length }
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error
