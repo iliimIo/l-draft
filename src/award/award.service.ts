@@ -85,6 +85,7 @@ export class AwardService {
 
         const awardsDailyDateDto = new AwardsDailyDateDto()
         awardsDailyDateDto.periodDate = dateAward.award_period_date
+        awardsDailyDateDto.no = dateAward.award_no
         awardsDailyDateDto.awards = []
 
         const [data] = await this.awardRepository.getAllAndPagination(searchAwardAndDateDto)
@@ -101,7 +102,7 @@ export class AwardService {
         awards.push(awardsDailyDateDto)
       }
 
-      return { awards, count: total?.length }
+      return { awards, count: total?.length - 1 }
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error

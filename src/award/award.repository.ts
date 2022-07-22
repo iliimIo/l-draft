@@ -2,7 +2,6 @@ import { EntityRepository, Repository } from 'typeorm'
 import { Award } from './entities/award.entity'
 import { SearchAwardDto } from './dto/search-award.dto'
 import { InternalServerErrorException, Logger } from '@nestjs/common'
-import { groupBy } from 'rxjs'
 
 @EntityRepository(Award)
 export class AwardRepository extends Repository<Award> {
@@ -149,14 +148,14 @@ export class AwardRepository extends Repository<Award> {
         .distinctOn(['award.periodDate'])
 
       if (page) {
-        query.offset(Number(page) || 1)
+        query.offset(Number(page) - 1 || 1)
       }
 
       if (limit) {
         query.limit(Number(limit) || 10)
       }
 
-      return query.orderBy('award.periodDate', 'DESC').getRawMany()
+      return query.orderBy('award.periodDate', 'DESC').addSelect('award.no').getRawMany()
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw new InternalServerErrorException()

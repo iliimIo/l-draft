@@ -22,6 +22,9 @@ export class AwardsDailyDateDto {
   @ApiProperty({ type: String })
   periodDate: string | Date
 
+  @ApiProperty({ type: Number })
+  no: number
+
   @ApiProperty({ type: () => TypeDto, isArray: true })
   awards: AwardDto[]
 }
