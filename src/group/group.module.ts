@@ -6,9 +6,15 @@ import { GroupService } from './group.service'
 import { GroupRepository } from './group.repository'
 import { AuthModule } from 'src/auth/auth.module'
 import { AwardModule } from 'src/award/award.module'
+import { CategoriesModule } from 'src/categories/categories.module'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([GroupRepository]), forwardRef(() => AuthModule), forwardRef(() => AwardModule)],
+  imports: [
+    TypeOrmModule.forFeature([GroupRepository]),
+    forwardRef(() => AuthModule),
+    forwardRef(() => AwardModule),
+    forwardRef(() => CategoriesModule)
+  ],
   controllers: [GroupController, GroupManagementController],
   providers: [GroupService],
   exports: [GroupService]

@@ -6,6 +6,9 @@ import { SearchGroupDto } from './dto/search-group.dto'
 import { CreateGroupDto } from './dto/create-group.dto'
 import { UpdateGroupDto } from './dto/update-group.dto'
 import { GroupsDailyDto } from './dto/response-group-daily.dto'
+import { CategoriesService } from 'src/categories/categories.service'
+import { SearchCategoriesDto } from 'src/categories/dto/search-categories.dto'
+import { Group } from './entities/group.entity'
 
 @Injectable()
 export class GroupService {
@@ -15,7 +18,9 @@ export class GroupService {
 
   constructor(
     @InjectRepository(GroupRepository)
-    private groupRepository: GroupRepository
+    private groupRepository: GroupRepository,
+    @Inject(forwardRef(() => CategoriesService))
+    private categoriesService: CategoriesService
   ) {}
 
   /**
@@ -122,20 +127,31 @@ export class GroupService {
       const searchGroupNameDto = new SearchGroupDto()
       searchGroupNameDto.name = createGroupDto.name
 
-      const categories = await this.findOne(searchGroupNameDto)
-      if (categories) {
+      const group = await this.findOne(searchGroupNameDto)
+      if (group) {
         throw new ConflictException('Group name already exist')
       }
 
       const searchGroupCodeDto = new SearchGroupDto()
       searchGroupCodeDto.code = createGroupDto.code
 
-      const categoriesCode = await this.findOne(searchGroupCodeDto)
-      if (categoriesCode) {
+      const groupCode = await this.findOne(searchGroupCodeDto)
+      if (groupCode) {
         throw new ConflictException('Group code already exist')
       }
 
-      return await this.groupRepository.save(createGroupDto)
+      const searchCategoriesDto = new SearchCategoriesDto()
+      searchCategoriesDto.id = createGroupDto.categoriesId
+      const categories = await this.categoriesService.findOne(searchCategoriesDto)
+      if (!categories) {
+        throw new NotFoundException('Categories not found')
+      }
+
+      const newGroup = new Group()
+      newGroup.name = createGroupDto.name
+      newGroup.code = createGroupDto.code
+      newGroup.categories = categories
+      return await this.groupRepository.save(newGroup)
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error
