@@ -1,4 +1,4 @@
-import { Injectable, Logger, HttpService } from '@nestjs/common'
+import { Injectable, Logger, HttpService, HttpException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { map } from 'rxjs/operators'
 import { firstValueFrom } from 'rxjs'
@@ -18,12 +18,21 @@ export class AuthService {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     }
-
-    return await firstValueFrom(
-      this.httpService
-        .get(`${this.configService.get('AUTH_SERVICE')}/auth/profile`, { headers })
-        .pipe(map((response) => response.data.data))
-    )
+    try {
+      return await firstValueFrom(
+        this.httpService
+          .get(`${this.configService.get('AUTH_SERVICE')}/auth/profile`, { headers })
+          .pipe(map((response) => response.data.data))
+      )
+    } catch (error) {
+      throw new HttpException(
+        {
+          statusCode: error.response.data.statusCode,
+          message: error.response.data.message
+        },
+        error.status
+      )
+    }
   }
 
   /**
@@ -37,10 +46,20 @@ export class AuthService {
       Authorization: `Bearer ${token}`
     }
 
-    return await firstValueFrom(
-      this.httpService
-        .get(`${this.configService.get('AUTH_SERVICE')}/user-refresh-token/verify`, { headers })
-        .pipe(map((response) => response.data.data))
-    )
+    try {
+      return await firstValueFrom(
+        this.httpService
+          .get(`${this.configService.get('AUTH_SERVICE')}/user-refresh-token/verify`, { headers })
+          .pipe(map((response) => response.data.data))
+      )
+    } catch (error) {
+      throw new HttpException(
+        {
+          statusCode: error.response.data.statusCode,
+          message: error.response.data.message
+        },
+        error.status
+      )
+    }
   }
 }
