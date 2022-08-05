@@ -30,9 +30,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException()
     }
     const user = await this.authService.findByUserId(token)
-    const userRefreshToken = await this.authService.getUserRefreshToken(token)
 
-    if (!user || !userRefreshToken.refreshToken) {
+    if (!user) {
       throw new UnauthorizedException()
     }
     user.token = token
