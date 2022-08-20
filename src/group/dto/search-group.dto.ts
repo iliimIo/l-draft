@@ -1,10 +1,17 @@
 import { Type } from 'class-transformer'
 import { ApiProperty, PickType } from '@nestjs/swagger'
-import { IsBoolean, IsOptional, IsString } from 'class-validator'
+import { IsOptional, IsString } from 'class-validator'
 
 import { BaseSearchDto } from 'src/common/base/dto/search.dto'
 
-export class SearchGroupDto extends PickType(BaseSearchDto, ['page', 'limit', 'sort', 'search', 'isDelete']) {
+export class SearchGroupDto extends PickType(BaseSearchDto, [
+  'page',
+  'limit',
+  'sort',
+  'search',
+  'isActive',
+  'isEnabled'
+]) {
   @ApiProperty({ type: String })
   @IsOptional()
   @IsString()
@@ -35,9 +42,9 @@ export class SearchGroupDto extends PickType(BaseSearchDto, ['page', 'limit', 's
   @Type(() => String)
   categoriesId: string
 
-  @ApiProperty({ type: Boolean })
+  @ApiProperty({ type: String })
   @IsOptional()
-  @IsBoolean()
-  @Type(() => Boolean)
-  isPublic: boolean
+  @IsString()
+  @Type(() => String)
+  awardTypeId: string
 }

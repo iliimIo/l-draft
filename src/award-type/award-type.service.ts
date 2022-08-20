@@ -63,6 +63,19 @@ export class AwardTypeService {
   }
 
   /**
+   * Find by ids
+   * @param ids uuid[]
+   */
+  public async findByIds(ids: string[]) {
+    try {
+      return await this.awardTypeRepository.findByIds(ids)
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw error
+    }
+  }
+
+  /**
    * Create
    * @param createTypeDto CreateTypeDto
    */

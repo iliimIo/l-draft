@@ -156,7 +156,7 @@ export class AwardService {
   public async create(createAwardDto: CreateAwardDto) {
     const { number, periodDate, groupId, typeId } = createAwardDto
     try {
-      const group = await this.groupService.findById(groupId)
+      // const group = await this.groupService.findById(groupId)
       // const type = await this.awardTypeService.findById(typeId)
 
       const searchAwardPeriodDateDto = new SearchAwardDto()
@@ -171,7 +171,7 @@ export class AwardService {
       const award = new Award()
       award.number = number
       award.periodDate = new Date(periodDate)
-      award.group = group.data
+      // award.group = group.data
       // award.type = type.data
       award.no = awardPeriodDateNo ? awardPeriodDateNo.no : awardNo ? awardNo.no + 1 : 1
 
@@ -202,8 +202,8 @@ export class AwardService {
       const updateAward = new Award()
 
       if (groupId) {
-        const group = await this.groupService.findById(groupId)
-        updateAward.group = group.data
+        // const group = await this.groupService.findById(groupId)
+        // updateAward.group = group.data
       }
 
       if (typeId) {

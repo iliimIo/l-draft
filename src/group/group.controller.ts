@@ -25,6 +25,7 @@ export class GroupController {
   @Get()
   public async all(@Res() res: Response, @Query() searchGroupDto: SearchGroupDto) {
     try {
+      searchGroupDto.isEnabled = true
       const { data, total } = await this.groupService.findAllAndPagination(searchGroupDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
@@ -92,7 +93,10 @@ export class GroupController {
   @Get('/:groupId')
   public async id(@Res() res: Response, @Param('groupId') groupId: string) {
     try {
-      const { data } = await this.groupService.findById(groupId)
+      const searchGroupDto = new SearchGroupDto()
+      searchGroupDto.id = groupId
+      searchGroupDto.isEnabled = true
+      const { data } = await this.groupService.findById(searchGroupDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
         message: `Can get group`,

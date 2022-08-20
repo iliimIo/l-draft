@@ -15,7 +15,7 @@ import { CategoriesModule } from 'src/categories/categories.module'
     forwardRef(() => AwardModule),
     forwardRef(() => CategoriesModule)
   ],
-  controllers: [GroupController, GroupManagementController],
+  controllers: [GroupManagementController, GroupController],
   providers: [GroupService],
   exports: [GroupService]
 })

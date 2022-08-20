@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, TableColumn, TableForeignKey } from 'typeorm'
 
-export class AddGroupToExchangeRate1660976449431 implements MigrationInterface {
+export class AddGroupToExchangeRate1661017947959 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.addColumn(
       'exchange_rate',

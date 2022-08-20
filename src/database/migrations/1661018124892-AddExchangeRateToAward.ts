@@ -1,11 +1,11 @@
 import { MigrationInterface, QueryRunner, TableColumn, TableForeignKey } from 'typeorm'
 
-export class AddGroupToAward1660974467980 implements MigrationInterface {
+export class AddExchangeRateToAward1661018124892 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.addColumn(
       'award',
       new TableColumn({
-        name: 'group_id',
+        name: 'exchange_rate_id',
         type: 'uuid',
         isNullable: false
       })
@@ -13,9 +13,9 @@ export class AddGroupToAward1660974467980 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'award',
       new TableForeignKey({
-        name: 'group',
-        columnNames: ['group_id'],
-        referencedTableName: 'group',
+        name: 'exchange_rate',
+        columnNames: ['exchange_rate_id'],
+        referencedTableName: 'exchange_rate',
         referencedColumnNames: ['id'],
         onDelete: 'SET NULL'
       })
@@ -23,7 +23,7 @@ export class AddGroupToAward1660974467980 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('award', 'group')
-    await queryRunner.dropColumn('award', 'group_id')
+    await queryRunner.dropForeignKey('award', 'exchange_rate')
+    await queryRunner.dropColumn('award', 'exchange_rate_id')
   }
 }

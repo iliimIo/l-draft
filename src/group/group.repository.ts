@@ -12,13 +12,10 @@ export class GroupRepository extends Repository<Group> {
    * @param searchGroupDto SearchGroupDto
    */
   async getAllAndPagination(searchGroupDto: SearchGroupDto) {
-    const { id, name, code, categoriesCode, categoriesId, isPublic, search, page, limit, sort, isDelete } =
+    const { id, name, code, categoriesCode, categoriesId, search, page, limit, sort, isActive, isEnabled } =
       searchGroupDto
     try {
-      const query = this.createQueryBuilder('group')
-        .select(['group'])
-        .leftJoin('group.categories', 'categories')
-        .where('group.isActive =:isActive', { isActive: true })
+      const query = this.createQueryBuilder('group').select(['group']).leftJoin('group.categories', 'categories')
 
       if (id) {
         query.andWhere('group.id =:id', { id })
@@ -40,22 +37,16 @@ export class GroupRepository extends Repository<Group> {
         query.andWhere('categories.id =:categoriesId', { categoriesId })
       }
 
-      if (isPublic) {
-        if (isPublic.toString() === 'true') {
-          query.andWhere('group.isPublic =:isPublic', { isPublic: true })
-        } else {
-          query.andWhere('group.isPublic =:isPublic', { isPublic: false })
-        }
-      }
-
       if (search) {
         query.andWhere('group.name LIKE :search OR group.code LIKE :search', { search: `%${search}%` })
       }
 
-      if (Boolean(isDelete)) {
-        query.withDeleted()
-      } else {
-        query.andWhere('group.isActive =:isActive', { isActive: true })
+      if (isEnabled) {
+        query.andWhere('group.isEnabled =:isEnabled', { isEnabled })
+      }
+
+      if (isActive) {
+        query.andWhere('group.isActive =:isActive', { isActive })
       }
 
       return await query
@@ -74,12 +65,9 @@ export class GroupRepository extends Repository<Group> {
    * @param searchGroupDto
    */
   async getOne(searchGroupDto: SearchGroupDto) {
-    const { id, name, code, categoriesCode, categoriesId, isPublic } = searchGroupDto
+    const { id, name, code, categoriesCode, categoriesId, isActive, isEnabled } = searchGroupDto
     try {
-      const query = this.createQueryBuilder('group')
-        .select(['group'])
-        .leftJoin('group.categories', 'categories')
-        .where('group.isActive =:isActive', { isActive: true })
+      const query = this.createQueryBuilder('group').select(['group']).leftJoin('group.categories', 'categories')
 
       if (id) {
         query.andWhere('group.id =:id', { id })
@@ -101,8 +89,12 @@ export class GroupRepository extends Repository<Group> {
         query.andWhere('categories.id =:categoriesId', { categoriesId })
       }
 
-      if (isPublic) {
-        query.andWhere('group.isPublic =:isPublic', { isPublic })
+      if (isEnabled) {
+        query.andWhere('group.isEnabled =:isEnabled', { isEnabled })
+      }
+
+      if (isActive) {
+        query.andWhere('group.isActive =:isActive', { isActive })
       }
 
       return await query.getOne()

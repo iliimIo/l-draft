@@ -80,4 +80,20 @@ export class AwardTypeRepository extends Repository<AwardType> {
       throw new InternalServerErrorException()
     }
   }
+
+  /**
+   * get ids
+   * @param ids uuid[]
+   */
+  async getIds(ids: string[]) {
+    try {
+      return await this.createQueryBuilder('award_type')
+        .select(['award_type'])
+        .where('award_type.id IN (:...ids)', { ids })
+        .getMany()
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw new InternalServerErrorException()
+    }
+  }
 }
