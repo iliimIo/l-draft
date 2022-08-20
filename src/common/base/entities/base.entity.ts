@@ -20,6 +20,10 @@ export class Base extends BaseEntity {
   isActive: boolean
 
   @ApiProperty()
+  @Column({ name: 'is_enabled', default: true, nullable: true })
+  isEnabled: boolean
+
+  @ApiProperty()
   @CreateDateColumn({ name: 'created_at', default: Date.now() })
   createdAt: Date
 
