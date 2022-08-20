@@ -8,4 +8,9 @@ export class UpdateTypeDto {
   @IsString()
   @Type(() => String)
   name: string
+
+  @ApiProperty({ type: Number })
+  @IsOptional()
+  @Type(() => Number)
+  digit: number
 }

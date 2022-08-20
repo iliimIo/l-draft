@@ -23,6 +23,11 @@ export class AwardTypeTable1660973063286 implements MigrationInterface {
             isUnique: true
           },
           {
+            name: 'digit', // sequential run number
+            type: 'integer',
+            default: 0
+          },
+          {
             name: 'is_active',
             type: 'boolean',
             default: true

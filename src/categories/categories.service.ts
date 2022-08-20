@@ -121,6 +121,16 @@ export class CategoriesService {
       searchCategoriesDto.name = createCategoriesDto.name
 
       const categories = await this.findOne(searchCategoriesDto)
+
+      if (categories && !categories?.isActive) {
+        await this.categoriesRepository.update(categories.id, {
+          isActive: true,
+          updatedAt: new Date()
+        })
+        const data = await this.categoriesRepository.findOne(categories.id)
+        return { data }
+      }
+
       if (categories) {
         throw new ConflictException(MESSAGE.CATEGORY.DUPLICATE_NAME)
       }

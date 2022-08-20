@@ -10,6 +10,10 @@ export class AwardType extends Base {
   @Column({ unique: true, nullable: false })
   name: string
 
+  @ApiProperty()
+  @Column({ nullable: false, default: 0 })
+  digit: number
+
   // ---------- start relation ----------//
 
   @OneToMany(() => Award, (award) => award.type)
