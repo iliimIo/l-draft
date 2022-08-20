@@ -1,9 +1,9 @@
 import { MigrationInterface, QueryRunner, TableColumn, TableForeignKey } from 'typeorm'
 
-export class AddGroupToAward1657213358064 implements MigrationInterface {
+export class AddGroupToRound1660975835309 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.addColumn(
-      'award',
+      'round',
       new TableColumn({
         name: 'group_id',
         type: 'uuid',
@@ -11,7 +11,7 @@ export class AddGroupToAward1657213358064 implements MigrationInterface {
       })
     )
     await queryRunner.createForeignKey(
-      'award',
+      'round',
       new TableForeignKey({
         name: 'group',
         columnNames: ['group_id'],
@@ -23,7 +23,7 @@ export class AddGroupToAward1657213358064 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('award', 'group')
-    await queryRunner.dropColumn('award', 'group_id')
+    await queryRunner.dropForeignKey('round', 'group')
+    await queryRunner.dropColumn('round', 'group_id')
   }
 }

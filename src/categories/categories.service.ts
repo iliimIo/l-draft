@@ -127,7 +127,7 @@ export class CategoriesService {
         throw new NotFoundException('Categories not found')
       }
 
-      return await this.categoriesRepository.update(categories.id, { isPublic: !categories.isPublic })
+      return await this.categoriesRepository.update(categories.id, { isEnabled: !categories.isEnabled })
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error

@@ -1,10 +1,10 @@
-import { MigrationInterface, QueryRunner, TableIndex, Table } from 'typeorm'
+import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm'
 
-export class GroupTable1657210191511 implements MigrationInterface {
+export class AwardTypeTable1660973063286 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'group',
+        name: 'award_type',
         columns: [
           {
             name: 'id',
@@ -23,26 +23,12 @@ export class GroupTable1657210191511 implements MigrationInterface {
             isUnique: true
           },
           {
-            name: 'code',
-            type: 'varchar',
-            length: '255',
-            isNullable: true,
-            isUnique: true
-          },
-          {
-            name: 'logo',
-            type: 'varchar',
-            length: '255',
-            isNullable: true,
-            isUnique: false
-          },
-          {
-            name: 'is_public',
+            name: 'is_active',
             type: 'boolean',
             default: true
           },
           {
-            name: 'is_active',
+            name: 'is_enabled',
             type: 'boolean',
             default: true
           },
@@ -66,15 +52,15 @@ export class GroupTable1657210191511 implements MigrationInterface {
     )
 
     await queryRunner.createIndex(
-      'group',
+      'award_type',
       new TableIndex({
-        name: 'IDX_GROUP_ID',
+        name: 'IDX_AWARD_TYPE_ID',
         columnNames: ['id']
       })
     )
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('group')
+    await queryRunner.dropTable('award_type')
   }
 }

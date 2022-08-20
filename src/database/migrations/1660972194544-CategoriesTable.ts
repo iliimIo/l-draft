@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm'
 
-export class CategoriesTable1657200483387 implements MigrationInterface {
+export class CategoriesTable1660972194544 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -30,12 +30,12 @@ export class CategoriesTable1657200483387 implements MigrationInterface {
             isUnique: true
           },
           {
-            name: 'is_public',
+            name: 'is_active',
             type: 'boolean',
             default: true
           },
           {
-            name: 'is_active',
+            name: 'is_enabled',
             type: 'boolean',
             default: true
           },

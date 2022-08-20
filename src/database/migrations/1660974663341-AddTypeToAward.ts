@@ -1,11 +1,11 @@
 import { MigrationInterface, QueryRunner, TableColumn, TableForeignKey } from 'typeorm'
 
-export class AddTypeToAward1657213596036 implements MigrationInterface {
+export class AddTypeToAward1660974663341 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.addColumn(
       'award',
       new TableColumn({
-        name: 'type_id',
+        name: 'award_type_id',
         type: 'uuid',
         isNullable: false
       })
@@ -13,9 +13,9 @@ export class AddTypeToAward1657213596036 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'award',
       new TableForeignKey({
-        name: 'type',
-        columnNames: ['type_id'],
-        referencedTableName: 'type',
+        name: 'award_type',
+        columnNames: ['award_type_id'],
+        referencedTableName: 'award_type',
         referencedColumnNames: ['id'],
         onDelete: 'SET NULL'
       })
@@ -23,7 +23,7 @@ export class AddTypeToAward1657213596036 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('award', 'type')
-    await queryRunner.dropColumn('award', 'type_id')
+    await queryRunner.dropForeignKey('award', 'award_type')
+    await queryRunner.dropColumn('award', 'award_type_id')
   }
 }

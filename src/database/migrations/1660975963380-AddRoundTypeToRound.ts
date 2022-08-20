@@ -1,21 +1,21 @@
 import { MigrationInterface, QueryRunner, TableColumn, TableForeignKey } from 'typeorm'
 
-export class AddCategoriesToGroupTable1658128704920 implements MigrationInterface {
+export class AddRoundTypeToRound1660975963380 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.addColumn(
-      'group',
+      'round',
       new TableColumn({
-        name: 'categories_id',
+        name: 'round_type_id',
         type: 'uuid',
         isNullable: false
       })
     )
     await queryRunner.createForeignKey(
-      'group',
+      'round',
       new TableForeignKey({
-        name: 'categories',
-        columnNames: ['categories_id'],
-        referencedTableName: 'categories',
+        name: 'round_type',
+        columnNames: ['round_type_id'],
+        referencedTableName: 'round_type',
         referencedColumnNames: ['id'],
         onDelete: 'SET NULL'
       })
@@ -23,7 +23,7 @@ export class AddCategoriesToGroupTable1658128704920 implements MigrationInterfac
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('group', 'categories')
-    await queryRunner.dropColumn('group', 'categories_id')
+    await queryRunner.dropForeignKey('round', 'round_type')
+    await queryRunner.dropColumn('round', 'round_type_id')
   }
 }

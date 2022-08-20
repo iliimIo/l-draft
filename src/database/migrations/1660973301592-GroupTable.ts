@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, TableIndex, Table } from 'typeorm'
 
-export class AwardTable1657212510691 implements MigrationInterface {
+export class GroupTable1660973301592 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'award',
+        name: 'group',
         columns: [
           {
             name: 'id',
@@ -16,23 +16,33 @@ export class AwardTable1657212510691 implements MigrationInterface {
             default: 'uuid_generate_v4()'
           },
           {
-            name: 'number',
+            name: 'name',
             type: 'varchar',
             length: '255',
-            isNullable: false
+            isNullable: false,
+            isUnique: true
           },
           {
-            name: 'period_date',
-            type: 'timestamp',
-            isNullable: false,
+            name: 'code',
+            type: 'varchar',
+            length: '255',
+            isNullable: true,
+            isUnique: true
+          },
+          {
+            name: 'logo',
+            type: 'varchar',
+            length: '255',
+            isNullable: true,
             isUnique: false
           },
           {
-            name: 'no',
-            type: 'integer'
+            name: 'is_active',
+            type: 'boolean',
+            default: true
           },
           {
-            name: 'is_active',
+            name: 'is_enabled',
             type: 'boolean',
             default: true
           },
@@ -56,15 +66,15 @@ export class AwardTable1657212510691 implements MigrationInterface {
     )
 
     await queryRunner.createIndex(
-      'award',
+      'group',
       new TableIndex({
-        name: 'IDX_AWARD_ID',
+        name: 'IDX_GROUP_ID',
         columnNames: ['id']
       })
     )
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('award')
+    await queryRunner.dropTable('group')
   }
 }

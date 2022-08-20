@@ -1,10 +1,10 @@
-import { MigrationInterface, QueryRunner, TableIndex, Table } from 'typeorm'
+import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm'
 
-export class TypeTable1657207761496 implements MigrationInterface {
+export class ExchangeRateTable1660976059501 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'type',
+        name: 'exchange_rate',
         columns: [
           {
             name: 'id',
@@ -23,7 +23,16 @@ export class TypeTable1657207761496 implements MigrationInterface {
             isUnique: true
           },
           {
+            name: 'exchange',
+            type: 'integer'
+          },
+          {
             name: 'is_active',
+            type: 'boolean',
+            default: true
+          },
+          {
+            name: 'is_enabled',
             type: 'boolean',
             default: true
           },
@@ -47,15 +56,15 @@ export class TypeTable1657207761496 implements MigrationInterface {
     )
 
     await queryRunner.createIndex(
-      'type',
+      'exchange_rate',
       new TableIndex({
-        name: 'IDX_TYPE_ID',
+        name: 'IDX_EXCHANGE_RATE_ID',
         columnNames: ['id']
       })
     )
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('type')
+    await queryRunner.dropTable('exchange_rate')
   }
 }
