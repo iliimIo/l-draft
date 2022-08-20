@@ -10,6 +10,8 @@ import { UpdateAwardDto } from './dto/update-award.dto'
 import { formatDate } from '../common/utils/date'
 import { AwardsDailyDateDto, AwardDto, TypeDto } from 'src/group/dto/response-group-daily.dto'
 import { generateNo } from '../common/utils/pagination'
+import { MESSAGE } from '../common/message/response'
+
 @Injectable()
 export class AwardService {
   private readonly logger = new Logger(AwardService.name)
@@ -137,7 +139,7 @@ export class AwardService {
       const award = await this.findOne(searchAwardDto)
 
       if (!award) {
-        throw new NotFoundException('Award not found')
+        throw new NotFoundException(MESSAGE.AWARD.NOT_FOUND)
       }
 
       return { data: award }
@@ -194,7 +196,7 @@ export class AwardService {
       const award = await this.findOne(searchAwardDto)
 
       if (!award) {
-        throw new NotFoundException('Award not found')
+        throw new NotFoundException(MESSAGE.AWARD.NOT_FOUND)
       }
 
       const updateAward = new Award()
@@ -238,7 +240,7 @@ export class AwardService {
       const award = await this.findOne(searchAwardDto)
 
       if (!award) {
-        throw new NotFoundException('Award not found')
+        throw new NotFoundException(MESSAGE.AWARD.NOT_FOUND)
       }
 
       await this.awardRepository.update(award.id, {

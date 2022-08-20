@@ -13,7 +13,7 @@ import { AwardModule } from 'src/award/award.module'
     forwardRef(() => AuthModule),
     forwardRef(() => AwardModule)
   ],
-  controllers: [CategoriesController, CategoriesManagementController],
+  controllers: [CategoriesManagementController, CategoriesController],
   providers: [CategoriesService],
   exports: [CategoriesService]
 })

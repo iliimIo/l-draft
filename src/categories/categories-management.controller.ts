@@ -1,4 +1,17 @@
-import { Body, Controller, Delete, HttpException, HttpStatus, Param, Patch, Post, Res, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Res,
+  UseGuards
+} from '@nestjs/common'
 import {
   ApiBearerAuth,
   ApiInternalServerErrorResponse,
@@ -10,12 +23,13 @@ import {
 import { AuthGuard } from '@nestjs/passport'
 import { Response } from 'express'
 import { CategoriesService } from './categories.service'
-import { ResponseCategoriesDto } from './dto/response-categories.dto'
+import { ResponseCategoriesDto, ResponseCategoriesListDto } from './dto/response-categories.dto'
 import { ResponseDto } from 'src/common/base/dto/response.dto'
 import { CreateCategoriesDto } from './dto/create-categories.dto'
 import { UpdateCategoriesDto } from './dto/update-categories.dto'
 import RoleGuard from 'src/common/guards/role.guard'
 import { Roles } from 'src/common/base/enum/role.enum'
+import { SearchCategoriesDto } from './dto/search-categories.dto'
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard(), RoleGuard([Roles.ADMIN]))
@@ -28,6 +42,38 @@ import { Roles } from 'src/common/base/enum/role.enum'
 @Controller('categories/management')
 export class CategoriesManagementController {
   constructor(private readonly categoriesService: CategoriesService) {}
+
+  @ApiOkResponse({
+    type: ResponseCategoriesListDto,
+    description: 'Get categories list',
+    status: HttpStatus.OK
+  })
+  @ApiInternalServerErrorResponse({
+    description: `Can't get categories`,
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    type: ResponseDto
+  })
+  @Get()
+  public async all(@Res() res: Response, @Query() searchCategoriesDto: SearchCategoriesDto) {
+    try {
+      searchCategoriesDto.isActive = true
+      const { data, total } = await this.categoriesService.findAllAndPagination(searchCategoriesDto)
+      return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
+        message: `Can get categories list`,
+        data,
+        total
+      })
+    } catch (error) {
+      throw new HttpException(
+        {
+          statusCode: error.response.statusCode,
+          message: error.response.message
+        },
+        error.status
+      )
+    }
+  }
 
   @ApiOkResponse({
     type: ResponseCategoriesDto,
@@ -44,13 +90,17 @@ export class CategoriesManagementController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     type: ResponseDto
   })
-  @Patch('status/:categoriesId')
-  public async status(@Res() res: Response, @Param('categoriesId') categoriesId: string) {
+  @Get('/:categoriesId')
+  public async id(@Res() res: Response, @Param('categoriesId') categoriesId: string) {
     try {
-      await this.categoriesService.status(categoriesId)
+      const searchCategoriesDto = new SearchCategoriesDto()
+      searchCategoriesDto.id = categoriesId
+      searchCategoriesDto.isActive = true
+      const { data } = await this.categoriesService.findById(searchCategoriesDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
-        message: `Can update categories status`
+        message: `Can get categories`,
+        data
       })
     } catch (error) {
       throw new HttpException(
@@ -76,10 +126,11 @@ export class CategoriesManagementController {
   @Post()
   public async create(@Res() res: Response, @Body() createCategoriesDto: CreateCategoriesDto) {
     try {
-      await this.categoriesService.create(createCategoriesDto)
+      const { data } = await this.categoriesService.create(createCategoriesDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
-        message: `Create categories successfully`
+        message: `Create categories successfully`,
+        data
       })
     } catch (error) {
       throw new HttpException(
@@ -118,6 +169,41 @@ export class CategoriesManagementController {
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
         message: `Update categories successfully`
+      })
+    } catch (error) {
+      throw new HttpException(
+        {
+          statusCode: error.response.statusCode,
+          message: error.response.message
+        },
+        error.status
+      )
+    }
+  }
+
+  @ApiOkResponse({
+    type: ResponseDto,
+    description: 'Enable categories',
+    status: HttpStatus.OK
+  })
+  @ApiNotFoundResponse({
+    type: ResponseDto,
+    description: `Can't enable categories`,
+    status: HttpStatus.NOT_FOUND
+  })
+  @ApiInternalServerErrorResponse({
+    description: `Can't enable categories`,
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    type: ResponseDto
+  })
+  @Patch('enable/:categoriesId')
+  public async enable(@Res() res: Response, @Param('categoriesId') categoriesId: string) {
+    try {
+      const { data } = await this.categoriesService.enable(categoriesId)
+      return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
+        message: `Enable categories successfully`,
+        data
       })
     } catch (error) {
       throw new HttpException(

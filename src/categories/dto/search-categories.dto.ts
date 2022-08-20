@@ -4,7 +4,15 @@ import { IsBoolean, IsOptional, IsString } from 'class-validator'
 
 import { BaseSearchDto } from 'src/common/base/dto/search.dto'
 
-export class SearchCategoriesDto extends PickType(BaseSearchDto, ['page', 'limit', 'sort', 'search', 'isDelete']) {
+export class SearchCategoriesDto extends PickType(BaseSearchDto, [
+  'page',
+  'limit',
+  'sort',
+  'search',
+  'isDelete',
+  'isActive',
+  'isEnabled'
+] as const) {
   @ApiProperty({ type: String })
   @IsOptional()
   @IsString()
@@ -22,10 +30,4 @@ export class SearchCategoriesDto extends PickType(BaseSearchDto, ['page', 'limit
   @IsString()
   @Type(() => String)
   code: string
-
-  @ApiProperty({ type: Boolean })
-  @IsOptional()
-  @IsBoolean()
-  @Type(() => Boolean)
-  isPublic: boolean
 }

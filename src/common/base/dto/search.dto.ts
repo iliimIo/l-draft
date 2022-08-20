@@ -26,4 +26,14 @@ export class BaseSearchDto {
   @IsOptional()
   @IsString()
   isDelete: boolean
+
+  @ApiProperty({ type: Boolean })
+  @IsOptional()
+  @IsString()
+  isActive: boolean
+
+  @ApiProperty({ type: Boolean })
+  @IsOptional()
+  @IsString()
+  isEnabled: boolean
 }

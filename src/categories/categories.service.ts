@@ -1,3 +1,4 @@
+import { UpdateAwardDto } from './../award/dto/update-award.dto'
 import { ConflictException, forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { CategoriesRepository } from './categories.repository'
@@ -6,6 +7,7 @@ import { CreateCategoriesDto } from './dto/create-categories.dto'
 import { UpdateCategoriesDto } from './dto/update-categories.dto'
 import { AwardService } from 'src/award/award.service'
 import { CategoriesDailyDto, GroupsDto, AwardDto, TypeDto } from './dto/response-categories-daily.dto'
+import { MESSAGE } from '../common/message/response'
 
 @Injectable()
 export class CategoriesService {
@@ -17,20 +19,6 @@ export class CategoriesService {
     @Inject(forwardRef(() => AwardService))
     private awardService: AwardService
   ) {}
-
-  /**
-   * Find all and pagination
-   * @param searchCategoriesDto SearchCategoriesDto
-   */
-  public async findAllAndPagination(searchCategoriesDto: SearchCategoriesDto) {
-    try {
-      const [categories, total] = await this.categoriesRepository.getAllAndPagination(searchCategoriesDto)
-      return { data: categories, total }
-    } catch (error) {
-      this.logger.error(JSON.stringify(error))
-      throw error
-    }
-  }
 
   /**
    * Find daily award
@@ -78,6 +66,20 @@ export class CategoriesService {
   }
 
   /**
+   * Find all and pagination
+   * @param searchCategoriesDto SearchCategoriesDto
+   */
+  public async findAllAndPagination(searchCategoriesDto: SearchCategoriesDto) {
+    try {
+      const [categories, total] = await this.categoriesRepository.getAllAndPagination(searchCategoriesDto)
+      return { data: categories, total }
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw error
+    }
+  }
+
+  /**
    * Find one
    * @param searchCategoriesDto SearchCategoriesDto
    */
@@ -92,17 +94,14 @@ export class CategoriesService {
 
   /**
    * Find by id
-   * @param categoriesId string
+   * @param searchCategoriesDto SearchCategoriesDto
    */
-  public async findById(categoriesId: string) {
+  public async findById(searchCategoriesDto: SearchCategoriesDto) {
     try {
-      const searchCategoriesDto = new SearchCategoriesDto()
-      searchCategoriesDto.id = categoriesId
-      searchCategoriesDto.isPublic = true
       const categories = await this.findOne(searchCategoriesDto)
 
       if (!categories) {
-        throw new NotFoundException('Categories not found')
+        throw new NotFoundException(MESSAGE.CATEGORY.NOT_FOUND)
       }
 
       return { data: categories }
@@ -112,30 +111,8 @@ export class CategoriesService {
     }
   }
 
-  /** Active a status
-   *  @param categoriesId string
-   */
-  public async status(categoriesId: string) {
-    try {
-      const searchCategoriesDto = new SearchCategoriesDto()
-      searchCategoriesDto.id = categoriesId
-      searchCategoriesDto
-
-      const categories = await this.findOne(searchCategoriesDto)
-
-      if (!categories) {
-        throw new NotFoundException('Categories not found')
-      }
-
-      return await this.categoriesRepository.update(categories.id, { isEnabled: !categories.isEnabled })
-    } catch (error) {
-      this.logger.error(JSON.stringify(error))
-      throw error
-    }
-  }
-
   /**
-   * Create categories
+   * Create
    * @param createBankingDto CreateBankingDto
    */
   public async create(createCategoriesDto: CreateCategoriesDto) {
@@ -145,7 +122,7 @@ export class CategoriesService {
 
       const categories = await this.findOne(searchCategoriesDto)
       if (categories) {
-        throw new ConflictException('Categories name already exist')
+        throw new ConflictException(MESSAGE.CATEGORY.DUPLICATE_NAME)
       }
 
       const searchCategoriesCodeDto = new SearchCategoriesDto()
@@ -153,10 +130,11 @@ export class CategoriesService {
 
       const categoriesCode = await this.findOne(searchCategoriesCodeDto)
       if (categoriesCode) {
-        throw new ConflictException('Categories code already exist')
+        throw new ConflictException(MESSAGE.CATEGORY.DUPLICATE_CODE)
       }
 
-      return await this.categoriesRepository.save(createCategoriesDto)
+      const data = await this.categoriesRepository.save(createCategoriesDto)
+      return { data }
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error
@@ -164,8 +142,8 @@ export class CategoriesService {
   }
 
   /**
-   * Update categories
-   * @param categories string
+   * Update
+   * @param categoriesId uuid
    * @param updateCategoriesDto UpdateCategoriesDto
    */
   public async update(categoriesId: string, updateCategoriesDto: UpdateCategoriesDto) {
@@ -175,16 +153,16 @@ export class CategoriesService {
       const categories = await this.findOne(searchCategoriesDto)
 
       if (!categories) {
-        throw new NotFoundException('Categories not found')
+        throw new NotFoundException(MESSAGE.CATEGORY.NOT_FOUND)
       }
 
       if (updateCategoriesDto.name) {
         const searchCategoriesNameDto = new SearchCategoriesDto()
         searchCategoriesNameDto.name = updateCategoriesDto.name
-        const categoriesNameDto = await this.findOne(searchCategoriesNameDto)
 
-        if (categoriesNameDto) {
-          throw new ConflictException('Categories name already exist')
+        const categoriesNameDto = await this.findOne(searchCategoriesNameDto)
+        if (categoriesNameDto && categoriesNameDto.id !== categoriesId) {
+          throw new ConflictException(MESSAGE.CATEGORY.DUPLICATE_NAME)
         }
       }
 
@@ -193,9 +171,8 @@ export class CategoriesService {
         searchCategoriesCodeDto.code = updateCategoriesDto.code
 
         const categoriesCode = await this.findOne(searchCategoriesCodeDto)
-
-        if (categoriesCode) {
-          throw new ConflictException('Categories code already exist')
+        if (categoriesCode && categoriesCode.id !== categoriesId) {
+          throw new ConflictException(MESSAGE.CATEGORY.DUPLICATE_CODE)
         }
       }
 
@@ -210,8 +187,35 @@ export class CategoriesService {
   }
 
   /**
-   * Delete categories
-   * @param categoriesId string
+   * Enable
+   * @param categoriesId uuid
+   */
+  public async enable(categoriesId: string) {
+    try {
+      const searchCategoriesDto = new SearchCategoriesDto()
+      searchCategoriesDto.id = categoriesId
+      searchCategoriesDto.isActive = true
+
+      const categories = await this.findOne(searchCategoriesDto)
+      if (!categories) {
+        throw new NotFoundException(MESSAGE.CATEGORY.NOT_FOUND)
+      }
+
+      await this.categoriesRepository.update(categories.id, {
+        isEnabled: !categories.isEnabled,
+        updatedAt: new Date()
+      })
+      const data = await this.findOne(searchCategoriesDto)
+      return { data }
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw error
+    }
+  }
+
+  /**
+   * Delete
+   * @param categoriesId uuid
    */
   public async delete(categoriesId: string) {
     try {
@@ -220,14 +224,13 @@ export class CategoriesService {
       const categories = await this.findOne(searchCategoriesDto)
 
       if (!categories) {
-        throw new NotFoundException('Categories not found')
+        throw new NotFoundException(MESSAGE.CATEGORY.NOT_FOUND)
       }
 
       await this.categoriesRepository.update(categories.id, {
         isActive: false,
-        deletedAt: new Date()
+        updatedAt: new Date()
       })
-      return await this.categoriesRepository.softDelete(categories.id)
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error

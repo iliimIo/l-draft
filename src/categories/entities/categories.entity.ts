@@ -14,10 +14,6 @@ export class Categories extends Base {
   @Column({ unique: true, nullable: true })
   code: string
 
-  // @ApiProperty()
-  // @Column({ name: 'is_public', default: true, nullable: true })
-  // isPublic: boolean
-
   // ---------- start relation ----------//
   @OneToMany(() => Group, (group) => group.categories)
   @JoinColumn({ name: 'group_id' })

@@ -12,20 +12,18 @@ export class CategoriesRepository extends Repository<Categories> {
    * @param searchCategoriesDto SearchCategoriesDto
    */
   async getAllAndPagination(searchCategoriesDto: SearchCategoriesDto) {
-    const { id, name, code, isPublic, search, page, limit, sort, isDelete } = searchCategoriesDto
+    const { id, name, code, search, page, limit, sort, isActive, isEnabled } = searchCategoriesDto
     try {
-      const query = this.createQueryBuilder('categories')
-        .select([
-          'categories.id',
-          'categories.name',
-          'categories.code',
-          'categories.isPublic',
-          'categories.isActive',
-          'categories.createdAt',
-          'categories.updatedAt',
-          'categories.deletedAt'
-        ])
-        .where('categories.isActive =:isActive', { isActive: true })
+      const query = this.createQueryBuilder('categories').select([
+        'categories.id',
+        'categories.name',
+        'categories.code',
+        'categories.isEnabled',
+        'categories.isActive',
+        'categories.createdAt',
+        'categories.updatedAt',
+        'categories.deletedAt'
+      ])
 
       if (id) {
         query.andWhere('categories.id =:id', { id })
@@ -39,24 +37,18 @@ export class CategoriesRepository extends Repository<Categories> {
         query.andWhere('categories.code =:code', { code })
       }
 
-      if (isPublic) {
-        if (isPublic.toString() === 'true') {
-          query.andWhere('categories.isPublic =:isPublic', { isPublic: true })
-        } else {
-          query.andWhere('categories.isPublic =:isPublic', { isPublic: false })
-        }
-      }
-
       if (search) {
         query.andWhere('categories.name LIKE :search OR categories.code LIKE :search', {
           search: `%${search}%`
         })
       }
 
-      if (Boolean(isDelete)) {
-        query.withDeleted()
-      } else {
-        query.andWhere('categories.isActive =:isActive', { isActive: true })
+      if (isEnabled) {
+        query.andWhere('categories.isEnabled =:isEnabled', { isEnabled })
+      }
+
+      if (isActive) {
+        query.andWhere('categories.isActive =:isActive', { isActive })
       }
 
       return await query
@@ -64,6 +56,41 @@ export class CategoriesRepository extends Repository<Categories> {
         .limit(Number(limit || 10))
         .addOrderBy('categories.createdAt', sort == 'DESC' ? 'DESC' : 'ASC')
         .getManyAndCount()
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw new InternalServerErrorException()
+    }
+  }
+
+  /**
+   * Get One
+   * @param searchCategoriesDto SearchCategoriesDto
+   */
+  async getOne(searchCategoriesDto: SearchCategoriesDto) {
+    const { id, name, code, isActive, isEnabled } = searchCategoriesDto
+    try {
+      const query = this.createQueryBuilder('categories').select(['categories'])
+      if (id) {
+        query.andWhere('categories.id =:id', { id })
+      }
+
+      if (name) {
+        query.andWhere('categories.name =:name', { name })
+      }
+
+      if (code) {
+        query.andWhere('categories.code =:code', { code })
+      }
+
+      if (isEnabled) {
+        query.andWhere('categories.isEnabled =:isEnabled', { isEnabled })
+      }
+
+      if (isActive) {
+        query.andWhere('categories.isActive =:isActive', { isActive })
+      }
+
+      return await query.getOne()
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw new InternalServerErrorException()
@@ -84,40 +111,6 @@ export class CategoriesRepository extends Repository<Categories> {
         .andWhere('group.isActive =:isActive', { isActive: true })
 
       return await query.addOrderBy('categories.createdAt', 'DESC').getMany()
-    } catch (error) {
-      this.logger.error(JSON.stringify(error))
-      throw new InternalServerErrorException()
-    }
-  }
-
-  /**
-   * Get One
-   * @param searchCategoriesDto SearchCategoriesDto
-   */
-  async getOne(searchCategoriesDto: SearchCategoriesDto) {
-    const { id, name, code, isPublic } = searchCategoriesDto
-    try {
-      const query = this.createQueryBuilder('categories')
-        .select(['categories'])
-        .where('categories.isActive =:isActive', { isActive: true })
-
-      if (id) {
-        query.andWhere('categories.id =:id', { id })
-      }
-
-      if (name) {
-        query.andWhere('categories.name =:name', { name })
-      }
-
-      if (code) {
-        query.andWhere('categories.code =:code', { code })
-      }
-
-      if (isPublic) {
-        query.andWhere('categories.isPublic =:isPublic', { isPublic })
-      }
-
-      return await query.getOne()
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw new InternalServerErrorException()

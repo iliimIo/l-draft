@@ -25,6 +25,7 @@ export class CategoriesController {
   @Get()
   public async all(@Res() res: Response, @Query() searchCategoriesDto: SearchCategoriesDto) {
     try {
+      searchCategoriesDto.isEnabled = true
       const { data, total } = await this.categoriesService.findAllAndPagination(searchCategoriesDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
@@ -91,7 +92,10 @@ export class CategoriesController {
   @Get('/:categoriesId')
   public async id(@Res() res: Response, @Param('categoriesId') categoriesId: string) {
     try {
-      const { data } = await this.categoriesService.findById(categoriesId)
+      const searchCategoriesDto = new SearchCategoriesDto()
+      searchCategoriesDto.id = categoriesId
+      searchCategoriesDto.isEnabled = true
+      const { data } = await this.categoriesService.findById(searchCategoriesDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
         message: `Can get categories`,
