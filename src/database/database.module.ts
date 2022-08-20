@@ -13,13 +13,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
         username: configService.get('DATABASE_USERNAME'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: ['dist/entities/*.entity{ .ts,.js}'],
+        entities: ['src/entities/*.entity{ .ts,.js}'],
         migrationsTableName: 'migrations_typeorm',
         migrations: ['dist/database/migrations/*{.ts,.js}', 'dist/database/seeders/*{.ts,.js}'],
         migrationsRun: true,
         autoLoadEntities: true,
-        synchronize: configService.get('DATABASE_SYNC')
-        // logging: ['query', 'error']
+        synchronize: configService.get('DATABASE_SYNC'),
+        logging: ['query', 'error']
       })
     })
   ]

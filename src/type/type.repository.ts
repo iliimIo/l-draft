@@ -1,10 +1,10 @@
 import { InternalServerErrorException, Logger } from '@nestjs/common'
 import { EntityRepository, Repository } from 'typeorm'
-import { Type } from './entities/type.entity'
+import { AwardType } from './entities/award-type.entity'
 import { SearchTypeDto } from './dto/search-type.dto'
 
-@EntityRepository(Type)
-export class TypeRepository extends Repository<Type> {
+@EntityRepository(AwardType)
+export class TypeRepository extends Repository<AwardType> {
   private logger = new Logger(TypeRepository.name)
 
   /**
