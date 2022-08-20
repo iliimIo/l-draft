@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner } from 'typeorm'
-import { Type } from 'src/type/entities/type.entity'
+import { AwardType } from 'src/type/entities/award-type.entity'
 
-export class SeedeType1657207905539 implements MigrationInterface {
+export class SeedeType1660986862564 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.manager.save(
-      queryRunner.manager.create<Type>(Type, [
+      queryRunner.manager.create<AwardType>(AwardType, [
         { name: 'รางวัลที่ 1' },
         { name: '2 ตัวบน' },
         { name: '2 ตัวล่าง' },

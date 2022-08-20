@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm'
 import { Base } from 'src/common/base/entities/base.entity'
 import { Group } from 'src/group/entities/group.entity'
-import { Type } from 'src/type/entities/type.entity'
+import { AwardType } from 'src/type/entities/award-type.entity'
 
 @Entity('award')
 @Index('IDX_AWARD_ID')
@@ -26,9 +26,9 @@ export class Award extends Base {
   group: Group
 
   @Index('IDX_TYPE_ID')
-  @ManyToOne(() => Type, (type) => type.award)
-  @JoinColumn({ name: 'type_id' })
-  type: Type
+  @ManyToOne(() => AwardType, (type) => type.award)
+  @JoinColumn({ name: 'award_type_id' })
+  type: AwardType
 
   // ---------- end relation ----------//
 }

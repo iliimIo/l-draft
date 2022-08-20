@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm'
 import { Categories } from 'src/categories/entities/categories.entity'
 
-export class SeedeCategories1657200737874 implements MigrationInterface {
+export class SeedeCategories1660986805352 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.manager.save(
       queryRunner.manager.create<Categories>(Categories, [
