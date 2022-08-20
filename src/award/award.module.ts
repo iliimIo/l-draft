@@ -6,13 +6,13 @@ import { AwardController } from './award.controller'
 import { AwardService } from './award.service'
 import { AwardRepository } from './award.repository'
 import { AuthModule } from 'src/auth/auth.module'
-import { TypeModule } from 'src/type/type.module'
+import { AwardTypeModule } from 'src/award-type/award-type.module'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([AwardRepository]),
     forwardRef(() => AuthModule),
-    forwardRef(() => TypeModule),
+    forwardRef(() => AwardTypeModule),
     forwardRef(() => GroupModule)
   ],
   controllers: [AwardController, AwardManagementController],

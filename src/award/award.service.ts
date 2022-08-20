@@ -4,7 +4,7 @@ import { AwardRepository } from './award.repository'
 import { CreateAwardDto } from './dto/create-award.dto'
 import { SearchAwardDto } from './dto/search-award.dto'
 import { GroupService } from 'src/group/group.service'
-import { TypeService } from 'src/type/type.service'
+import { AwardTypeService } from 'src/award-type/award-type.service'
 import { Award } from './entities/award.entity'
 import { UpdateAwardDto } from './dto/update-award.dto'
 import { formatDate } from '../common/utils/date'
@@ -21,8 +21,8 @@ export class AwardService {
     private awardRepository: AwardRepository,
     @Inject(forwardRef(() => GroupService))
     private groupService: GroupService,
-    @Inject(forwardRef(() => TypeService))
-    private typeService: TypeService
+    @Inject(forwardRef(() => AwardTypeService))
+    private awardTypeService: AwardTypeService
   ) {}
 
   /**
@@ -157,7 +157,7 @@ export class AwardService {
     const { number, periodDate, groupId, typeId } = createAwardDto
     try {
       const group = await this.groupService.findById(groupId)
-      const type = await this.typeService.findById(typeId)
+      // const type = await this.awardTypeService.findById(typeId)
 
       const searchAwardPeriodDateDto = new SearchAwardDto()
       searchAwardPeriodDateDto.periodDate = periodDate
@@ -172,7 +172,7 @@ export class AwardService {
       award.number = number
       award.periodDate = new Date(periodDate)
       award.group = group.data
-      award.type = type.data
+      // award.type = type.data
       award.no = awardPeriodDateNo ? awardPeriodDateNo.no : awardNo ? awardNo.no + 1 : 1
 
       return await this.awardRepository.save(award)
@@ -207,8 +207,8 @@ export class AwardService {
       }
 
       if (typeId) {
-        const type = await this.typeService.findById(typeId)
-        updateAward.type = type.data
+        // const type = await this.awardTypeService.findById(typeId)
+        // updateAward.type = type.data
       }
 
       if (number) {

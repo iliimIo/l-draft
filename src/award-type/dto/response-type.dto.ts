@@ -3,12 +3,15 @@ import { ApiProperty, OmitType } from '@nestjs/swagger'
 import { ResponseAndDataDto } from 'src/common/base/dto/response.dto'
 import { IsArray } from 'class-validator'
 
-export class TypeDto {
+export class AwardTypeDto {
   @ApiProperty({ type: String })
   id: string
 
   @ApiProperty({ type: String })
   name: string
+
+  @ApiProperty({ type: Boolean })
+  isEnabled: boolean
 
   @ApiProperty({ type: Boolean })
   isActive: boolean
@@ -20,16 +23,16 @@ export class TypeDto {
   updatedAt: Date
 }
 
-export class ResponseTypeListDto extends OmitType(ResponseAndDataDto, ['data'] as const) {
-  @ApiProperty({ type: () => TypeDto, isArray: true })
+export class ResponseAwardTypeListDto extends OmitType(ResponseAndDataDto, ['data'] as const) {
+  @ApiProperty({ type: () => AwardTypeDto, isArray: true })
   @IsArray()
-  data: TypeDto[]
+  data: AwardTypeDto[]
 
   @ApiProperty()
   total: number
 }
 
-export class ResponseTypeDto extends OmitType(ResponseAndDataDto, ['data'] as const) {
-  @ApiProperty({ type: TypeDto })
-  data: TypeDto
+export class ResponseAwardTypeDto extends OmitType(ResponseAndDataDto, ['data'] as const) {
+  @ApiProperty({ type: AwardTypeDto })
+  data: AwardTypeDto
 }

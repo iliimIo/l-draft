@@ -1,18 +1,18 @@
 import { Controller, Get, HttpException, HttpStatus, Param, Query, Res } from '@nestjs/common'
 import { ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
 import { Response } from 'express'
-import { ResponseTypeListDto, ResponseTypeDto } from './dto/response-type.dto'
-import { SearchTypeDto } from './dto/search-type.dto'
+import { ResponseAwardTypeListDto, ResponseAwardTypeDto } from './dto/response-type.dto'
+import { SearchAwardTypeDto } from './dto/search-type.dto'
 import { ResponseDto } from 'src/common/base/dto/response.dto'
-import { TypeService } from './type.service'
+import { AwardTypeService } from './award-type.service'
 
 @ApiTags('type')
-@Controller('type')
-export class TypeController {
-  constructor(private readonly typeService: TypeService) {}
+@Controller('award-type')
+export class AwardTypeController {
+  constructor(private readonly awardTypeService: AwardTypeService) {}
 
   @ApiOkResponse({
-    type: ResponseTypeListDto,
+    type: ResponseAwardTypeListDto,
     description: 'Get type list',
     status: HttpStatus.OK
   })
@@ -22,9 +22,10 @@ export class TypeController {
     type: ResponseDto
   })
   @Get()
-  public async all(@Res() res: Response, @Query() searchTypeDto: SearchTypeDto) {
+  public async all(@Res() res: Response, @Query() searchAwardTypeDto: SearchAwardTypeDto) {
     try {
-      const { data, total } = await this.typeService.findAllAndPagination(searchTypeDto)
+      searchAwardTypeDto.isEnabled = true
+      const { data, total } = await this.awardTypeService.findAllAndPagination(searchAwardTypeDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
         message: `Can get type list`,
@@ -43,7 +44,7 @@ export class TypeController {
   }
 
   @ApiOkResponse({
-    type: ResponseTypeDto,
+    type: ResponseAwardTypeDto,
     description: 'Get type',
     status: HttpStatus.OK
   })
@@ -57,10 +58,13 @@ export class TypeController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     type: ResponseDto
   })
-  @Get('/:typeId')
-  public async id(@Res() res: Response, @Param('typeId') typeId: string) {
+  @Get('/:awardTypeId')
+  public async id(@Res() res: Response, @Param('awardTypeId') awardTypeId: string) {
     try {
-      const { data } = await this.typeService.findById(typeId)
+      const searchAwardTypeDto = new SearchAwardTypeDto()
+      searchAwardTypeDto.id = awardTypeId
+      searchAwardTypeDto.isEnabled = true
+      const { data } = await this.awardTypeService.findById(searchAwardTypeDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
         message: `Can get type`,

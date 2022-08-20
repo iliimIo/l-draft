@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner } from 'typeorm'
-import { AwardType } from 'src/type/entities/award-type.entity'
+import { AwardType } from 'src/award-type/entities/award-type.entity'
 
 export class SeedeType1660986862564 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {

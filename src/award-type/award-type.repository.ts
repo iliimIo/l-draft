@@ -1,22 +1,20 @@
 import { InternalServerErrorException, Logger } from '@nestjs/common'
 import { EntityRepository, Repository } from 'typeorm'
 import { AwardType } from './entities/award-type.entity'
-import { SearchTypeDto } from './dto/search-type.dto'
+import { SearchAwardTypeDto } from './dto/search-type.dto'
 
 @EntityRepository(AwardType)
-export class TypeRepository extends Repository<AwardType> {
-  private logger = new Logger(TypeRepository.name)
+export class AwardTypeRepository extends Repository<AwardType> {
+  private logger = new Logger(AwardTypeRepository.name)
 
   /**
    * Get all and pagination
-   * @param searchTypeDto SearchTypeDto
+   * @param searchAwardTypeDto SearchAwardTypeDto
    */
-  async getAllAndPagination(searchTypeDto: SearchTypeDto) {
-    const { id, name, search, page, limit, sort, isDelete } = searchTypeDto
+  async getAllAndPagination(searchAwardTypeDto: SearchAwardTypeDto) {
+    const { id, name, search, page, limit, sort, isActive, isEnabled } = searchAwardTypeDto
     try {
-      const query = this.createQueryBuilder('type')
-        .select(['type'])
-        .where('type.isActive =:isActive', { isActive: true })
+      const query = this.createQueryBuilder('type').select(['type'])
 
       if (id) {
         query.andWhere('type.id =:id', { id })
@@ -32,10 +30,12 @@ export class TypeRepository extends Repository<AwardType> {
         })
       }
 
-      if (Boolean(isDelete)) {
-        query.withDeleted()
-      } else {
-        query.andWhere('type.isActive =:isActive', { isActive: true })
+      if (isEnabled) {
+        query.andWhere('type.isEnabled =:isEnabled', { isEnabled })
+      }
+
+      if (isActive) {
+        query.andWhere('type.isActive =:isActive', { isActive })
       }
 
       return await query
@@ -51,14 +51,12 @@ export class TypeRepository extends Repository<AwardType> {
 
   /**
    * Get One
-   * @param searchTypeDto SearchTypeDto
+   * @param searchAwardTypeDto SearchAwardTypeDto
    */
-  async getOne(searchTypeDto: SearchTypeDto) {
-    const { id, name } = searchTypeDto
+  async getOne(searchAwardTypeDto: SearchAwardTypeDto) {
+    const { id, name, isEnabled, isActive } = searchAwardTypeDto
     try {
-      const query = this.createQueryBuilder('type')
-        .select(['type'])
-        .where('type.isActive =:isActive', { isActive: true })
+      const query = this.createQueryBuilder('type').select(['type'])
 
       if (id) {
         query.andWhere('type.id =:id', { id })
@@ -66,6 +64,14 @@ export class TypeRepository extends Repository<AwardType> {
 
       if (name) {
         query.andWhere('type.name =:name', { name })
+      }
+
+      if (isEnabled) {
+        query.andWhere('type.isEnabled =:isEnabled', { isEnabled })
+      }
+
+      if (isActive) {
+        query.andWhere('type.isActive =:isActive', { isActive })
       }
 
       return await query.getOne()

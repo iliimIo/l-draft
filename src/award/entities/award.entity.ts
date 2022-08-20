@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm'
 import { Base } from 'src/common/base/entities/base.entity'
 import { Group } from 'src/group/entities/group.entity'
-import { AwardType } from 'src/type/entities/award-type.entity'
+import { AwardType } from 'src/award-type/entities/award-type.entity'
 
 @Entity('award')
 @Index('IDX_AWARD_ID')
