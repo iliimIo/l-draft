@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, JoinColumn, OneToMany, Index } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany, Index, ManyToOne } from 'typeorm'
 import { Base } from 'src/common/base/entities/base.entity'
-import { Award } from 'src/award/entities/award.entity'
+import { ExchangeRate } from 'src/exchange-rate/entities/exchange-rate.entity'
 
 @Entity('award_type')
 @Index('IDX_TYPE_ID')
@@ -16,9 +16,9 @@ export class AwardType extends Base {
 
   // ---------- start relation ----------//
 
-  @OneToMany(() => Award, (award) => award.type)
-  @JoinColumn({ name: 'award_id' })
-  award: Award[]
+  @OneToMany(() => ExchangeRate, (exchangeRate) => exchangeRate.type)
+  @JoinColumn({ name: 'exchange_rate_id' })
+  exchange: ExchangeRate
 
   // ---------- end relation ----------//
 }

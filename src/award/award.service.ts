@@ -51,7 +51,7 @@ export class AwardService {
       const awards = []
       for (const typeAward of typeAwards) {
         const searchAwardAndTypeDto = new SearchAwardDto()
-        searchAwardAndTypeDto.typeId = typeAward.type.id
+        // searchAwardAndTypeDto.typeId = typeAward.type.id
         searchAwardAndTypeDto.groupCode = groupCode
         const award = await this.findOne(searchAwardAndTypeDto)
         awards.push(award)
@@ -96,7 +96,7 @@ export class AwardService {
           const [data] = await this.awardRepository.getAllAndPagination(searchAwardAndDateDto)
           for (const award of data) {
             const typeDto = new TypeDto()
-            typeDto.name = award.type.name
+            // typeDto.name = award.type.name
 
             const awardDto = new AwardDto()
             awardDto.number = award.number

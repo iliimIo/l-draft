@@ -18,7 +18,7 @@ import { Response } from 'express'
 
 import { AuthGuard } from '@nestjs/passport'
 import RoleGuard from 'src/common/guards/role.guard'
-import { Roles } from 'src/common/base/enum/role.enum'
+import { ROLE } from 'src/common/base/enum/role.enum'
 import { AwardTypeService } from './award-type.service'
 import { ResponseDto } from 'src/common/base/dto/response.dto'
 import { CreateTypeDto } from './dto/create-type.dto'
@@ -27,7 +27,7 @@ import { ResponseAwardTypeDto, ResponseAwardTypeListDto } from './dto/response-t
 import { SearchAwardTypeDto } from './dto/search-type.dto'
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard(), RoleGuard([Roles.ADMIN]))
+@UseGuards(AuthGuard(), RoleGuard([ROLE.ADMIN]))
 @ApiUnauthorizedResponse({
   description: 'Access token is expire',
   status: HttpStatus.UNAUTHORIZED,
@@ -50,7 +50,6 @@ export class AwardTypeManagementController {
   })
   @Get()
   public async all(@Res() res: Response, @Query() searchAwardTypeDto: SearchAwardTypeDto) {
-    console.log('all management +++++++')
     try {
       searchAwardTypeDto.isActive = true
       const { data, total } = await this.awardTypeService.findAllAndPagination(searchAwardTypeDto)

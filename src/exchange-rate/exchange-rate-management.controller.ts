@@ -20,16 +20,16 @@ import {
   ApiTags,
   ApiUnauthorizedResponse
 } from '@nestjs/swagger'
-import { AuthGuard } from '@nestjs/passport'
 import { Response } from 'express'
-import { CategoriesService } from './categories.service'
-import { ResponseCategoriesDto, ResponseCategoriesListDto } from './dto/response-categories.dto'
 import { ResponseDto } from 'src/common/base/dto/response.dto'
-import { CreateCategoriesDto } from './dto/create-categories.dto'
-import { UpdateCategoriesDto } from './dto/update-categories.dto'
+import { ExchangeRateService } from './exchange-rate.service'
+import { SearchExchangeRateDto } from './dto/search-exchange-rate.dto'
+import { ResponseExchangeRateDto, ResponseExchangeRateListDto } from './dto/response-exchange-rate.dto'
 import RoleGuard from 'src/common/guards/role.guard'
 import { ROLE } from 'src/common/base/enum/role.enum'
-import { SearchCategoriesDto } from './dto/search-categories.dto'
+import { AuthGuard } from '@nestjs/passport'
+import { CreateExchangeRateDto } from './dto/create-exchange-rate.dto'
+import { UpdateExchangeRateDto } from './dto/update-exchange-rate.dto'
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard(), RoleGuard([ROLE.ADMIN]))
@@ -38,29 +38,29 @@ import { SearchCategoriesDto } from './dto/search-categories.dto'
   status: HttpStatus.UNAUTHORIZED,
   type: ResponseDto
 })
-@ApiTags('categories-management')
-@Controller('categories/management')
-export class CategoriesManagementController {
-  constructor(private readonly categoriesService: CategoriesService) {}
+@ApiTags('exchange-rate-management')
+@Controller('exchange-rate/management')
+export class ExchangeRateManagementController {
+  constructor(private readonly exchangeRateService: ExchangeRateService) {}
 
   @ApiOkResponse({
-    type: ResponseCategoriesListDto,
-    description: 'Get categories list',
+    type: ResponseExchangeRateListDto,
+    description: 'Get exchange list',
     status: HttpStatus.OK
   })
   @ApiInternalServerErrorResponse({
-    description: `Can't get categories`,
+    description: `Can't get exchange list`,
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     type: ResponseDto
   })
   @Get()
-  public async all(@Res() res: Response, @Query() searchCategoriesDto: SearchCategoriesDto) {
+  public async all(@Res() res: Response, @Query() searchExchangeRateDto: SearchExchangeRateDto) {
     try {
-      searchCategoriesDto.isActive = true
-      const { data, total } = await this.categoriesService.findAllAndPagination(searchCategoriesDto)
+      searchExchangeRateDto.isActive = true
+      const { data, total } = await this.exchangeRateService.findAllAndPagination(searchExchangeRateDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
-        message: `Can get categories list`,
+        message: `Can get exchange list`,
         data,
         total
       })
@@ -76,30 +76,30 @@ export class CategoriesManagementController {
   }
 
   @ApiOkResponse({
-    type: ResponseCategoriesDto,
-    description: 'Get categories',
+    type: ResponseExchangeRateDto,
+    description: 'Get banking',
     status: HttpStatus.OK
   })
   @ApiNotFoundResponse({
     type: ResponseDto,
-    description: `Can't get categories`,
+    description: `Can't get exchange`,
     status: HttpStatus.NOT_FOUND
   })
   @ApiInternalServerErrorResponse({
-    description: `Can't get categories`,
+    description: `Can't get exchange`,
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     type: ResponseDto
   })
-  @Get('/:categoriesId')
-  public async id(@Res() res: Response, @Param('categoriesId') categoriesId: string) {
+  @Get('/:exchangeId')
+  public async id(@Res() res: Response, @Param('exchangeId') exchangeId: string) {
     try {
-      const searchCategoriesDto = new SearchCategoriesDto()
-      searchCategoriesDto.id = categoriesId
-      searchCategoriesDto.isActive = true
-      const { data } = await this.categoriesService.findById(searchCategoriesDto)
+      const searchExchangeRateDto = new SearchExchangeRateDto()
+      searchExchangeRateDto.id = exchangeId
+      searchExchangeRateDto.isActive = true
+      const { data } = await this.exchangeRateService.findById(searchExchangeRateDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
-        message: `Can get categories`,
+        message: `Can get exchange`,
         data
       })
     } catch (error) {
@@ -115,21 +115,21 @@ export class CategoriesManagementController {
 
   @ApiOkResponse({
     type: ResponseDto,
-    description: 'Create categories',
+    description: 'Create exchange',
     status: HttpStatus.OK
   })
   @ApiInternalServerErrorResponse({
-    description: `Can't create categories`,
+    description: `Can't create exchange`,
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     type: ResponseDto
   })
   @Post()
-  public async create(@Res() res: Response, @Body() createCategoriesDto: CreateCategoriesDto) {
+  public async create(@Res() res: Response, @Body() createExchangeRateDto: CreateExchangeRateDto) {
     try {
-      const { data } = await this.categoriesService.create(createCategoriesDto)
+      const { data } = await this.exchangeRateService.create(createExchangeRateDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
-        message: `Create categories successfully`,
+        message: `Create exchange successfully`,
         data
       })
     } catch (error) {
@@ -145,64 +145,30 @@ export class CategoriesManagementController {
 
   @ApiOkResponse({
     type: ResponseDto,
-    description: 'Update categories',
+    description: 'Update exchange',
     status: HttpStatus.OK
   })
   @ApiNotFoundResponse({
     type: ResponseDto,
-    description: `Can't update categories`,
+    description: `Can't update exchange`,
     status: HttpStatus.NOT_FOUND
   })
   @ApiInternalServerErrorResponse({
-    description: `Can't update categories`,
+    description: `Can't update exchange`,
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     type: ResponseDto
   })
-  @Patch('/:categoriesId')
+  @Patch('/:exchangeId')
   public async update(
     @Res() res: Response,
-    @Body() updateCategoriesDto: UpdateCategoriesDto,
-    @Param('categoriesId') categoriesId: string
+    @Body() updateExchangeRateDto: UpdateExchangeRateDto,
+    @Param('exchangeId') exchangeId: string
   ) {
     try {
-      await this.categoriesService.update(categoriesId, updateCategoriesDto)
+      const { data } = await this.exchangeRateService.update(exchangeId, updateExchangeRateDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
-        message: `Update categories successfully`
-      })
-    } catch (error) {
-      throw new HttpException(
-        {
-          statusCode: error.response.statusCode,
-          message: error.response.message
-        },
-        error.status
-      )
-    }
-  }
-
-  @ApiOkResponse({
-    type: ResponseDto,
-    description: 'Enable categories',
-    status: HttpStatus.OK
-  })
-  @ApiNotFoundResponse({
-    type: ResponseDto,
-    description: `Can't enable categories`,
-    status: HttpStatus.NOT_FOUND
-  })
-  @ApiInternalServerErrorResponse({
-    description: `Can't enable categories`,
-    status: HttpStatus.INTERNAL_SERVER_ERROR,
-    type: ResponseDto
-  })
-  @Patch('enable/:categoriesId')
-  public async enable(@Res() res: Response, @Param('categoriesId') categoriesId: string) {
-    try {
-      const { data } = await this.categoriesService.enable(categoriesId)
-      return res.status(HttpStatus.OK).json({
-        statusCode: HttpStatus.OK,
-        message: `Enable categories successfully`,
+        message: `Update exchange successfully`,
         data
       })
     } catch (error) {
@@ -218,26 +184,61 @@ export class CategoriesManagementController {
 
   @ApiOkResponse({
     type: ResponseDto,
-    description: 'Delete categories',
+    description: 'Enable exchange',
     status: HttpStatus.OK
   })
   @ApiNotFoundResponse({
     type: ResponseDto,
-    description: `Can't delete categories`,
+    description: `Can't enable exchange`,
     status: HttpStatus.NOT_FOUND
   })
   @ApiInternalServerErrorResponse({
-    description: `Can't delete categories`,
+    description: `Can't enable exchange`,
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     type: ResponseDto
   })
-  @Delete('/:categoriesId')
-  public async delete(@Res() res: Response, @Param('categoriesId') categoriesId: string) {
+  @Patch('enable/:exchangeId')
+  public async enable(@Res() res: Response, @Param('exchangeId') exchangeId: string) {
     try {
-      await this.categoriesService.delete(categoriesId)
+      const { data } = await this.exchangeRateService.enable(exchangeId)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
-        message: `Delete categories successfully`
+        message: `Enable exchange successfully`,
+        data
+      })
+    } catch (error) {
+      throw new HttpException(
+        {
+          statusCode: error.response.statusCode,
+          message: error.response.message
+        },
+        error.status
+      )
+    }
+  }
+
+  @ApiOkResponse({
+    type: ResponseDto,
+    description: 'Delete exchange',
+    status: HttpStatus.OK
+  })
+  @ApiNotFoundResponse({
+    type: ResponseDto,
+    description: `Can't delete exchange`,
+    status: HttpStatus.NOT_FOUND
+  })
+  @ApiInternalServerErrorResponse({
+    description: `Can't delete exchange`,
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    type: ResponseDto
+  })
+  @Delete('/:exchangeId')
+  public async delete(@Res() res: Response, @Param('exchangeId') exchangeId: string) {
+    try {
+      await this.exchangeRateService.delete(exchangeId)
+      return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
+        message: `Delete exchange successfully`
       })
     } catch (error) {
       throw new HttpException(

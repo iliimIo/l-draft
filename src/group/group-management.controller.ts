@@ -22,12 +22,12 @@ import { CreateGroupDto } from './dto/create-group.dto'
 import { UpdateGroupDto } from './dto/update-group.dto'
 import { AuthGuard } from '@nestjs/passport'
 import RoleGuard from 'src/common/guards/role.guard'
-import { Roles } from 'src/common/base/enum/role.enum'
+import { ROLE } from 'src/common/base/enum/role.enum'
 import { SearchGroupDto } from './dto/search-group.dto'
 import { ResponseGroupDailyDto } from './dto/response-group-daily.dto'
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard(), RoleGuard([Roles.ADMIN]))
+@UseGuards(AuthGuard(), RoleGuard([ROLE.ADMIN]))
 @ApiUnauthorizedResponse({
   description: 'Access token is expire',
   status: HttpStatus.UNAUTHORIZED,

@@ -16,15 +16,9 @@ export class ExchangeRateTable1660976059501 implements MigrationInterface {
             default: 'uuid_generate_v4()'
           },
           {
-            name: 'name',
-            type: 'varchar',
-            length: '255',
-            isNullable: false,
-            isUnique: true
-          },
-          {
             name: 'exchange',
-            type: 'integer'
+            type: 'integer',
+            isNullable: false
           },
           {
             name: 'is_active',

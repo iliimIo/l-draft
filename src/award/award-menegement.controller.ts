@@ -12,20 +12,20 @@ import { AuthGuard } from '@nestjs/passport'
 import { Response } from 'express'
 import { ResponseDto } from 'src/common/base/dto/response.dto'
 import RoleGuard from 'src/common/guards/role.guard'
-import { Roles } from 'src/common/base/enum/role.enum'
+import { ROLE } from 'src/common/base/enum/role.enum'
 import { AwardService } from './award.service'
 import { ResponseAwardDto } from './dto/response-award.dto'
 import { UpdateAwardDto } from './dto/update-award.dto'
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard(), RoleGuard([Roles.ADMIN]))
+@UseGuards(AuthGuard(), RoleGuard([ROLE.ADMIN]))
 @ApiUnauthorizedResponse({
   description: 'Access token is expire',
   status: HttpStatus.UNAUTHORIZED,
   type: ResponseDto
 })
 @ApiBearerAuth()
-@UseGuards(AuthGuard(), RoleGuard([Roles.ADMIN]))
+@UseGuards(AuthGuard(), RoleGuard([ROLE.ADMIN]))
 @ApiUnauthorizedResponse({
   description: 'Access token is expire',
   status: HttpStatus.UNAUTHORIZED,

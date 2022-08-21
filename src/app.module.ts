@@ -9,6 +9,7 @@ import { AwardTypeModule } from './award-type/award-type.module'
 import { GroupModule } from './group/group.module'
 import { AwardModule } from './award/award.module'
 import { AuthModule } from './auth/auth.module'
+import { ExchangeRateModule } from './exchange-rate/exchange-rate.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { AuthModule } from './auth/auth.module'
     AwardTypeModule,
     GroupModule,
     AwardModule,
-    AuthModule
+    AuthModule,
+    ExchangeRateModule
   ],
   controllers: [AppController],
   providers: [AppService]

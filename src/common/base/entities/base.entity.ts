@@ -24,7 +24,7 @@ export class Base extends BaseEntity {
   isEnabled: boolean
 
   @ApiProperty()
-  @CreateDateColumn({ name: 'created_at', default: Date.now() })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp', precision: 3, default: () => 'CURRENT_TIMESTAMP(6)' })
   createdAt: Date
 
   @ApiProperty()
