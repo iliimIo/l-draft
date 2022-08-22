@@ -26,6 +26,7 @@ export class CategoriesController {
   public async all(@Res() res: Response, @Query() searchCategoriesDto: SearchCategoriesDto) {
     try {
       searchCategoriesDto.isEnabled = true
+      searchCategoriesDto.isActive = true
       const { data, total } = await this.categoriesService.findAllAndPagination(searchCategoriesDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
@@ -95,6 +96,7 @@ export class CategoriesController {
       const searchCategoriesDto = new SearchCategoriesDto()
       searchCategoriesDto.id = categoriesId
       searchCategoriesDto.isEnabled = true
+      searchCategoriesDto.isActive = true
       const { data } = await this.categoriesService.findById(searchCategoriesDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,

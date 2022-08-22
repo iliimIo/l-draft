@@ -25,6 +25,7 @@ export class ExchangeRateController {
   public async all(@Res() res: Response, @Query() searchExchangeRateDto: SearchExchangeRateDto) {
     try {
       searchExchangeRateDto.isEnabled = true
+      searchExchangeRateDto.isActive = true
       const { data, total } = await this.exchangeRateService.findAllAndPagination(searchExchangeRateDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
@@ -64,6 +65,7 @@ export class ExchangeRateController {
       const searchExchangeRateDto = new SearchExchangeRateDto()
       searchExchangeRateDto.id = exchangeId
       searchExchangeRateDto.isEnabled = true
+      searchExchangeRateDto.isActive = true
       const { data } = await this.exchangeRateService.findById(searchExchangeRateDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,

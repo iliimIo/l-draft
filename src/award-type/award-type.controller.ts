@@ -25,6 +25,7 @@ export class AwardTypeController {
   public async all(@Res() res: Response, @Query() searchAwardTypeDto: SearchAwardTypeDto) {
     try {
       searchAwardTypeDto.isEnabled = true
+      searchAwardTypeDto.isActive = true
       const { data, total } = await this.awardTypeService.findAllAndPagination(searchAwardTypeDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
@@ -64,6 +65,7 @@ export class AwardTypeController {
       const searchAwardTypeDto = new SearchAwardTypeDto()
       searchAwardTypeDto.id = awardTypeId
       searchAwardTypeDto.isEnabled = true
+      searchAwardTypeDto.isActive = true
       const { data } = await this.awardTypeService.findById(searchAwardTypeDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
