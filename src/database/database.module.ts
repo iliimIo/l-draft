@@ -18,8 +18,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
         migrations: ['dist/database/migrations/*{.ts,.js}', 'dist/database/seeders/*{.ts,.js}'],
         migrationsRun: true,
         autoLoadEntities: true,
-        synchronize: configService.get('DATABASE_SYNC'),
-        logging: ['query', 'error']
+        synchronize: configService.get('DATABASE_SYNC')
+        // logging: ['query', 'error']
       })
     })
   ]

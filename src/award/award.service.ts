@@ -210,9 +210,6 @@ export class AwardService {
       const searchAwardDto = new SearchAwardDto()
       searchAwardDto.groupCode = groupCode
       const total = await this.awardRepository.getGroupAward(searchAwardDto)
-
-      searchAwardDto.page = page
-      searchAwardDto.limit = limit
       const dateAwards = await this.awardRepository.getGroupAward(searchAwardDto)
 
       const awards = []

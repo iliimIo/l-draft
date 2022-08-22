@@ -12,8 +12,21 @@ export class AwardRepository extends Repository<Award> {
    * @param searchAwardDto SearchAwardDto
    */
   async getAllAndPagination(searchAwardDto: SearchAwardDto) {
-    const { id, number, rewardDate, startDate, endDate, search, page, limit, sort, isActive, isEnabled, isExchange } =
-      searchAwardDto
+    const {
+      id,
+      number,
+      rewardDate,
+      groupCode,
+      startDate,
+      endDate,
+      search,
+      page,
+      limit,
+      sort,
+      isActive,
+      isEnabled,
+      isExchange
+    } = searchAwardDto
     try {
       const query = this.createQueryBuilder('award').select(['award'])
 
@@ -52,7 +65,11 @@ export class AwardRepository extends Repository<Award> {
       }
 
       if (isExchange) {
-        query.leftJoinAndSelect('award.exchange', 'exchange').leftJoinAndSelect('exchange.type', 'type')
+        query
+          .leftJoinAndSelect('award.exchange', 'exchange')
+          .leftJoinAndSelect('exchange.type', 'type')
+          .leftJoinAndSelect('exchange.group', 'group')
+          .andWhere('group.code =:groupCode', { groupCode })
       }
 
       return await query
@@ -71,8 +88,7 @@ export class AwardRepository extends Repository<Award> {
    * @param searchAwardDto SearchAwardDto
    */
   async getOne(searchAwardDto: SearchAwardDto) {
-    const { id, number, rewardDate, startDate, endDate, search, page, limit, sort, isActive, isEnabled } =
-      searchAwardDto
+    const { id, number, rewardDate, startDate, endDate, isActive, isEnabled } = searchAwardDto
     try {
       const query = this.createQueryBuilder('award').select(['award'])
 
@@ -143,7 +159,7 @@ export class AwardRepository extends Repository<Award> {
    * @param searchAwardDto SearchAwardDto
    */
   async getGroupAward(searchAwardDto: SearchAwardDto) {
-    const { groupCode, page, limit } = searchAwardDto
+    const { groupCode } = searchAwardDto
     try {
       const query = await this.createQueryBuilder('award')
         .select(['award.id', 'award.number', 'award.rewardDate', 'award.startDate', 'award.endDate', 'type.name'])
@@ -152,14 +168,6 @@ export class AwardRepository extends Repository<Award> {
         .leftJoin('exchange.type', 'type')
         .andWhere('group.code =:groupCode', { groupCode })
         .distinctOn(['award.rewardDate'])
-
-      if (page) {
-        query.offset(Number(page) || 1)
-      }
-
-      if (limit) {
-        query.limit(Number(limit) || 10)
-      }
 
       return query.orderBy('award.rewardDate', 'DESC').addSelect('award.no').getRawMany()
     } catch (error) {
