@@ -16,6 +16,7 @@ import { AwardTypeModule } from 'src/award-type/award-type.module'
     forwardRef(() => AwardTypeModule)
   ],
   controllers: [ExchangeRateManagementController, ExchangeRateController],
-  providers: [ExchangeRateService]
+  providers: [ExchangeRateService],
+  exports: [ExchangeRateService]
 })
 export class ExchangeRateModule {}

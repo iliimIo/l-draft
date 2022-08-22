@@ -25,6 +25,8 @@ export class AwardController {
   @Get()
   public async all(@Res() res: Response, @Query() searchAwardDto: SearchAwardDto) {
     try {
+      searchAwardDto.isEnabled = true
+      searchAwardDto.isActive = true
       const { data, total } = await this.awardService.findAllAndPagination(searchAwardDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
@@ -61,7 +63,11 @@ export class AwardController {
   @Get('/:awardId')
   public async id(@Res() res: Response, @Param('awardId') awardId: string) {
     try {
-      const { data } = await this.awardService.findById(awardId)
+      const searchAwardDto = new SearchAwardDto()
+      searchAwardDto.isEnabled = true
+      searchAwardDto.isActive = true
+      searchAwardDto.id = awardId
+      const { data } = await this.awardService.findById(searchAwardDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
         message: `Can get award`,

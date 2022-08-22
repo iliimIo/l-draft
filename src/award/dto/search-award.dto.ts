@@ -4,7 +4,14 @@ import { IsOptional, IsString } from 'class-validator'
 
 import { BaseSearchDto } from 'src/common/base/dto/search.dto'
 
-export class SearchAwardDto extends PickType(BaseSearchDto, ['page', 'limit', 'sort', 'search', 'isDelete']) {
+export class SearchAwardDto extends PickType(BaseSearchDto, [
+  'page',
+  'limit',
+  'sort',
+  'search',
+  'isActive',
+  'isEnabled'
+]) {
   @ApiProperty({ type: String })
   @IsOptional()
   @IsString()
@@ -21,37 +28,7 @@ export class SearchAwardDto extends PickType(BaseSearchDto, ['page', 'limit', 's
   @IsOptional()
   @IsString()
   @Type(() => String)
-  periodDate: string | Date
-
-  @ApiProperty({ type: String })
-  @IsOptional()
-  @IsString()
-  @Type(() => String)
-  categoriesId: string
-
-  @ApiProperty({ type: String })
-  @IsOptional()
-  @IsString()
-  @Type(() => String)
-  categoriesCode: string
-
-  @ApiProperty({ type: String })
-  @IsOptional()
-  @IsString()
-  @Type(() => String)
-  groupId: string
-
-  @ApiProperty({ type: String })
-  @IsOptional()
-  @IsString()
-  @Type(() => String)
-  groupCode: string
-
-  @ApiProperty({ type: String })
-  @IsOptional()
-  @IsString()
-  @Type(() => String)
-  typeId: string
+  rewardDate: string
 
   @ApiProperty({ type: String })
   @IsOptional()
@@ -64,4 +41,10 @@ export class SearchAwardDto extends PickType(BaseSearchDto, ['page', 'limit', 's
   @IsString()
   @Type(() => String)
   endDate: string
+
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @IsString()
+  @Type(() => String)
+  exchangeRateId: string
 }

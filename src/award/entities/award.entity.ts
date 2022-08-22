@@ -11,18 +11,26 @@ export class Award extends Base {
   number: string
 
   @ApiProperty()
-  @Column({ name: 'period_date', unique: false, nullable: false })
-  periodDate: Date
+  @Column({ name: 'reward_date', unique: false, nullable: false })
+  rewardDate: Date
+
+  @ApiProperty()
+  @Column({ name: 'start_date', unique: false, nullable: false })
+  startDate: Date
+
+  @ApiProperty()
+  @Column({ name: 'end_date', unique: false, nullable: false })
+  endDate: Date
 
   @ApiProperty()
   @Column({ nullable: false })
   no: number
 
   // ---------- start relation ----------//
-  
+
   @ManyToOne(() => ExchangeRate, (exchangeRate) => exchangeRate.award)
   @JoinColumn({ name: 'exchange_rate_id' })
-  exchange: ExchangeRate[]
+  exchange: ExchangeRate
 
   // ---------- end relation ----------//
 }

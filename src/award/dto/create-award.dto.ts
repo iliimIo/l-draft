@@ -11,15 +11,20 @@ export class CreateAwardDto {
   @ApiProperty({ type: String })
   @IsString()
   @Type(() => String)
-  periodDate: string
+  rewardDate: string
 
   @ApiProperty({ type: String })
   @IsString()
   @Type(() => String)
-  typeId: string
+  startDate: string
 
   @ApiProperty({ type: String })
   @IsString()
   @Type(() => String)
-  groupId: string
+  endDate: string
+
+  @ApiProperty({ type: String })
+  @IsString()
+  @Type(() => String)
+  exchangeId: string
 }

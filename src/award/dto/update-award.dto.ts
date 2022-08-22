@@ -4,26 +4,32 @@ import { IsOptional, IsString } from 'class-validator'
 
 export class UpdateAwardDto {
   @ApiProperty({ type: String })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   @Type(() => String)
   number: string
 
   @ApiProperty({ type: String })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   @Type(() => String)
-  periodDate: string
+  rewardDate: string
 
   @ApiProperty({ type: String })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   @Type(() => String)
-  typeId: string
+  startDate: string
 
   @ApiProperty({ type: String })
-  @IsOptional()
   @IsString()
+  @IsOptional()
   @Type(() => String)
-  groupId: string
+  endDate: string
+
+  @ApiProperty({ type: String })
+  @IsString()
+  @IsOptional()
+  @Type(() => String)
+  exchangeId: string
 }

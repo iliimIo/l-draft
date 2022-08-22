@@ -12,41 +12,10 @@ export class AwardRepository extends Repository<Award> {
    * @param searchAwardDto SearchAwardDto
    */
   async getAllAndPagination(searchAwardDto: SearchAwardDto) {
-    const {
-      id,
-      number,
-      periodDate,
-      categoriesId,
-      categoriesCode,
-      groupId,
-      groupCode,
-      typeId,
-      startDate,
-      endDate,
-      search,
-      page,
-      limit,
-      sort,
-      isDelete
-    } = searchAwardDto
+    const { id, number, rewardDate, startDate, endDate, search, page, limit, sort, isActive, isEnabled } =
+      searchAwardDto
     try {
-      const query = this.createQueryBuilder('award')
-        .select([
-          'award',
-          'categories.id',
-          'categories.name',
-          'categories.code',
-          'group.id',
-          'group.name',
-          'group.code',
-          'group.logo',
-          'type.id',
-          'type.name'
-        ])
-        .leftJoin('award.group', 'group')
-        .leftJoin('group.categories', 'categories')
-        .leftJoin('award.type', 'type')
-        .where('award.isActive =:isActive', { isActive: true })
+      const query = this.createQueryBuilder('award').select(['award'])
 
       if (id) {
         query.andWhere('award.id =:id', { id })
@@ -56,55 +25,84 @@ export class AwardRepository extends Repository<Award> {
         query.andWhere('award.name =:name', { number })
       }
 
-      if (categoriesId) {
-        query.andWhere('categories.id =:groupId', { categoriesId })
-      }
-
-      if (categoriesCode) {
-        query.andWhere('categories.code =:groupCode', { categoriesCode })
-      }
-
-      if (groupId) {
-        query.andWhere('group.id =:groupId', { groupId })
-      }
-
-      if (groupCode) {
-        query.andWhere('group.code =:groupCode', { groupCode })
-      }
-
-      if (typeId) {
-        query.andWhere('type.id =:typeId', { typeId })
-      }
-
       if (search) {
         query.andWhere('award.number LIKE :search', { search: `%${search}%` })
       }
 
-      if (Boolean(isDelete)) {
-        query.withDeleted()
-      } else {
-        query.andWhere('award.isActive =:isActive', { isActive: true })
-      }
-
-      if (periodDate) {
-        query.andWhere('award.periodDate BETWEEN :startDate AND :endDate', {
-          startDate: new Date(`${periodDate} 00:00:00`),
-          endDate: new Date(`${periodDate} 23:59:59`)
+      if (rewardDate) {
+        query.andWhere('award.rewardDate BETWEEN :startDate AND :endDate', {
+          startDate: new Date(`${rewardDate} 00:00:00`),
+          endDate: new Date(`${rewardDate} 23:59:59`)
         })
       }
 
       if (startDate && endDate) {
-        query.andWhere('award.periodDate BETWEEN :startDate AND :endDate', {
+        query.andWhere('award.rewardDate BETWEEN :startDate AND :endDate', {
           startDate: new Date(`${startDate} 00:00:00`),
           endDate: new Date(`${endDate} 23:59:59`)
         })
       }
 
+      if (isEnabled) {
+        query.andWhere('award.isEnabled =:isEnabled', { isEnabled })
+      }
+
+      if (isActive) {
+        query.andWhere('award.isActive =:isActive', { isActive })
+      }
+
       return await query
         .offset((Number(page || 1) - 1) * Number(limit || 10))
         .limit(Number(limit || 10))
-        .addOrderBy('award.periodDate', sort == 'DESC' ? 'DESC' : 'ASC')
+        .addOrderBy('award.rewardDate', sort == 'DESC' ? 'DESC' : 'ASC')
         .getManyAndCount()
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw new InternalServerErrorException()
+    }
+  }
+
+  /**
+   * Get One
+   * @param searchAwardDto SearchAwardDto
+   */
+  async getOne(searchAwardDto: SearchAwardDto) {
+    const { id, number, rewardDate, startDate, endDate, search, page, limit, sort, isActive, isEnabled } =
+      searchAwardDto
+    try {
+      const query = this.createQueryBuilder('award').select(['award'])
+
+      if (id) {
+        query.andWhere('award.id =:id', { id })
+      }
+
+      if (number) {
+        query.andWhere('award.number =:number', { number })
+      }
+
+      if (rewardDate) {
+        query.andWhere('award.rewardDate BETWEEN :startDate AND :endDate', {
+          startDate: new Date(`${rewardDate} 00:00:00`),
+          endDate: new Date(`${rewardDate} 23:59:59`)
+        })
+      }
+
+      if (startDate && endDate) {
+        query.andWhere('award.rewardDate BETWEEN :startDate AND :endDate', {
+          startDate: new Date(`${startDate} 00:00:00`),
+          endDate: new Date(`${endDate} 23:59:59`)
+        })
+      }
+
+      if (isEnabled) {
+        query.andWhere('award.isEnabled =:isEnabled', { isEnabled })
+      }
+
+      if (isActive) {
+        query.andWhere('award.isActive =:isActive', { isActive })
+      }
+
+      return await query.getOne()
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw new InternalServerErrorException()
@@ -116,17 +114,19 @@ export class AwardRepository extends Repository<Award> {
    * @param searchAwardDto SearchAwardDto
    */
   async getTypeAwards(searchAwardDto: SearchAwardDto) {
-    const { groupCode } = searchAwardDto
+    // const { groupCode } = searchAwardDto
     try {
-      return this.createQueryBuilder('award')
-        .select(['award.id', 'type.id', 'type.name'])
-        .leftJoin('award.group', 'group')
-        .leftJoin('group.categories', 'categories')
-        .leftJoin('award.type', 'type')
-        .where('award.isActive =:isActive', { isActive: true })
-        .andWhere('group.code =:groupCode', { groupCode })
-        .distinctOn(['type.name'])
-        .getMany()
+      return (
+        this.createQueryBuilder('award')
+          .select(['award.id', 'type.id', 'type.name'])
+          .leftJoin('award.group', 'group')
+          .leftJoin('group.categories', 'categories')
+          .leftJoin('award.type', 'type')
+          .where('award.isActive =:isActive', { isActive: true })
+          // .andWhere('group.code =:groupCode', { groupCode })
+          .distinctOn(['type.name'])
+          .getMany()
+      )
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw new InternalServerErrorException()
@@ -138,13 +138,13 @@ export class AwardRepository extends Repository<Award> {
    * @param searchAwardDto SearchAwardDto
    */
   async getDateAwards(searchAwardDto: SearchAwardDto) {
-    const { groupCode, page, limit } = searchAwardDto
+    // const { groupCode, page, limit } = searchAwardDto
     try {
       const query = await this.createQueryBuilder('award')
         .select(['award.periodDate'])
         .leftJoin('award.group', 'group')
         .where('award.isActive =:isActive', { isActive: true })
-        .andWhere('group.code =:groupCode', { groupCode })
+        // .andWhere('group.code =:groupCode', { groupCode })
         .distinctOn(['award.periodDate'])
 
       // if (page) {
@@ -163,110 +163,26 @@ export class AwardRepository extends Repository<Award> {
   }
 
   /**
-   * Get One
+   * Get award reward date no
    * @param searchAwardDto SearchAwardDto
    */
-  async getOne(searchAwardDto: SearchAwardDto) {
-    const { id, number, periodDate, categoriesId, groupCode, groupId, typeId, startDate, endDate } = searchAwardDto
+  async getAwardRewardDateNo(searchAwardDto: SearchAwardDto) {
+    const { exchangeRateId, isActive, isEnabled } = searchAwardDto
     try {
-      const query = this.createQueryBuilder('award')
-        .select([
-          'award',
-          'categories.id',
-          'categories.name',
-          'categories.code',
-          'group.id',
-          'group.name',
-          'group.code',
-          'group.logo',
-          'type.id',
-          'type.name'
-        ])
-        .leftJoin('award.group', 'group')
-        .leftJoin('group.categories', 'categories')
-        .leftJoin('award.type', 'type')
-        .where('award.isActive =:isActive', { isActive: true })
+      const query = this.createQueryBuilder('award').select(['award']).leftJoin('award.exchange', 'exchange')
 
-      if (id) {
-        query.andWhere('award.id =:id', { id })
+      if (exchangeRateId) {
+        query.andWhere('exchange.id =:exchangeRateId', { exchangeRateId })
       }
 
-      if (number) {
-        query.andWhere('award.number =:number', { number })
+      if (isEnabled) {
+        query.andWhere('award.isEnabled =:isEnabled', { isEnabled })
       }
 
-      if (categoriesId) {
-        query.andWhere('categories.id =:groupId', { categoriesId })
+      if (isActive) {
+        query.andWhere('award.isActive =:isActive', { isActive })
       }
-
-      if (groupCode) {
-        query.andWhere('group.code =:groupCode', { groupCode })
-      }
-
-      if (groupId) {
-        query.andWhere('group.id =:groupId', { groupId })
-      }
-
-      if (typeId) {
-        query.andWhere('type.id =:typeId', { typeId })
-      }
-
-      if (periodDate && startDate && endDate) {
-        query.andWhere('award.periodDate BETWEEN :startDate AND :endDate', {
-          startDate: new Date(`${startDate} 00:00:00`),
-          endDate: new Date(`${endDate} 23:59:59`)
-        })
-      }
-
-      return await query.getOne()
-    } catch (error) {
-      this.logger.error(JSON.stringify(error))
-      throw new InternalServerErrorException()
-    }
-  }
-
-  /**
-   * Get Period Date No
-   * @param searchAwardDto SearchAwardDto
-   */
-  async getPeriodDateNo(searchAwardDto: SearchAwardDto) {
-    const { periodDate, groupId, typeId } = searchAwardDto
-    try {
-      const query = this.createQueryBuilder('award')
-        .select([
-          'award',
-          'categories.id',
-          'categories.name',
-          'categories.code',
-          'group.id',
-          'group.name',
-          'group.code',
-          'group.logo',
-          'type.id',
-          'type.name'
-        ])
-        .leftJoin('award.group', 'group')
-        .leftJoin('group.categories', 'categories')
-        .leftJoin('award.type', 'type')
-        .where('award.isActive =:isActive', { isActive: true })
-        .orderBy('award.periodDate', 'DESC')
-
-      if (groupId) {
-        query.andWhere('group.id =:groupId', { groupId })
-      }
-
-      if (typeId) {
-        query.andWhere('type.id =:typeId', { typeId })
-      }
-
-      if (periodDate) {
-        query.andWhere('award.periodDate BETWEEN :startDate AND :endDate', {
-          startDate: new Date(`${periodDate} 00:00:00`),
-          endDate: new Date(`${periodDate} 23:59:59`)
-        })
-      }
-
-      return await query.getOne()
+      return await query.addOrderBy('award.no', 'DESC').getOne()
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw new InternalServerErrorException()
