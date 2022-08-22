@@ -47,4 +47,9 @@ export class SearchGroupDto extends PickType(BaseSearchDto, [
   @IsString()
   @Type(() => String)
   awardTypeId: string
+
+  @ApiProperty({ type: Boolean })
+  @IsOptional()
+  @IsString()
+  isExchange: boolean
 }

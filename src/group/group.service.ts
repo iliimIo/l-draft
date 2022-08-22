@@ -44,8 +44,11 @@ export class GroupService {
    */
   public async dailyAwards(searchGroupDto: SearchGroupDto) {
     try {
+      searchGroupDto.isExchange = true
+      searchGroupDto.isActive = true
+      searchGroupDto.isEnabled = true
       const group = await this.groupRepository.getOne(searchGroupDto)
-      const { awards, count } = await this.awardService.dailyDateAwards(
+      const { awards, count } = await this.awardService.dailyGroupAwards(
         searchGroupDto.code,
         searchGroupDto.page,
         searchGroupDto.limit

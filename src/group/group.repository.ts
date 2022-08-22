@@ -65,7 +65,7 @@ export class GroupRepository extends Repository<Group> {
    * @param searchGroupDto
    */
   async getOne(searchGroupDto: SearchGroupDto) {
-    const { id, name, code, categoriesCode, categoriesId, isActive, isEnabled } = searchGroupDto
+    const { id, name, code, categoriesCode, categoriesId, isActive, isEnabled, isExchange } = searchGroupDto
     try {
       const query = this.createQueryBuilder('group').select(['group']).leftJoin('group.categories', 'categories')
 
@@ -79,6 +79,16 @@ export class GroupRepository extends Repository<Group> {
 
       if (code) {
         query.andWhere('group.code =:code', { code })
+      }
+
+      if (isExchange) {
+        query
+          .leftJoinAndSelect('group.exchange', 'exchange')
+          .leftJoinAndSelect('exchange.type', 'type')
+          .andWhere('type.isActive =:isActive', { isEnabled: true })
+          .andWhere('type.isEnabled =:isEnabled', { isEnabled: true })
+          .andWhere('exchange.isActive =:isActive', { isEnabled: true })
+          .andWhere('exchange.isEnabled =:isEnabled', { isEnabled: true })
       }
 
       if (categoriesCode) {

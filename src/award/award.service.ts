@@ -188,7 +188,7 @@ export class AwardService {
   }
 
   /**
-   * Find daily exchange award
+   * Find daily categories award
    */
   public async dailyCategoriesAwards(exchangeId: string, typeId: string) {
     try {
@@ -203,17 +203,17 @@ export class AwardService {
   }
 
   /**
-   * Find daily date award
+   * Find daily group award
    */
-  public async dailyDateAwards(groupCode: string, page: string, limit: string) {
+  public async dailyGroupAwards(groupCode: string, page: string, limit: string) {
     try {
       const searchAwardDto = new SearchAwardDto()
-      // searchAwardDto.groupCode = groupCode
-      const total = await this.awardRepository.getDateAwards(searchAwardDto)
+      searchAwardDto.groupCode = groupCode
+      const total = await this.awardRepository.getGroupAward(searchAwardDto)
 
       searchAwardDto.page = page
       searchAwardDto.limit = limit
-      const dateAwards = await this.awardRepository.getDateAwards(searchAwardDto)
+      const dateAwards = await this.awardRepository.getGroupAward(searchAwardDto)
 
       const awards = []
       for (const [i, dateAward] of dateAwards.entries()) {
@@ -221,24 +221,25 @@ export class AwardService {
 
         if (i + 1 >= min && i + 1 <= max) {
           const searchAwardAndDateDto = new SearchAwardDto()
-          // searchAwardAndDateDto.periodDate = formatDate(dateAward.award_period_date)
-          // searchAwardAndDateDto.groupCode = groupCode
+          searchAwardAndDateDto.rewardDate = formatDate(dateAward.award_reward_date)
+          searchAwardAndDateDto.groupCode = groupCode
           searchAwardAndDateDto.limit = '1000'
           searchAwardAndDateDto.page = '1'
+          searchAwardAndDateDto.isExchange = true
 
           const awardsDailyDateDto = new AwardsDailyDateDto()
-          awardsDailyDateDto.periodDate = dateAward.award_period_date
+          awardsDailyDateDto.rewardDate = dateAward.award_reward_date
           awardsDailyDateDto.no = dateAward.award_no
           awardsDailyDateDto.awards = []
 
           const [data] = await this.awardRepository.getAllAndPagination(searchAwardAndDateDto)
           for (const award of data) {
             const typeDto = new TypeDto()
-            // typeDto.name = award.type.name
+            typeDto.name = award.exchange.type.name
 
             const awardDto = new AwardDto()
             awardDto.number = award.number
-            // awardDto.periodDate = award.periodDate
+            awardDto.rewardDate = award.rewardDate
             awardDto.type = typeDto
             awardsDailyDateDto.awards.push(awardDto)
           }

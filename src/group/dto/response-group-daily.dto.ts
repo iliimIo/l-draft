@@ -12,7 +12,7 @@ export class AwardDto {
   number: string
 
   @ApiProperty({ type: Date })
-  periodDate: Date
+  rewardDate: Date
 
   @ApiProperty({ type: () => TypeDto })
   type: TypeDto
@@ -20,7 +20,7 @@ export class AwardDto {
 
 export class AwardsDailyDateDto {
   @ApiProperty({ type: String })
-  periodDate: string | Date
+  rewardDate: string | Date
 
   @ApiProperty({ type: Number })
   no: number

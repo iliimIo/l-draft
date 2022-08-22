@@ -12,7 +12,7 @@ export class AwardRepository extends Repository<Award> {
    * @param searchAwardDto SearchAwardDto
    */
   async getAllAndPagination(searchAwardDto: SearchAwardDto) {
-    const { id, number, rewardDate, startDate, endDate, search, page, limit, sort, isActive, isEnabled } =
+    const { id, number, rewardDate, startDate, endDate, search, page, limit, sort, isActive, isEnabled, isExchange } =
       searchAwardDto
     try {
       const query = this.createQueryBuilder('award').select(['award'])
@@ -49,6 +49,10 @@ export class AwardRepository extends Repository<Award> {
 
       if (isActive) {
         query.andWhere('award.isActive =:isActive', { isActive })
+      }
+
+      if (isExchange) {
+        query.leftJoinAndSelect('award.exchange', 'exchange').leftJoinAndSelect('exchange.type', 'type')
       }
 
       return await query
@@ -138,25 +142,26 @@ export class AwardRepository extends Repository<Award> {
    * Get date award
    * @param searchAwardDto SearchAwardDto
    */
-  async getDateAwards(searchAwardDto: SearchAwardDto) {
-    // const { groupCode, page, limit } = searchAwardDto
+  async getGroupAward(searchAwardDto: SearchAwardDto) {
+    const { groupCode, page, limit } = searchAwardDto
     try {
       const query = await this.createQueryBuilder('award')
-        .select(['award.periodDate'])
-        .leftJoin('award.group', 'group')
-        .where('award.isActive =:isActive', { isActive: true })
-        // .andWhere('group.code =:groupCode', { groupCode })
-        .distinctOn(['award.periodDate'])
+        .select(['award.id', 'award.number', 'award.rewardDate', 'award.startDate', 'award.endDate', 'type.name'])
+        .leftJoin('award.exchange', 'exchange')
+        .leftJoin('exchange.group', 'group')
+        .leftJoin('exchange.type', 'type')
+        .andWhere('group.code =:groupCode', { groupCode })
+        .distinctOn(['award.rewardDate'])
 
-      // if (page) {
-      //   query.offset(Number(page) || 1)
-      // }
+      if (page) {
+        query.offset(Number(page) || 1)
+      }
 
-      // if (limit) {
-      //   query.limit(Number(limit) || 10)
-      // }
+      if (limit) {
+        query.limit(Number(limit) || 10)
+      }
 
-      return query.orderBy('award.periodDate', 'DESC').addSelect('award.no').getRawMany()
+      return query.orderBy('award.rewardDate', 'DESC').addSelect('award.no').getRawMany()
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw new InternalServerErrorException()
