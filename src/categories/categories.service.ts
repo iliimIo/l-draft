@@ -6,7 +6,7 @@ import { SearchCategoriesDto } from './dto/search-categories.dto'
 import { CreateCategoriesDto } from './dto/create-categories.dto'
 import { UpdateCategoriesDto } from './dto/update-categories.dto'
 import { AwardService } from 'src/award/award.service'
-import { CategoriesDailyDto, GroupsDto, AwardDto, TypeDto } from './dto/response-categories-daily.dto'
+import { CategoriesDailyDto, GroupsDto, AwardDto, TypeDto, ExchangeDto } from './dto/response-categories-daily.dto'
 import { MESSAGE } from '../common/message/response'
 
 @Injectable()
@@ -41,24 +41,31 @@ export class CategoriesService {
           groupDto.logo = group.logo
           groupDto.awards = []
 
-          const awardList = await this.awardService.dailyCategoriesAwards(group.code)
-          if (awardList) {
-            for (const award of awardList) {
-              const typeDto = new TypeDto()
-              typeDto.name = award.type.name
+          for (const exchange of JSON.parse(JSON.stringify(group.exchange))) {
+            const typeDto = new TypeDto()
+            typeDto.id = exchange.type.id
+            typeDto.name = exchange.type.name
+            typeDto.digit = exchange.type.digit
 
-              const awardDto = new AwardDto()
-              awardDto.number = award.number
-              awardDto.periodDate = award.periodDate
-              awardDto.type = typeDto
-              groupDto.awards.push(awardDto)
-            }
+            const exchangeDto = new ExchangeDto()
+            exchangeDto.id = exchange.id
+            exchangeDto.exchange = exchange.exchange
+
+            const award = await this.awardService.dailyCategoriesAwards(exchange.id, exchange.type.id)
+            const awardDto = new AwardDto()
+            awardDto.number = award.number
+            awardDto.rewardDate = award.rewardDate
+            awardDto.startDate = award.startDate
+            awardDto.endDate = award.endDate
+            awardDto.type = typeDto
+            awardDto.exchange = exchangeDto
+            await groupDto.awards.push(awardDto)
           }
           categoriesDto.groups.push(groupDto)
         }
         data.push(categoriesDto)
       }
-      return { data: data }
+      return { data }
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error

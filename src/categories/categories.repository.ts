@@ -103,12 +103,25 @@ export class CategoriesRepository extends Repository<Categories> {
   async getCategoriesDaily() {
     try {
       const query = this.createQueryBuilder('categories')
-        .select(['categories.name', 'categories.code', 'group.name', 'group.code', 'group.logo'])
+        .select([
+          'categories.name',
+          'categories.code',
+          'group.name',
+          'group.code',
+          'group.logo',
+          'exchange.id',
+          'exchange.exchange',
+          'type.id',
+          'type.name',
+          'type.digit'
+        ])
         .leftJoin('categories.group', 'group')
-        .leftJoin('group.award', 'award')
-        .leftJoin('award.type', 'type')
+        .leftJoin('group.exchange', 'exchange')
+        .leftJoin('exchange.type', 'type')
         .where('categories.isActive =:isActive', { isActive: true })
+        .where('categories.isEnabled =:isEnabled', { isEnabled: true })
         .andWhere('group.isActive =:isActive', { isActive: true })
+        .andWhere('group.isEnabled =:isEnabled', { isEnabled: true })
 
       return await query.addOrderBy('categories.createdAt', 'DESC').getMany()
     } catch (error) {

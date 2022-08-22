@@ -113,20 +113,21 @@ export class AwardRepository extends Repository<Award> {
    * Get type award
    * @param searchAwardDto SearchAwardDto
    */
-  async getTypeAwards(searchAwardDto: SearchAwardDto) {
-    // const { groupCode } = searchAwardDto
+  async getCategoriesAward(searchAwardDto: SearchAwardDto) {
+    const { exchangeId, typeId } = searchAwardDto
     try {
-      return (
-        this.createQueryBuilder('award')
-          .select(['award.id', 'type.id', 'type.name'])
-          .leftJoin('award.group', 'group')
-          .leftJoin('group.categories', 'categories')
-          .leftJoin('award.type', 'type')
-          .where('award.isActive =:isActive', { isActive: true })
-          // .andWhere('group.code =:groupCode', { groupCode })
-          .distinctOn(['type.name'])
-          .getMany()
-      )
+      return this.createQueryBuilder('award')
+        .select(['award'])
+        .leftJoin('award.exchange', 'exchange')
+        .leftJoin('exchange.type', 'type')
+        .andWhere('exchange.id =:exchangeId', { exchangeId })
+        .andWhere('type.id =:typeId', { typeId })
+        .andWhere('award.isEnabled =:isEnabled', { isEnabled: true })
+        .andWhere('award.isActive =:isActive', { isActive: true })
+        .andWhere('exchange.isEnabled =:isEnabled', { isEnabled: true })
+        .andWhere('exchange.isActive =:isActive', { isActive: true })
+        .orderBy('award.rewardDate', 'DESC')
+        .getOne()
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw new InternalServerErrorException()
@@ -167,12 +168,12 @@ export class AwardRepository extends Repository<Award> {
    * @param searchAwardDto SearchAwardDto
    */
   async getAwardRewardDateNo(searchAwardDto: SearchAwardDto) {
-    const { exchangeRateId, isActive, isEnabled } = searchAwardDto
+    const { exchangeId, isActive, isEnabled } = searchAwardDto
     try {
       const query = this.createQueryBuilder('award').select(['award']).leftJoin('award.exchange', 'exchange')
 
-      if (exchangeRateId) {
-        query.andWhere('exchange.id =:exchangeRateId', { exchangeRateId })
+      if (exchangeId) {
+        query.andWhere('exchange.id =:exchangeId', { exchangeId })
       }
 
       if (isEnabled) {

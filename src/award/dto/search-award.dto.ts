@@ -46,5 +46,11 @@ export class SearchAwardDto extends PickType(BaseSearchDto, [
   @IsOptional()
   @IsString()
   @Type(() => String)
-  exchangeRateId: string
+  exchangeId: string
+
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @IsString()
+  @Type(() => String)
+  typeId: string
 }

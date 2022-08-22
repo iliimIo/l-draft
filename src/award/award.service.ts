@@ -90,7 +90,7 @@ export class AwardService {
 
       const searchExchangeRateDateDto = new SearchAwardDto()
       searchExchangeRateDateDto.rewardDate = rewardDate
-      searchExchangeRateDateDto.exchangeRateId = exchangeId
+      searchExchangeRateDateDto.exchangeId = exchangeId
       const awardExchangeRateRewardDateNo = await this.awardRepository.getAwardRewardDateNo(searchExchangeRateDateDto)
 
       const award = new Award()
@@ -188,24 +188,14 @@ export class AwardService {
   }
 
   /**
-   * Find daily categories award
+   * Find daily exchange award
    */
-  public async dailyCategoriesAwards(groupCode: string) {
+  public async dailyCategoriesAwards(exchangeId: string, typeId: string) {
     try {
       const searchAwardDto = new SearchAwardDto()
-      // searchAwardDto.groupCode = groupCode
-      const typeAwards = await this.awardRepository.getTypeAwards(searchAwardDto)
-
-      const awards = []
-      for (const typeAward of typeAwards) {
-        const searchAwardAndTypeDto = new SearchAwardDto()
-        // searchAwardAndTypeDto.typeId = typeAward.type.id
-        // searchAwardAndTypeDto.groupCode = groupCode
-        const award = await this.findOne(searchAwardAndTypeDto)
-        awards.push(award)
-      }
-
-      return awards
+      searchAwardDto.exchangeId = exchangeId
+      searchAwardDto.typeId = typeId
+      return await this.awardRepository.getCategoriesAward(searchAwardDto)
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error
