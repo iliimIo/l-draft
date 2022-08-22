@@ -80,6 +80,8 @@ export class AwardService {
     try {
       const searchExchangeRateDto = new SearchExchangeRateDto()
       searchExchangeRateDto.id = exchangeId
+      searchExchangeRateDto.isActive = true
+      searchExchangeRateDto.isEnabled = true
       const exchangeRate = await this.exchangeRateService.findById(searchExchangeRateDto)
 
       if (!exchangeRate) {
