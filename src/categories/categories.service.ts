@@ -52,14 +52,16 @@ export class CategoriesService {
             exchangeDto.exchange = exchange.exchange
 
             const award = await this.awardService.dailyCategoriesAwards(exchange.id, exchange.type.id)
-            const awardDto = new AwardDto()
-            awardDto.number = award.number
-            awardDto.rewardDate = award.rewardDate
-            awardDto.startDate = award.startDate
-            awardDto.endDate = award.endDate
-            awardDto.type = typeDto
-            awardDto.exchange = exchangeDto
-            await groupDto.awards.push(awardDto)
+            if (award) {
+              const awardDto = new AwardDto()
+              awardDto.number = award.number
+              awardDto.rewardDate = award.rewardDate
+              awardDto.startDate = award.startDate
+              awardDto.endDate = award.endDate
+              awardDto.type = typeDto
+              awardDto.exchange = exchangeDto
+              await groupDto.awards.push(awardDto)
+            }
           }
           categoriesDto.groups.push(groupDto)
         }
