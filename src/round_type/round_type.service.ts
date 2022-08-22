@@ -11,20 +11,20 @@ export class RoundTypeService {
   constructor(
     @InjectRepository(RoundTypeRepository)
     private roundTypeRepository: RoundTypeRepository,
-  ) {}
+  ) { }
 
 
-   /**
-   * Find all and pagination
-   * @param searchRoundTypeDto SearchRoundTypeDto
-   */
-    public async findAllAndPagination(searchRoundTypeDto: SearchRoundTypeDto) {
-      try {
-        const [group, total] = await this.roundTypeRepository.getAllAndPagination(searchRoundTypeDto)
-        return { data: group, total }
-      } catch (error) {
-        this.logger.error(JSON.stringify(error))
-        throw error
-      }
+  /**
+  * Find all and pagination
+  * @param searchRoundTypeDto SearchRoundTypeDto
+  */
+  public async findAllAndPagination(searchRoundTypeDto: SearchRoundTypeDto) {
+    try {
+      const [group, total] = await this.roundTypeRepository.getAllAndPagination(searchRoundTypeDto)
+      return { data: group, total }
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw error
     }
+  }
 }
