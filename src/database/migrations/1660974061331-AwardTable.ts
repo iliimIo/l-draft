@@ -45,6 +45,11 @@ export class AwardTable1660974061331 implements MigrationInterface {
             type: 'integer'
           },
           {
+            name: 'is_award',
+            type: 'boolean',
+            default: false
+          },
+          {
             name: 'is_active',
             type: 'boolean',
             default: true

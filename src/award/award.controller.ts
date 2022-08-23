@@ -46,6 +46,41 @@ export class AwardController {
   }
 
   @ApiOkResponse({
+    type: ResponseAwardListDto,
+    description: 'Get award list',
+    status: HttpStatus.OK
+  })
+  @ApiInternalServerErrorResponse({
+    description: `Can't get award`,
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    type: ResponseDto
+  })
+  @Get('reward')
+  public async reward(@Res() res: Response, @Query() searchAwardDto: SearchAwardDto) {
+    try {
+      searchAwardDto.isEnabled = true
+      searchAwardDto.isActive = true
+      searchAwardDto.isAward = false
+      searchAwardDto.isReward = true
+      const { data, total } = await this.awardService.findAllAndPagination(searchAwardDto)
+      return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
+        message: `Can get award list`,
+        data,
+        total
+      })
+    } catch (error) {
+      throw new HttpException(
+        {
+          statusCode: error.response.statusCode,
+          message: error.response.message
+        },
+        error.status
+      )
+    }
+  }
+
+  @ApiOkResponse({
     type: ResponseAwardDto,
     description: 'Get award',
     status: HttpStatus.OK

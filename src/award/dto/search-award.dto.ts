@@ -64,4 +64,14 @@ export class SearchAwardDto extends PickType(BaseSearchDto, [
   @IsOptional()
   @Type(() => Boolean)
   isExchange: boolean
+
+  @ApiProperty({ type: Boolean })
+  @IsOptional()
+  @Type(() => Boolean)
+  isAward: boolean
+
+  @ApiProperty({ type: Boolean })
+  @IsOptional()
+  @Type(() => Boolean)
+  isReward: boolean
 }

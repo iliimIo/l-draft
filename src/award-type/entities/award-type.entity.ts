@@ -1,13 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, JoinColumn, OneToMany, Index, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany } from 'typeorm'
 import { Base } from 'src/common/base/entities/base.entity'
 import { ExchangeRate } from 'src/exchange-rate/entities/exchange-rate.entity'
 
 @Entity('award_type')
-@Index('IDX_TYPE_ID')
 export class AwardType extends Base {
   @ApiProperty()
-  @Column({ unique: true, nullable: false })
+  @Column({ unique: true, nullable: true })
   name: string
 
   @ApiProperty()

@@ -1,13 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, Index, JoinColumn, OneToMany } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany } from 'typeorm'
 import { Base } from 'src/common/base/entities/base.entity'
 import { Group } from 'src/group/entities/group.entity'
 
 @Entity('categories')
-@Index('IDX_CATEGORIES_ID')
 export class Categories extends Base {
   @ApiProperty()
-  @Column({ unique: true, nullable: false })
+  @Column({ unique: true, nullable: true })
   name: string
 
   @ApiProperty()

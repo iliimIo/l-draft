@@ -5,8 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { AwardRepository } from './award.repository'
 import { CreateAwardDto } from './dto/create-award.dto'
 import { SearchAwardDto } from './dto/search-award.dto'
-import { GroupService } from 'src/group/group.service'
-import { AwardTypeService } from 'src/award-type/award-type.service'
 import { Award } from './entities/award.entity'
 import { UpdateAwardDto } from './dto/update-award.dto'
 import { formatDate } from '../common/utils/date'
@@ -127,6 +125,7 @@ export class AwardService {
 
       await this.awardRepository.update(award.id, {
         ...updateAwardDto,
+        isAward: false,
         updatedAt: new Date()
       })
       return await this.findById(searchAwardDto)

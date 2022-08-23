@@ -1,14 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, JoinColumn, OneToMany, Index, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany, ManyToOne } from 'typeorm'
 import { Base } from 'src/common/base/entities/base.entity'
 import { Categories } from 'src/categories/entities/categories.entity'
 import { ExchangeRate } from 'src/exchange-rate/entities/exchange-rate.entity'
 
 @Entity('group')
-@Index('IDX_GROUP_ID')
 export class Group extends Base {
   @ApiProperty()
-  @Column({ unique: true, nullable: false })
+  @Column({ unique: true, nullable: true })
   name: string
 
   @ApiProperty()
@@ -24,7 +23,6 @@ export class Group extends Base {
   @JoinColumn({ name: 'exchange_rate_id' })
   exchange: ExchangeRate
 
-  @Index('IDX_CATEGORIES_ID')
   @ManyToOne(() => Categories, (categories) => categories.group)
   @JoinColumn({ name: 'categories_id' })
   categories: Categories

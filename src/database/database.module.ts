@@ -15,11 +15,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
         database: configService.get('DATABASE_NAME'),
         entities: ['src/entities/*.entity{ .ts,.js}'],
         migrationsTableName: 'migrations_typeorm',
-        migrations: ['dist/database/migrations/*{.ts,.js}', 'dist/database/seeders/*{.ts,.js}'],
+        // migrations: ['dist/database/migrations/*{.ts,.js}', 'dist/database/seeders/*{.ts,.js}'],
+        migrations: ['dist/database/migrations/*{.js}', 'dist/database/seeders/*{.js}'],
         migrationsRun: true,
         autoLoadEntities: true,
-        synchronize: configService.get('DATABASE_SYNC')
-        // logging: ['query', 'error']
+        synchronize: configService.get('DATABASE_SYNC'),
+        logging: ['query', 'error']
       })
     })
   ]

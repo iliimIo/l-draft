@@ -13,6 +13,18 @@ export class AwardDto {
   @ApiProperty({ type: Date })
   periodDate: Date
 
+  @ApiProperty({ type: Date })
+  startDate: Date
+
+  @ApiProperty({ type: Date })
+  endDate: Date
+
+  @ApiProperty({ type: Boolean })
+  isAward: boolean
+
+  @ApiProperty({ type: Boolean })
+  isEnabled: boolean
+
   @ApiProperty({ type: Boolean })
   isActive: boolean
 

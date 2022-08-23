@@ -1,10 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 import { Base } from 'src/common/base/entities/base.entity'
 import { ExchangeRate } from 'src/exchange-rate/entities/exchange-rate.entity'
 
 @Entity('award')
-@Index('IDX_AWARD_ID')
 export class Award extends Base {
   @ApiProperty()
   @Column({ nullable: false })
@@ -25,6 +24,10 @@ export class Award extends Base {
   @ApiProperty()
   @Column({ nullable: false })
   no: number
+
+  @ApiProperty()
+  @Column({ name: 'is_award', default: false, nullable: true })
+  isAward: boolean
 
   // ---------- start relation ----------//
 

@@ -25,7 +25,9 @@ export class AwardRepository extends Repository<Award> {
       sort,
       isActive,
       isEnabled,
-      isExchange
+      isExchange,
+      isAward,
+      isReward
     } = searchAwardDto
     try {
       const query = this.createQueryBuilder('award').select(['award'])
@@ -62,6 +64,10 @@ export class AwardRepository extends Repository<Award> {
 
       if (isActive) {
         query.andWhere('award.isActive =:isActive', { isActive })
+      }
+
+      if (isReward) {
+        query.andWhere('award.isAward =:isAward', { isAward })
       }
 
       if (isExchange) {
