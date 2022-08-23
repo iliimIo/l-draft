@@ -7,11 +7,11 @@ import { ExchangeRate } from 'src/exchange-rate/entities/exchange-rate.entity'
 @Entity('group')
 export class Group extends Base {
   @ApiProperty()
-  @Column({ unique: true, nullable: true })
+  @Column({ unique: true, nullable: false })
   name: string
 
   @ApiProperty()
-  @Column({ unique: true, nullable: true })
+  @Column({ unique: true, nullable: false })
   code: string
 
   @ApiProperty()

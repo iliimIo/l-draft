@@ -26,7 +26,7 @@ export class GroupTable1660973301592 implements MigrationInterface {
             name: 'code',
             type: 'varchar',
             length: '255',
-            isNullable: true,
+            isNullable: false,
             isUnique: true
           },
           {

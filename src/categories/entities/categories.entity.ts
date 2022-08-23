@@ -6,7 +6,7 @@ import { Group } from 'src/group/entities/group.entity'
 @Entity('categories')
 export class Categories extends Base {
   @ApiProperty()
-  @Column({ unique: true, nullable: true })
+  @Column({ unique: true, nullable: false })
   name: string
 
   @ApiProperty()

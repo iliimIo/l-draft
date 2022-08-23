@@ -6,7 +6,7 @@ import { ExchangeRate } from 'src/exchange-rate/entities/exchange-rate.entity'
 @Entity('award_type')
 export class AwardType extends Base {
   @ApiProperty()
-  @Column({ unique: true, nullable: true })
+  @Column({ unique: true, nullable: false })
   name: string
 
   @ApiProperty()
