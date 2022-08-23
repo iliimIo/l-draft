@@ -51,6 +51,9 @@ export class GroupsDto {
   @ApiProperty({ type: String })
   logo: string | null
 
+  @ApiProperty({ type: Date })
+  rewardDate: Date
+
   @ApiProperty({ type: () => AwardDto, isArray: true })
   awards: AwardDto[]
 }

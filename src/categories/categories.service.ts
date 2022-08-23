@@ -39,6 +39,7 @@ export class CategoriesService {
           groupDto.name = group.name
           groupDto.code = group.code
           groupDto.logo = group.logo
+          groupDto.rewardDate = new Date()
           groupDto.awards = []
 
           for (const exchange of JSON.parse(JSON.stringify(group.exchange))) {
@@ -53,6 +54,8 @@ export class CategoriesService {
 
             const award = await this.awardService.dailyCategoriesAwards(exchange.id, exchange.type.id)
             if (award) {
+              groupDto.rewardDate = award.rewardDate
+
               const awardDto = new AwardDto()
               awardDto.number = award.number
               awardDto.rewardDate = award.rewardDate
