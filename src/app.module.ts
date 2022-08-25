@@ -9,9 +9,9 @@ import { AwardTypeModule } from './award-type/award-type.module'
 import { GroupModule } from './group/group.module'
 import { AwardModule } from './award/award.module'
 import { AuthModule } from './auth/auth.module'
-import { ExchangeRateModule } from './exchange-rate/exchange-rate.module';
-import { RoundTypeModule } from './round_type/round_type.module';
-import { RoundModule } from './round/round.module';
+import { ExchangeRateModule } from './exchange-rate/exchange-rate.module'
+import { RoundTypeModule } from './round_type/round-type.module'
+import { RoundModule } from './round/round.module'
 
 @Module({
   imports: [

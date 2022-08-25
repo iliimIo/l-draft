@@ -1,15 +1,15 @@
 import { Controller, Get, HttpException, HttpStatus, Param, Query, Res } from '@nestjs/common'
-import { RoundTypeService } from './round_type.service';
+import { RoundTypeService } from './round-type.service'
 import { ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger'
-import { ResponseDto } from 'src/common/base/dto/response.dto';
+import { ResponseDto } from 'src/common/base/dto/response.dto'
 import { Response } from 'express'
-import { ResponseGroupListDto } from 'src/group/dto/response-group.dto';
-import { SearchRoundTypeDto } from './dto/search-round_type.dto';
+import { ResponseGroupListDto } from 'src/group/dto/response-group.dto'
+import { SearchRoundTypeDto } from './dto/search-round-type.dto'
 
 @ApiTags('round-type')
 @Controller('round-type')
 export class RoundTypeController {
-  constructor(private readonly roundTypeService: RoundTypeService) { }
+  constructor(private readonly roundTypeService: RoundTypeService) {}
 
   @ApiOkResponse({
     type: ResponseGroupListDto,
@@ -42,5 +42,4 @@ export class RoundTypeController {
       )
     }
   }
-
 }
