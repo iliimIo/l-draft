@@ -52,4 +52,9 @@ export class SearchGroupDto extends PickType(BaseSearchDto, [
   @IsOptional()
   @IsString()
   isExchange: boolean
+
+  @ApiProperty({ type: Boolean })
+  @IsOptional()
+  @IsString()
+  isCategories: boolean
 }

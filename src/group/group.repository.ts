@@ -12,8 +12,20 @@ export class GroupRepository extends Repository<Group> {
    * @param searchGroupDto SearchGroupDto
    */
   async getAllAndPagination(searchGroupDto: SearchGroupDto) {
-    const { id, name, code, categoriesCode, categoriesId, search, page, limit, sort, isActive, isEnabled } =
-      searchGroupDto
+    const {
+      id,
+      name,
+      code,
+      categoriesCode,
+      categoriesId,
+      search,
+      page,
+      limit,
+      sort,
+      isActive,
+      isEnabled,
+      isCategories
+    } = searchGroupDto
     try {
       const query = this.createQueryBuilder('group').select(['group']).leftJoin('group.categories', 'categories')
 
@@ -49,6 +61,10 @@ export class GroupRepository extends Repository<Group> {
         query.andWhere('group.isActive =:isActive', { isActive })
       }
 
+      if (isCategories) {
+        query.addSelect(['categories'])
+      }
+
       return await query
         .offset((Number(page || 1) - 1) * Number(limit || 10))
         .limit(Number(limit || 10))
@@ -65,7 +81,8 @@ export class GroupRepository extends Repository<Group> {
    * @param searchGroupDto
    */
   async getOne(searchGroupDto: SearchGroupDto) {
-    const { id, name, code, categoriesCode, categoriesId, isActive, isEnabled, isExchange } = searchGroupDto
+    const { id, name, code, categoriesCode, categoriesId, isActive, isEnabled, isExchange, isCategories } =
+      searchGroupDto
     try {
       const query = this.createQueryBuilder('group').select(['group']).leftJoin('group.categories', 'categories')
 
@@ -107,6 +124,9 @@ export class GroupRepository extends Repository<Group> {
         query.andWhere('group.isActive =:isActive', { isActive })
       }
 
+      if (isCategories) {
+        query.addSelect(['categories'])
+      }
       return await query.getOne()
     } catch (error) {
       this.logger.error(JSON.stringify(error))

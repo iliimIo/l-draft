@@ -24,7 +24,6 @@ import { AuthGuard } from '@nestjs/passport'
 import RoleGuard from 'src/common/guards/role.guard'
 import { ROLE } from 'src/common/base/enum/role.enum'
 import { SearchGroupDto } from './dto/search-group.dto'
-import { ResponseGroupDailyDto } from './dto/response-group-daily.dto'
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard(), RoleGuard([ROLE.ADMIN]))
@@ -52,6 +51,7 @@ export class GroupManagementController {
   public async all(@Res() res: Response, @Query() searchGroupDto: SearchGroupDto) {
     try {
       searchGroupDto.isActive = true
+      searchGroupDto.isCategories = true
       const { data, total } = await this.groupService.findAllAndPagination(searchGroupDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
@@ -91,6 +91,7 @@ export class GroupManagementController {
       const searchGroupDto = new SearchGroupDto()
       searchGroupDto.id = groupId
       searchGroupDto.isActive = true
+      searchGroupDto.isCategories = true
       const { data } = await this.groupService.findById(searchGroupDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
