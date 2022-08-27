@@ -198,10 +198,12 @@ export class CategoriesService {
         }
       }
 
-      return await this.categoriesRepository.update(categories.id, {
+      await this.categoriesRepository.update(categories.id, {
         ...updateCategoriesDto,
         updatedAt: new Date()
       })
+      const data = await this.categoriesRepository.findOne(categories.id)
+      return { data }
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error

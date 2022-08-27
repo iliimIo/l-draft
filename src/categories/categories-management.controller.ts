@@ -165,10 +165,11 @@ export class CategoriesManagementController {
     @Param('categoriesId') categoriesId: string
   ) {
     try {
-      await this.categoriesService.update(categoriesId, updateCategoriesDto)
+      const {data} = await this.categoriesService.update(categoriesId, updateCategoriesDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
-        message: `Update categories successfully`
+        message: `Update categories successfully`,
+        data
       })
     } catch (error) {
       throw new HttpException(
