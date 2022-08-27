@@ -70,6 +70,14 @@ export class AwardRepository extends Repository<Award> {
         query.andWhere('award.isAward =:isAward', { isAward })
       }
 
+      if (groupCode) {
+        query
+          .leftJoinAndSelect('award.exchange', 'exchange')
+          .leftJoinAndSelect('exchange.type', 'type')
+          .leftJoinAndSelect('exchange.group', 'group')
+          .andWhere('group.code =:groupCode', { groupCode })
+      }
+
       if (isExchange) {
         query
           .leftJoinAndSelect('award.exchange', 'exchange')
