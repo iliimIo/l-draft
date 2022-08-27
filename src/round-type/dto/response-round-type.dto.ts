@@ -21,3 +21,12 @@ export class RoundTypeDto {
   @ApiProperty({ type: Date })
   updatedAt: Date
 }
+
+export class ResponseRoundTypeListDto extends OmitType(ResponseAndDataDto, ['data'] as const) {
+  @ApiProperty({ type: () => RoundTypeDto, isArray: true })
+  @IsArray()
+  data: RoundTypeDto[]
+
+  @ApiProperty()
+  total: number
+}
