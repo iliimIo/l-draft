@@ -46,4 +46,37 @@ export class RoundTypeRepository extends Repository<RoundType> {
       throw new InternalServerErrorException()
     }
   }
+
+  /**
+ * Get One
+ * @param searchRoundTypeDto SearchRoundTypeDto
+ */
+  async getOne(searchRoundTypeDto: SearchRoundTypeDto) {
+    const { id, name, isEnabled, isActive } = searchRoundTypeDto
+    try {
+      const query = this.createQueryBuilder('type').select(['type'])
+
+      if (id) {
+        query.andWhere('type.id =:id', { id })
+      }
+
+      if (name) {
+        query.andWhere('type.name =:name', { name })
+      }
+
+      if (isEnabled) {
+        query.andWhere('type.isEnabled =:isEnabled', { isEnabled })
+      }
+
+      if (isActive) {
+        query.andWhere('type.isActive =:isActive', { isActive })
+      }
+
+      return await query.getOne()
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw new InternalServerErrorException()
+    }
+  }
+
 }
