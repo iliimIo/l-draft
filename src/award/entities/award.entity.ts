@@ -10,15 +10,36 @@ export class Award extends Base {
   number: string
 
   @ApiProperty()
-  @Column({ name: 'reward_date', unique: false, nullable: false })
+  @Column({
+    name: 'reward_date',
+    type: 'timestamp',
+    precision: 6,
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    unique: false,
+    nullable: false
+  })
   rewardDate: Date
 
   @ApiProperty()
-  @Column({ name: 'start_date', unique: false, nullable: false })
+  @Column({
+    name: 'start_date',
+    type: 'timestamp',
+    precision: 6,
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    unique: false,
+    nullable: false
+  })
   startDate: Date
 
   @ApiProperty()
-  @Column({ name: 'end_date', unique: false, nullable: false })
+  @Column({
+    name: 'end_date',
+    type: 'timestamp',
+    precision: 6,
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    unique: false,
+    nullable: false
+  })
   endDate: Date
 
   @ApiProperty()

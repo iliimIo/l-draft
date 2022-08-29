@@ -93,11 +93,13 @@ export class AwardService {
 
       const award = new Award()
       award.number = number
-      award.rewardDate = new Date(rewardDate)
-      award.startDate = new Date(startDate)
-      award.endDate = new Date(endDate)
+      award.rewardDate = new Date(new Date(rewardDate).getTime())
+      award.startDate = new Date(new Date(startDate).getTime())
+      award.endDate = new Date(new Date(endDate).getTime())
       award.exchange = exchangeRate.data
       award.no = awardExchangeRateRewardDateNo?.no + 1 || 1
+
+      console.log(award)
 
       const data = await this.awardRepository.save(award)
       return { data }
