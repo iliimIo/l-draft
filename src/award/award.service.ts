@@ -11,7 +11,7 @@ import { formatDate } from '../common/utils/date'
 import { AwardsDailyDateDto, AwardDto, TypeDto } from 'src/group/dto/response-group-daily.dto'
 import { generateNo } from '../common/utils/pagination'
 import { MESSAGE } from '../common/message/response'
-import { formatTzUTC } from '../common/utils/date'
+import { formatTzUTC, changeTimeZone } from '../common/utils/date'
 
 @Injectable()
 export class AwardService {
@@ -94,13 +94,11 @@ export class AwardService {
 
       const award = new Award()
       award.number = number
-      award.rewardDate = new Date(formatTzUTC(rewardDate))
-      award.startDate = new Date(formatTzUTC(startDate))
-      award.endDate = new Date(formatTzUTC(endDate))
+      award.rewardDate = new Date(changeTimeZone(rewardDate, 'Asia/Bangkok'))
+      award.startDate = new Date(changeTimeZone(startDate, 'Asia/Bangkok'))
+      award.endDate = new Date(changeTimeZone(endDate, 'Asia/Bangkok'))
       award.exchange = exchangeRate.data
       award.no = awardExchangeRateRewardDateNo?.no + 1 || 1
-
-      console.log(award)
 
       const data = await this.awardRepository.save(award)
       return { data }

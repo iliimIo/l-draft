@@ -22,3 +22,20 @@ export const formatTzUTC = (day: string): any => {
 
   return new Date(Date.UTC(year, month, date, hour, minute, second)).toISOString()
 }
+
+export const changeTimeZone = (date: string, timeZone: string): Date => {
+  const day: Date = formatTzUTC(date)
+  if (typeof day === 'string') {
+    return new Date(
+      new Date(day).toLocaleString('en-US', {
+        timeZone
+      })
+    )
+  }
+
+  return new Date(
+    day.toLocaleString('en-US', {
+      timeZone
+    })
+  )
+}
