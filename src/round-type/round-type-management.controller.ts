@@ -57,7 +57,7 @@ export class RoundTypeManagementController {
   
   @ApiOkResponse({
     type: ResponseRoundTypeListDto,
-    description: 'Get banking',
+    description: 'Get round type',
     status: HttpStatus.OK
   })
   @ApiNotFoundResponse({

@@ -20,8 +20,8 @@ export class RoundTypeService {
    */
   public async findAllAndPagination(searchRoundTypeDto: SearchRoundTypeDto) {
     try {
-      const [group, total] = await this.roundTypeRepository.getAllAndPagination(searchRoundTypeDto)
-      return { data: group, total }
+      const [roundType, total] = await this.roundTypeRepository.getAllAndPagination(searchRoundTypeDto)
+      return { data: roundType, total }
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error
@@ -47,13 +47,13 @@ export class RoundTypeService {
    */
    public async findById(searchRoundTypeDto: SearchRoundTypeDto) {
     try {
-      const categories = await this.findOne(searchRoundTypeDto)
+      const roundType = await this.findOne(searchRoundTypeDto)
 
-      if (!categories) {
+      if (!roundType) {
         throw new NotFoundException(MESSAGE.ROUND_TYPE.NOT_FOUND)
       }
 
-      return { data: categories }
+      return { data: roundType }
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error
@@ -82,18 +82,18 @@ export class RoundTypeService {
       const searchRoundTypeDto = new SearchRoundTypeDto()
       searchRoundTypeDto.name = createRoundTypeDto.name
 
-      const awardType = await this.findOne(searchRoundTypeDto)
+      const roundType = await this.findOne(searchRoundTypeDto)
 
-      if (awardType && !awardType?.isActive) {
-        await this.roundTypeRepository.update(awardType.id, {
+      if (roundType && !roundType?.isActive) {
+        await this.roundTypeRepository.update(roundType.id, {
           isActive: true,
           updatedAt: new Date()
         })
-        const data = await this.roundTypeRepository.findOne(awardType.id)
+        const data = await this.roundTypeRepository.findOne(roundType.id)
         return { data }
       }
 
-      if (awardType) {
+      if (roundType) {
         throw new ConflictException(MESSAGE.ROUND_TYPE.DUPLICATE)
       }
 
