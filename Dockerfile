@@ -23,6 +23,7 @@ FROM node:16.13.0-alpine as production
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
+ENV TZ=Bangkok/Asia
 
 WORKDIR /usr/src/app
 
