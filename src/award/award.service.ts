@@ -11,6 +11,7 @@ import { formatDate } from '../common/utils/date'
 import { AwardsDailyDateDto, AwardDto, TypeDto } from 'src/group/dto/response-group-daily.dto'
 import { generateNo } from '../common/utils/pagination'
 import { MESSAGE } from '../common/message/response'
+import { formatTzUTC } from '../common/utils/date'
 
 @Injectable()
 export class AwardService {
@@ -93,9 +94,9 @@ export class AwardService {
 
       const award = new Award()
       award.number = number
-      award.rewardDate = new Date(new Date(rewardDate).getTime())
-      award.startDate = new Date(new Date(startDate).getTime())
-      award.endDate = new Date(new Date(endDate).getTime())
+      award.rewardDate = new Date(formatTzUTC(rewardDate))
+      award.startDate = new Date(formatTzUTC(startDate))
+      award.endDate = new Date(formatTzUTC(endDate))
       award.exchange = exchangeRate.data
       award.no = awardExchangeRateRewardDateNo?.no + 1 || 1
 

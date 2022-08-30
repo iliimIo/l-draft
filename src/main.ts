@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 
 async function bootstrap() {
+  process.env.TZ = 'UTC'
   const app = await NestFactory.create(AppModule, {
     logger: ['log', 'error', 'warn', 'debug', 'verbose']
   })
@@ -26,7 +27,6 @@ async function bootstrap() {
     credentials: true
   })
   app.setGlobalPrefix('api/v1')
-
   await app.listen(8002)
 }
 bootstrap()
