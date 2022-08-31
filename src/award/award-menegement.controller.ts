@@ -220,6 +220,41 @@ export class AwardManagementController {
 
   @ApiOkResponse({
     type: ResponseDto,
+    description: 'Reward award',
+    status: HttpStatus.OK
+  })
+  @ApiNotFoundResponse({
+    type: ResponseDto,
+    description: `Can't reward award`,
+    status: HttpStatus.NOT_FOUND
+  })
+  @ApiInternalServerErrorResponse({
+    description: `Can't reward award`,
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    type: ResponseDto
+  })
+  @Patch('reward/:awardId')
+  public async reward(@Res() res: Response, @Param('awardId') awardId: string) {
+    try {
+      const { data } = await this.awardService.reward(awardId)
+      return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
+        message: `Reward award successfully`,
+        data
+      })
+    } catch (error) {
+      throw new HttpException(
+        {
+          statusCode: error.response.statusCode,
+          message: error.response.message
+        },
+        error.status
+      )
+    }
+  }
+
+  @ApiOkResponse({
+    type: ResponseDto,
     description: 'Delete award',
     status: HttpStatus.OK
   })

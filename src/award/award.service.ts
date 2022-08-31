@@ -124,13 +124,12 @@ export class AwardService {
         throw new NotFoundException(MESSAGE.AWARD.NOT_FOUND)
       }
 
-      if (new Date(new Date(`${award.rewardDate}`).getTime()) > new Date() && updateAwardDto.number !== award.number) {
-        throw new NotFoundException(MESSAGE.AWARD.NOT_REWARD)
-      }
+      // if (new Date(new Date(`${award.rewardDate}`).getTime()) > new Date() && updateAwardDto.number !== award.number) {
+      //   throw new NotFoundException(MESSAGE.AWARD.NOT_REWARD)
+      // }
 
       await this.awardRepository.update(award.id, {
         ...updateAwardDto,
-        isAward: updateAwardDto.number !== award.number ? true : false,
         rewardDate: updateAwardDto.rewardDate
           ? new Date(changeTimeZone(updateAwardDto.rewardDate, 'UTC'))
           : award.rewardDate,
@@ -164,6 +163,33 @@ export class AwardService {
 
       await this.awardRepository.update(award.id, {
         isEnabled: !award.isEnabled,
+        updatedAt: new Date()
+      })
+      const data = await this.awardRepository.findOne(award.id)
+      return { data }
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw error
+    }
+  }
+
+  /**
+   * Reward
+   * @param awardId uuid
+   */
+  public async reward(awardId: string) {
+    try {
+      const searchAwardDto = new SearchAwardDto()
+      searchAwardDto.id = awardId
+      searchAwardDto.isActive = true
+
+      const award = await this.findOne(searchAwardDto)
+      if (!award) {
+        throw new NotFoundException(MESSAGE.AWARD.NOT_FOUND)
+      }
+
+      await this.awardRepository.update(award.id, {
+        isAward: !award.isAward,
         updatedAt: new Date()
       })
       const data = await this.awardRepository.findOne(award.id)
