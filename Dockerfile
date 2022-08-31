@@ -35,5 +35,5 @@ COPY . .
 
 COPY --from=development /usr/src/app/dist ./dist
 
-# CMD ["node", "dist/main"]
-CMD ["node", "npm", "start"]
+CMD ["node", "dist/main"]
+# CMD ["node", "npm", "start"]

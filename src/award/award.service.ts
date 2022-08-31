@@ -94,9 +94,9 @@ export class AwardService {
 
       const award = new Award()
       award.number = number
-      award.rewardDate = new Date(changeTimeZone(rewardDate, 'Asia/Bangkok'))
-      award.startDate = new Date(changeTimeZone(startDate, 'Asia/Bangkok'))
-      award.endDate = new Date(changeTimeZone(endDate, 'Asia/Bangkok'))
+      award.rewardDate = new Date(changeTimeZone(rewardDate, 'UTC'))
+      award.startDate = new Date(changeTimeZone(startDate, 'UTC'))
+      award.endDate = new Date(changeTimeZone(endDate, 'UTC'))
       award.exchange = exchangeRate.data
       award.no = awardExchangeRateRewardDateNo?.no + 1 || 1
 
