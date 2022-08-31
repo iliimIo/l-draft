@@ -15,6 +15,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
         database: configService.get('DATABASE_NAME'),
         entities: ['src/entities/*.entity{ .ts,.js}'],
         migrationsTableName: 'migrations_typeorm',
+        timezone: 'UTC',
+        charset: 'utf8mb4',
         // migrations: ['dist/database/migrations/*{.ts,.js}', 'dist/database/seeders/*{.ts,.js}'],
         migrations: ['dist/database/migrations/*{.js}', 'dist/database/seeders/*{.js}'],
         migrationsRun: true,
