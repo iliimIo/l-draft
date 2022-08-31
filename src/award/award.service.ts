@@ -124,16 +124,13 @@ export class AwardService {
         throw new NotFoundException(MESSAGE.AWARD.NOT_FOUND)
       }
 
-      if (
-        new Date(new Date(`${award.isAward}`).getTime()).getDate() !== new Date().getDate() &&
-        updateAwardDto.number !== award.number
-      ) {
+      if (new Date(new Date(`${award.rewardDate}`).getTime()) > new Date() && updateAwardDto.number !== award.number) {
         throw new NotFoundException(MESSAGE.AWARD.NOT_REWARD)
       }
 
       await this.awardRepository.update(award.id, {
         ...updateAwardDto,
-        isAward: true,
+        isAward: updateAwardDto.number !== award.number ? true : false,
         updatedAt: new Date()
       })
       return await this.findById(searchAwardDto)
