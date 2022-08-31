@@ -131,6 +131,13 @@ export class AwardService {
       await this.awardRepository.update(award.id, {
         ...updateAwardDto,
         isAward: updateAwardDto.number !== award.number ? true : false,
+        rewardDate: updateAwardDto.rewardDate
+          ? new Date(changeTimeZone(updateAwardDto.rewardDate, 'UTC'))
+          : award.rewardDate,
+        startDate: updateAwardDto.startDate
+          ? new Date(changeTimeZone(updateAwardDto.startDate, 'UTC'))
+          : award.startDate,
+        endDate: updateAwardDto.endDate ? new Date(changeTimeZone(updateAwardDto.endDate, 'UTC')) : award.endDate,
         updatedAt: new Date()
       })
       return await this.findById(searchAwardDto)
