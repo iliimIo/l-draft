@@ -99,6 +99,7 @@ export class AwardService {
       award.endDate = new Date(changeTimeZone(endDate, 'UTC'))
       award.exchange = exchangeRate.data
       award.no = awardExchangeRateRewardDateNo?.no + 1 || 1
+      award.isEnabled = false
 
       const data = await this.awardRepository.save(award)
       return { data }
