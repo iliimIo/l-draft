@@ -126,7 +126,7 @@ export class AwardService {
 
       await this.awardRepository.update(award.id, {
         ...updateAwardDto,
-        isAward: false,
+        isAward: true,
         updatedAt: new Date()
       })
       return await this.findById(searchAwardDto)
