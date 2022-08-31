@@ -11,7 +11,7 @@ import { formatDate } from '../common/utils/date'
 import { AwardsDailyDateDto, AwardDto, TypeDto } from 'src/group/dto/response-group-daily.dto'
 import { generateNo } from '../common/utils/pagination'
 import { MESSAGE } from '../common/message/response'
-import { formatTzUTC, changeTimeZone } from '../common/utils/date'
+import { changeTimeZone } from '../common/utils/date'
 
 @Injectable()
 export class AwardService {
@@ -122,6 +122,13 @@ export class AwardService {
 
       if (!award) {
         throw new NotFoundException(MESSAGE.AWARD.NOT_FOUND)
+      }
+
+      if (
+        new Date(new Date(`${award.isAward}`).getTime()).getDate() !== new Date().getDate() &&
+        updateAwardDto.number !== award.number
+      ) {
+        throw new NotFoundException(MESSAGE.AWARD.NOT_REWARD)
       }
 
       await this.awardRepository.update(award.id, {
