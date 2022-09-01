@@ -21,6 +21,11 @@ export class ExchangeRateTable1660976059501 implements MigrationInterface {
             isNullable: false
           },
           {
+            name: 'quantity',
+            type: 'integer',
+            isNullable: false
+          },
+          {
             name: 'is_active',
             type: 'boolean',
             default: true

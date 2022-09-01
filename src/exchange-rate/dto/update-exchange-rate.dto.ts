@@ -9,6 +9,12 @@ export class UpdateExchangeRateDto {
   @Type(() => Number)
   exchange: number
 
+  @ApiProperty({ type: Number, default: 0 })
+  @IsNumber()
+  @IsOptional()
+  @Type(() => Number)
+  quantity: number
+
   @ApiProperty({ type: String })
   @IsString()
   @IsOptional()

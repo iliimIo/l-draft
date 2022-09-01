@@ -11,6 +11,10 @@ export class ExchangeRate extends Base {
   @Column({ nullable: false, default: 0 })
   exchange: number
 
+  @ApiProperty()
+  @Column({ nullable: false, default: 0 })
+  quantity: number
+
   // ---------- start relation ----------//
 
   @ManyToOne(() => AwardType, (awardType) => awardType.exchange)
