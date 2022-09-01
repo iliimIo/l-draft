@@ -28,7 +28,7 @@ export class Round extends Base {
 
   // ---------- start relation ----------//
 
-  @OneToMany(() => RoundType, (roundType) => roundType.round)
+  @OneToMany(() => RoundType, (roundType) => roundType.id)
   @JoinColumn({ name: 'round_type_id' })
   roundType: RoundType[]
 

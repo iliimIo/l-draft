@@ -9,10 +9,4 @@ export class RoundType extends Base {
   @ApiProperty()
   @Column({ unique: true, nullable: false })
   name: string
-
-  // ---------- start relation ----------//
-  @ManyToOne(() => Round, (round) => round.roundType)
-  @JoinColumn({ name: 'round_id' })
-  round: Round
-  // ---------- end relation ----------//
 }

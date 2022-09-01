@@ -1,6 +1,26 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, Query, Res, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Res,
+  UseGuards
+} from '@nestjs/common'
 import { RoundTypeService } from './round-type.service'
-import { ApiBearerAuth, ApiInternalServerErrorResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger'
+import {
+  ApiBearerAuth,
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse
+} from '@nestjs/swagger'
 import { ResponseDto } from 'src/common/base/dto/response.dto'
 import { Response } from 'express'
 import { SearchRoundTypeDto } from './dto/search-round-type.dto'
@@ -12,14 +32,14 @@ import { CreateRoundTypeDto } from './dto/create-round-type.dto'
 import { UpdateRoundTypeDto } from './dto/update-round-type.dto'
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard(), RoleGuard([ROLE.ADMIN]))
+// @UseGuards(AuthGuard(), RoleGuard([ROLE.ADMIN]))
 @ApiUnauthorizedResponse({
   description: 'Access token is expire',
   status: HttpStatus.UNAUTHORIZED,
   type: ResponseDto
 })
-@ApiTags('round-type-management')
-@Controller('round-type-management')
+@ApiTags('round-type/management')
+@Controller('round-type/management')
 export class RoundTypeManagementController {
   constructor(private readonly roundTypeService: RoundTypeService) {}
 
@@ -54,7 +74,7 @@ export class RoundTypeManagementController {
       )
     }
   }
-  
+
   @ApiOkResponse({
     type: ResponseRoundTypeListDto,
     description: 'Get round type',
@@ -123,7 +143,6 @@ export class RoundTypeManagementController {
     }
   }
 
-  
   @ApiOkResponse({
     type: ResponseDto,
     description: 'Update round type',
@@ -198,7 +217,6 @@ export class RoundTypeManagementController {
     }
   }
 
-  
   @ApiOkResponse({
     type: ResponseDto,
     description: 'Delete round type',
