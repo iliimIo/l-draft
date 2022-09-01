@@ -9,8 +9,11 @@ export class RoundDto {
   @ApiProperty({ type: String })
   name: string
 
+  @ApiProperty({ type: String })
+  time: string
+
   @ApiProperty({ type: Boolean })
-  isPublic: boolean
+  isEnabled: boolean
 
   @ApiProperty({ type: Boolean })
   isActive: boolean
@@ -29,4 +32,9 @@ export class ResponseRoundListDto extends OmitType(ResponseAndDataDto, ['data'] 
 
   @ApiProperty()
   total: number
+}
+
+export class ResponseRoundDto extends OmitType(ResponseAndDataDto, ['data'] as const) {
+  @ApiProperty({ type: RoundDto })
+  data: RoundDto
 }

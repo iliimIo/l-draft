@@ -11,12 +11,19 @@ export class CreateRoundDto {
   @ApiProperty({ type: String })
   @IsString()
   @Type(() => String)
-  startDate: string
+  time: string
 
   @ApiProperty({ type: String })
   @IsString()
+  @IsOptional()
   @Type(() => String)
-  endDate: string
+  day: string
+
+  @ApiProperty({ type: String })
+  @IsString()
+  @IsOptional()
+  @Type(() => String)
+  date: string
 
   @ApiProperty({ type: String })
   @IsString()

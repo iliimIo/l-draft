@@ -61,19 +61,6 @@ export class RoundTypeService {
   }
 
   /**
-   * Find by ids
-   * @param ids uuid[]
-   */
-  public async findByIds(ids: string[]) {
-    try {
-      return await this.roundTypeRepository.findByIds(ids)
-    } catch (error) {
-      this.logger.error(JSON.stringify(error))
-      throw error
-    }
-  }
-
-  /**
    * Create
    * @param createRoundTypeDto CreateRoundTypeDto
    */

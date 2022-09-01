@@ -3,8 +3,6 @@ import { ApiProperty, PickType } from '@nestjs/swagger'
 import { IsOptional, IsString } from 'class-validator'
 
 import { BaseSearchDto } from 'src/common/base/dto/search.dto'
-import { timestamp } from 'rxjs'
-import { Timestamp } from 'typeorm'
 
 export class SearchRoundDto extends PickType(BaseSearchDto, [
   'page',
@@ -25,6 +23,12 @@ export class SearchRoundDto extends PickType(BaseSearchDto, [
   @IsString()
   @Type(() => String)
   name: string
+
+  @ApiProperty({ type: String })
+  @IsOptional()
+  @IsString()
+  @Type(() => String)
+  time: string
 
   @ApiProperty({ type: String })
   @IsString()

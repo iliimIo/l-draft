@@ -11,12 +11,8 @@ export class Round extends Base {
   name: string
 
   @ApiProperty()
-  @Column({ name: 'start_date', nullable: false })
-  startDate: Date
-
-  @ApiProperty()
-  @Column({ name: 'end_date', nullable: false })
-  endDate: Date
+  @Column({ name: 'time', nullable: false })
+  time: string
 
   @ApiProperty()
   @Column({ nullable: true })

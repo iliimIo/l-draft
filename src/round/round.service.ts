@@ -10,6 +10,7 @@ import { RoundTypeService } from 'src/round-type/round-type.service'
 import { SearchRoundTypeDto } from 'src/round-type/dto/search-round-type.dto'
 import { SearchGroupDto } from 'src/group/dto/search-group.dto'
 import { GroupService } from 'src/group/group.service'
+
 @Injectable()
 export class RoundService {
   private readonly logger = new Logger(RoundService.name)
@@ -69,25 +70,12 @@ export class RoundService {
   }
 
   /**
-   * Find by ids
-   * @param ids uuid[]
-   */
-  public async findByIds(ids: string[]) {
-    try {
-      return await this.roundRepository.findByIds(ids)
-    } catch (error) {
-      this.logger.error(JSON.stringify(error))
-      throw error
-    }
-  }
-
-  /**
    * Create
    * @param createRoundDto CreateRoundDto
    */
   public async create(createRoundDto: CreateRoundDto) {
     try {
-      const { name, startDate, endDate, roundTypeId, groupId } = createRoundDto
+      const { name, time, date, day, roundTypeId, groupId } = createRoundDto
       const searchRoundTypeDto = new SearchRoundTypeDto()
       searchRoundTypeDto.id = roundTypeId
       searchRoundTypeDto.isActive = true
@@ -108,18 +96,13 @@ export class RoundService {
         throw new NotFoundException(MESSAGE.GROUP.NOT_FOUND)
       }
 
-      // const searchRoundDto = new SearchRoundDto()
-      // searchRoundDto.name = createRoundDto.name
-      // searchRoundDto.roundTypeId = createRoundDto.roundTypeId
-
       const round = new Round()
       round.name = name
-      round.startDate = new Date(startDate)
-      round.endDate = new Date(endDate)
+      round.time = time
       round.roundType = roundType.data
       round.group = group.data
-      round.date = ''
-      round.day = ''
+      round.date = date
+      round.day = day
 
       const data = await this.roundRepository.save(round)
       return { data }

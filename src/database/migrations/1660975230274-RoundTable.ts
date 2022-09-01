@@ -22,28 +22,22 @@ export class RoundTable1660975230274 implements MigrationInterface {
             isNullable: false
           },
           {
-            name: 'start_date',
-            type: 'timestamp',
-            isNullable: false,
-            isUnique: false
-          },
-          {
-            name: 'end_date',
-            type: 'timestamp',
-            isNullable: false,
-            isUnique: false
+            name: 'time',
+            type: 'varchar',
+            length: '255',
+            isNullable: false
           },
           {
             name: 'day',
             type: 'varchar',
             length: '255',
-            isNullable: false
+            isNullable: true
           },
           {
             name: 'date',
             type: 'varchar',
             length: '255',
-            isNullable: false
+            isNullable: true
           },
           {
             name: 'is_active',

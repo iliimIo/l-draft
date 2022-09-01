@@ -14,7 +14,12 @@ export class RoundRepository extends Repository<Round> {
   async getAllAndPagination(searchRoundDto: SearchRoundDto) {
     const { id, name, page, limit, sort, isActive, isEnabled } = searchRoundDto
     try {
-      const query = this.createQueryBuilder('round').select(['round'])
+      const query = this.createQueryBuilder('round')
+        .select(['round'])
+        .leftJoinAndSelect('round.roundType', 'roundType')
+        .leftJoinAndSelect('round.group', 'group')
+        .leftJoinAndSelect('group.exchange', 'exchange')
+        .leftJoinAndSelect('exchange.type', 'type')
 
       if (id) {
         query.andWhere('round.id =:id', { id })
@@ -50,7 +55,12 @@ export class RoundRepository extends Repository<Round> {
   async getOne(searchRoundDto: SearchRoundDto) {
     const { id, name, isEnabled, isActive } = searchRoundDto
     try {
-      const query = this.createQueryBuilder('round').select(['round'])
+      const query = this.createQueryBuilder('round')
+        .select(['round'])
+        .leftJoinAndSelect('round.roundType', 'roundType')
+        .leftJoinAndSelect('round.group', 'group')
+        .leftJoinAndSelect('group.exchange', 'exchange')
+        .leftJoinAndSelect('exchange.type', 'type')
 
       if (id) {
         query.andWhere('round.id =:id', { id })

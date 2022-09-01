@@ -32,13 +32,13 @@ import { CreateRoundDto } from './dto/create-round.dto'
 import { UpdateRoundDto } from './dto/update-round.dto'
 
 @ApiBearerAuth()
-// @UseGuards(AuthGuard(), RoleGuard([ROLE.ADMIN]))
+@UseGuards(AuthGuard(), RoleGuard([ROLE.ADMIN]))
 @ApiUnauthorizedResponse({
   description: 'Access token is expire',
   status: HttpStatus.UNAUTHORIZED,
   type: ResponseDto
 })
-@ApiTags('round/management')
+@ApiTags('round-management')
 @Controller('round/management')
 export class RoundManagementController {
   constructor(private readonly roundService: RoundService) {}
