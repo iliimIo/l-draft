@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common'
+import { ScheduleModule } from '@nestjs/schedule'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { DatabaseModule } from './database/database.module'
@@ -20,6 +21,7 @@ import { RoundModule } from './round/round.module'
       isGlobal: true,
       validationSchema: configValidationSchema
     }),
+    ScheduleModule.forRoot(),
     DatabaseModule,
     CategoriesModule,
     AwardTypeModule,
