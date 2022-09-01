@@ -113,9 +113,7 @@ export class RoundTypeService {
   public async update(roundTypeId: string, updateRoundTypeDto: UpdateRoundTypeDto) {
     try {
       const searchRoundTypeDto = new SearchRoundTypeDto()
-
       searchRoundTypeDto.id = roundTypeId
-      console.log(roundTypeId, updateRoundTypeDto, searchRoundTypeDto)
       const roundType = await this.findOne(searchRoundTypeDto)
 
       if (!roundType) {
