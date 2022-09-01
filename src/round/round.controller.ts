@@ -46,6 +46,7 @@ export class RoundController {
         total
       })
     } catch (error) {
+      console.log(error)
       throw new HttpException(
         {
           statusCode: error.response.statusCode,

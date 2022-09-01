@@ -28,16 +28,6 @@ export class SearchRoundDto extends PickType(BaseSearchDto, [
 
   @ApiProperty({ type: String })
   @IsString()
-  @Type(() => String)
-  startDate: string
-
-  @ApiProperty({ type: String })
-  @IsString()
-  @Type(() => String)
-  endDate: string
-
-  @ApiProperty({ type: String })
-  @IsString()
   @IsOptional()
   @Type(() => String)
   groupId: string

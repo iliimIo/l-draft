@@ -108,11 +108,9 @@ export class RoundService {
         throw new NotFoundException(MESSAGE.GROUP.NOT_FOUND)
       }
 
-      const searchRoundDto = new SearchRoundDto()
-      searchRoundDto.name = createRoundDto.name
-      searchRoundDto.startDate = createRoundDto.startDate
-      searchRoundDto.endDate = createRoundDto.endDate
-      searchRoundDto.roundTypeId = createRoundDto.roundTypeId
+      // const searchRoundDto = new SearchRoundDto()
+      // searchRoundDto.name = createRoundDto.name
+      // searchRoundDto.roundTypeId = createRoundDto.roundTypeId
 
       const round = new Round()
       round.name = name
