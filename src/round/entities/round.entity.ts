@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Base } from 'src/common/base/entities/base.entity'
+import { Group } from 'src/group/entities/group.entity'
 import { RoundType } from 'src/round-type/entities/round-type.entity'
-import { Column, Entity, Index, JoinColumn, OneToMany, UpdateDateColumn } from 'typeorm'
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm'
 
 @Entity('round')
 @Index('IDX_ROUND_ID')
@@ -11,11 +12,11 @@ export class Round extends Base {
   name: string
 
   @ApiProperty()
-  @UpdateDateColumn({ name: 'start_dete', nullable: true })
+  @Column({ name: 'start_date', unique: false, nullable: false })
   startDate: Date
 
   @ApiProperty()
-  @UpdateDateColumn({ name: 'end_date', nullable: true })
+  @Column({ name: 'end_date', unique: false, nullable: false })
   endDate: Date
 
   @ApiProperty()
@@ -28,9 +29,13 @@ export class Round extends Base {
 
   // ---------- start relation ----------//
 
-  @OneToMany(() => RoundType, (roundType) => roundType.id)
+  @ManyToOne(() => Group, (group) => group.round)
+  @JoinColumn({ name: 'group_id' })
+  group: Group
+
+  @ManyToOne(() => RoundType, (roundType) => roundType.round)
   @JoinColumn({ name: 'round_type_id' })
-  roundType: RoundType[]
+  roundType: RoundType
 
   // ---------- end relation ----------//
 }

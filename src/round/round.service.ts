@@ -1,18 +1,26 @@
-import { ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { MESSAGE } from 'src/common/message/response';
-import { CreateRoundDto } from './dto/create-round.dto';
-import { SearchRoundDto } from './dto/search-round.dto';
-import { UpdateRoundDto } from './dto/update-round.dto';
+import { ConflictException, forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { MESSAGE } from 'src/common/message/response'
+import { CreateRoundDto } from './dto/create-round.dto'
+import { SearchRoundDto } from './dto/search-round.dto'
+import { UpdateRoundDto } from './dto/update-round.dto'
+import { Round } from './entities/round.entity'
 import { RoundRepository } from './round.repository'
-
+import { RoundTypeService } from 'src/round-type/round-type.service'
+import { SearchRoundTypeDto } from 'src/round-type/dto/search-round-type.dto'
+import { SearchGroupDto } from 'src/group/dto/search-group.dto'
+import { GroupService } from 'src/group/group.service'
 @Injectable()
 export class RoundService {
   private readonly logger = new Logger(RoundService.name)
   constructor(
     @InjectRepository(RoundRepository)
-    private roundRepository: RoundRepository
-  ) { }
+    private roundRepository: RoundRepository,
+    @Inject(forwardRef(() => RoundTypeService))
+    private roundTypeService: RoundTypeService,
+    @Inject(forwardRef(() => GroupService))
+    private groupService: GroupService
+  ) {}
 
   /**
    * Find all and pagination
@@ -20,8 +28,8 @@ export class RoundService {
    */
   public async findAllAndPagination(searchRoundDto: SearchRoundDto) {
     try {
-      const [group, total] = await this.roundRepository.getAllAndPagination(searchRoundDto)
-      return { data: group, total }
+      const [round, total] = await this.roundRepository.getAllAndPagination(searchRoundDto)
+      return { data: round, total }
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error
@@ -29,9 +37,9 @@ export class RoundService {
   }
 
   /**
- * Find one
- * @param searchRoundDto SearchRoundDto
- */
+   * Find one
+   * @param searchRoundDto SearchRoundDto
+   */
   public async findOne(searchRoundDto: SearchRoundDto) {
     try {
       return await this.roundRepository.getOne(searchRoundDto)
@@ -42,9 +50,9 @@ export class RoundService {
   }
 
   /**
-* Find by id
-* @param searchRoundDto SearchRoundDto
-*/
+   * Find by id
+   * @param searchRoundDto SearchRoundDto
+   */
   public async findById(searchRoundDto: SearchRoundDto) {
     try {
       const categories = await this.findOne(searchRoundDto)
@@ -60,11 +68,10 @@ export class RoundService {
     }
   }
 
-
   /**
-  * Find by ids
-  * @param ids uuid[]
-  */
+   * Find by ids
+   * @param ids uuid[]
+   */
   public async findByIds(ids: string[]) {
     try {
       return await this.roundRepository.findByIds(ids)
@@ -75,37 +82,54 @@ export class RoundService {
   }
 
   /**
- * Create
- * @param createRoundDto CreateRoundDto
- */
+   * Create
+   * @param createRoundDto CreateRoundDto
+   */
   public async create(createRoundDto: CreateRoundDto) {
     try {
-      const searchRoundTypeDto = new SearchRoundDto()
-      searchRoundTypeDto.name = createRoundDto.name
+      const { name, startDate, endDate, roundTypeId, groupId } = createRoundDto
+      const searchRoundTypeDto = new SearchRoundTypeDto()
+      searchRoundTypeDto.id = roundTypeId
+      searchRoundTypeDto.isActive = true
+      searchRoundTypeDto.isEnabled = true
+      const roundType = await this.roundTypeService.findById(searchRoundTypeDto)
 
-      const round = await this.findOne(searchRoundTypeDto)
-
-      if (round && !round?.isActive) {
-        await this.roundRepository.update(round.id, {
-          isActive: true,
-          updatedAt: new Date()
-        })
-        const data = await this.roundRepository.findOne(round.id)
-        return { data }
+      if (!roundType) {
+        throw new NotFoundException(MESSAGE.ROUND_TYPE.NOT_FOUND)
       }
 
-      if (round) {
-        throw new ConflictException(MESSAGE.ROUND.DUPLICATE)
+      const searchGroupDto = new SearchGroupDto()
+      searchGroupDto.id = groupId
+      searchGroupDto.isActive = true
+      searchGroupDto.isEnabled = true
+      const group = await this.groupService.findById(searchGroupDto)
+
+      if (!roundType) {
+        throw new NotFoundException(MESSAGE.GROUP.NOT_FOUND)
       }
 
-      const data = await this.roundRepository.save(createRoundDto)
+      const searchRoundDto = new SearchRoundDto()
+      searchRoundDto.name = createRoundDto.name
+      searchRoundDto.startDate = createRoundDto.startDate
+      searchRoundDto.endDate = createRoundDto.endDate
+      searchRoundDto.roundTypeId = createRoundDto.roundTypeId
+
+      const round = new Round()
+      round.name = name
+      round.startDate = new Date(startDate)
+      round.endDate = new Date(endDate)
+      round.roundType = roundType.data
+      round.group = group.data
+      round.date = ''
+      round.day = ''
+
+      const data = await this.roundRepository.save(round)
       return { data }
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw error
     }
   }
-
 
   /**
    * Update
@@ -144,9 +168,9 @@ export class RoundService {
   }
 
   /**
-* Enable
-* @param roundId uuid
-*/
+   * Enable
+   * @param roundId uuid
+   */
   public async enable(roundId: string) {
     try {
       const searchRoundDto = new SearchRoundDto()

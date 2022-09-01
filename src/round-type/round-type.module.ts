@@ -9,6 +9,7 @@ import { RoundTypeManagementController } from './round-type-management.controlle
 @Module({
   imports: [TypeOrmModule.forFeature([RoundTypeRepository]), forwardRef(() => AuthModule)],
   controllers: [RoundTypeManagementController, RoundTypeController],
-  providers: [RoundTypeService]
+  providers: [RoundTypeService],
+  exports: [RoundTypeService]
 })
 export class RoundTypeModule {}

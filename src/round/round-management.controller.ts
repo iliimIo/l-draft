@@ -32,16 +32,16 @@ import { CreateRoundDto } from './dto/create-round.dto'
 import { UpdateRoundDto } from './dto/update-round.dto'
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard(), RoleGuard([ROLE.ADMIN]))
+// @UseGuards(AuthGuard(), RoleGuard([ROLE.ADMIN]))
 @ApiUnauthorizedResponse({
   description: 'Access token is expire',
   status: HttpStatus.UNAUTHORIZED,
   type: ResponseDto
 })
-@ApiTags('round-management')
-@Controller('round-management')
+@ApiTags('round/management')
+@Controller('round/management')
 export class RoundManagementController {
-  constructor(private readonly roundService: RoundService) { }
+  constructor(private readonly roundService: RoundService) {}
 
   @ApiOkResponse({
     type: ResponseRoundListDto,
@@ -113,7 +113,6 @@ export class RoundManagementController {
     }
   }
 
-
   @ApiOkResponse({
     type: ResponseDto,
     description: 'Create round',
@@ -144,7 +143,6 @@ export class RoundManagementController {
     }
   }
 
-
   @ApiOkResponse({
     type: ResponseDto,
     description: 'Update round',
@@ -161,11 +159,7 @@ export class RoundManagementController {
     type: ResponseDto
   })
   @Patch('/:roundId')
-  public async update(
-    @Res() res: Response,
-    @Body() updateRoundDto: UpdateRoundDto,
-    @Param('roundId') roundId: string
-  ) {
+  public async update(@Res() res: Response, @Body() updateRoundDto: UpdateRoundDto, @Param('roundId') roundId: string) {
     try {
       const { data } = await this.roundService.update(roundId, updateRoundDto)
       return res.status(HttpStatus.OK).json({
@@ -219,7 +213,6 @@ export class RoundManagementController {
     }
   }
 
-
   @ApiOkResponse({
     type: ResponseDto,
     description: 'Delete round',
@@ -253,5 +246,4 @@ export class RoundManagementController {
       )
     }
   }
-
 }
