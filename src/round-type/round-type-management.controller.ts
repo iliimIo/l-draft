@@ -165,6 +165,7 @@ export class RoundTypeManagementController {
     @Param('roundTypeId') roundTypeId: string
   ) {
     try {
+      console.log(roundTypeId)
       const { data } = await this.roundTypeService.update(roundTypeId, updateRoundTypeDto)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,

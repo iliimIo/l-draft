@@ -14,7 +14,7 @@ export class RoundTypeRepository extends Repository<RoundType> {
   async getAllAndPagination(searchRoundTypeDto: SearchRoundTypeDto) {
     const { id, name, page, limit, sort, isActive, isEnabled } = searchRoundTypeDto
     try {
-      const query = this.createQueryBuilder('round_type').select(['name'])
+      const query = this.createQueryBuilder('round_type').select(['round_type'])
 
       if (id) {
         query.andWhere('round_type.id =:id', { id })
@@ -50,7 +50,7 @@ export class RoundTypeRepository extends Repository<RoundType> {
   async getOne(searchRoundTypeDto: SearchRoundTypeDto) {
     const { id, name, isEnabled, isActive } = searchRoundTypeDto
     try {
-      const query = this.createQueryBuilder('round_type').select(['name'])
+      const query = this.createQueryBuilder('round_type').select(['round_type'])
 
       if (id) {
         query.andWhere('round_type.id =:id', { id })

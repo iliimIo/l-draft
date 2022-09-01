@@ -50,7 +50,7 @@ export class RoundRepository extends Repository<Round> {
   async getOne(searchRoundDto: SearchRoundDto) {
     const { id, name, isEnabled, isActive } = searchRoundDto
     try {
-      const query = this.createQueryBuilder('round').select(['name'])
+      const query = this.createQueryBuilder('round').select(['round'])
 
       if (id) {
         query.andWhere('round.id =:id', { id })

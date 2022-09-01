@@ -12,7 +12,7 @@ export class RoundTypeService {
   constructor(
     @InjectRepository(RoundTypeRepository)
     private roundTypeRepository: RoundTypeRepository
-  ) { }
+  ) {}
 
   /**
    * Find all and pagination
@@ -45,7 +45,7 @@ export class RoundTypeService {
    * Find by id
    * @param searchRoundTypeDto SearchRoundTypeDto
    */
-   public async findById(searchRoundTypeDto: SearchRoundTypeDto) {
+  public async findById(searchRoundTypeDto: SearchRoundTypeDto) {
     try {
       const roundType = await this.findOne(searchRoundTypeDto)
 
@@ -74,9 +74,9 @@ export class RoundTypeService {
   }
 
   /**
- * Create
- * @param createRoundTypeDto CreateRoundTypeDto
- */
+   * Create
+   * @param createRoundTypeDto CreateRoundTypeDto
+   */
   public async create(createRoundTypeDto: CreateRoundTypeDto) {
     try {
       const searchRoundTypeDto = new SearchRoundTypeDto()
@@ -110,10 +110,12 @@ export class RoundTypeService {
    * @param roundTypeId uuid
    * @param updateRoundTypeDto UpdateRoundTypeDto
    */
-   public async update(roundTypeId: string, updateRoundTypeDto: UpdateRoundTypeDto) {
+  public async update(roundTypeId: string, updateRoundTypeDto: UpdateRoundTypeDto) {
     try {
       const searchRoundTypeDto = new SearchRoundTypeDto()
+
       searchRoundTypeDto.id = roundTypeId
+      console.log(roundTypeId, updateRoundTypeDto, searchRoundTypeDto)
       const roundType = await this.findOne(searchRoundTypeDto)
 
       if (!roundType) {
@@ -141,54 +143,54 @@ export class RoundTypeService {
     }
   }
 
-    /**
+  /**
    * Enable
    * @param roundTypeId uuid
    */
-     public async enable(roundTypeId: string) {
-      try {
-        const searchRoundTypeDto = new SearchRoundTypeDto()
-        searchRoundTypeDto.id = roundTypeId
-        searchRoundTypeDto.isActive = true
-  
-        const roundType = await this.findOne(searchRoundTypeDto)
-        if (!roundType) {
-          throw new NotFoundException(MESSAGE.ROUND_TYPE.NOT_FOUND)
-        }
-  
-        await this.roundTypeRepository.update(roundType.id, {
-          isEnabled: !roundType.isEnabled,
-          updatedAt: new Date()
-        })
-        const data = await this.roundTypeRepository.findOne(roundType.id)
-        return { data }
-      } catch (error) {
-        this.logger.error(JSON.stringify(error))
-        throw error
+  public async enable(roundTypeId: string) {
+    try {
+      const searchRoundTypeDto = new SearchRoundTypeDto()
+      searchRoundTypeDto.id = roundTypeId
+      searchRoundTypeDto.isActive = true
+
+      const roundType = await this.findOne(searchRoundTypeDto)
+      if (!roundType) {
+        throw new NotFoundException(MESSAGE.ROUND_TYPE.NOT_FOUND)
       }
+
+      await this.roundTypeRepository.update(roundType.id, {
+        isEnabled: !roundType.isEnabled,
+        updatedAt: new Date()
+      })
+      const data = await this.roundTypeRepository.findOne(roundType.id)
+      return { data }
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw error
     }
-  
-    /**
-     * Delete type
-     * @param roundTypeId uuid
-     */
-    public async delete(roundTypeId: string) {
-      try {
-        const searchRoundTypeDto = new SearchRoundTypeDto()
-        searchRoundTypeDto.id = roundTypeId
-  
-        const roundType = await this.findOne(searchRoundTypeDto)
-        if (!roundType) {
-          throw new NotFoundException(MESSAGE.ROUND_TYPE.NOT_FOUND)
-        }
-  
-        await this.roundTypeRepository.update(roundType.id, {
-          isActive: false,
-          updatedAt: new Date()
-        })
-      } catch (error) {
-        this.logger.error(JSON.stringify(error))
-        throw error
+  }
+
+  /**
+   * Delete type
+   * @param roundTypeId uuid
+   */
+  public async delete(roundTypeId: string) {
+    try {
+      const searchRoundTypeDto = new SearchRoundTypeDto()
+      searchRoundTypeDto.id = roundTypeId
+
+      const roundType = await this.findOne(searchRoundTypeDto)
+      if (!roundType) {
+        throw new NotFoundException(MESSAGE.ROUND_TYPE.NOT_FOUND)
       }
+
+      await this.roundTypeRepository.update(roundType.id, {
+        isActive: false,
+        updatedAt: new Date()
+      })
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw error
     }
+  }
 }
