@@ -2,7 +2,7 @@ import { ApiProperty, OmitType } from '@nestjs/swagger'
 import { ResponseAndDataDto } from 'src/common/base/dto/response.dto'
 import { IsArray } from 'class-validator'
 
-export class RoundTypeDto {
+export class RoundDto {
   @ApiProperty({ type: String })
   id: string
 
@@ -22,10 +22,10 @@ export class RoundTypeDto {
   updatedAt: Date
 }
 
-export class ResponseRoundTypeListDto extends OmitType(ResponseAndDataDto, ['data'] as const) {
-  @ApiProperty({ type: () => RoundTypeDto, isArray: true })
+export class ResponseRoundListDto extends OmitType(ResponseAndDataDto, ['data'] as const) {
+  @ApiProperty({ type: () => RoundDto, isArray: true })
   @IsArray()
-  data: RoundTypeDto[]
+  data: RoundDto[]
 
   @ApiProperty()
   total: number

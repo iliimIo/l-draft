@@ -12,35 +12,63 @@ export class RoundTypeRepository extends Repository<RoundType> {
    * @param searchRoundTypeDto SearchRoundTypeDto
    */
   async getAllAndPagination(searchRoundTypeDto: SearchRoundTypeDto) {
-    const { id, name, search, page, limit, sort, isActive, isEnabled } = searchRoundTypeDto
+    const { id, name, page, limit, sort, isActive, isEnabled } = searchRoundTypeDto
     try {
-      const query = this.createQueryBuilder('group').select(['group']).leftJoin('group.categories', 'categories')
+      const query = this.createQueryBuilder('round_type').select(['round_type'])
 
       if (id) {
-        query.andWhere('group.id =:id', { id })
+        query.andWhere('round_type.id =:id', { id })
       }
 
       if (name) {
-        query.andWhere('group.name =:name', { name })
-      }
-
-      if (search) {
-        query.andWhere('group.name LIKE :search OR group.code LIKE :search', { search: `%${search}%` })
+        query.andWhere('round_type.name =:name', { name })
       }
 
       if (isEnabled) {
-        query.andWhere('group.isEnabled =:isEnabled', { isEnabled })
+        query.andWhere('round_type.isEnabled =:isEnabled', { isEnabled })
       }
 
       if (isActive) {
-        query.andWhere('group.isActive =:isActive', { isActive })
+        query.andWhere('round_type.isActive =:isActive', { isActive })
       }
 
       return await query
         .offset((Number(page || 1) - 1) * Number(limit || 10))
         .limit(Number(limit || 10))
-        .addOrderBy('group.createdAt', sort == 'DESC' ? 'DESC' : 'ASC')
+        .addOrderBy('round_type.createdAt', sort == 'DESC' ? 'DESC' : 'ASC')
         .getManyAndCount()
+    } catch (error) {
+      this.logger.error(JSON.stringify(error))
+      throw new InternalServerErrorException()
+    }
+  }
+
+  /**
+   * Get One
+   * @param searchRoundTypeDto SearchRoundTypeDto
+   */
+  async getOne(searchRoundTypeDto: SearchRoundTypeDto) {
+    const { id, name, isEnabled, isActive } = searchRoundTypeDto
+    try {
+      const query = this.createQueryBuilder('round_type').select(['round_type'])
+
+      if (id) {
+        query.andWhere('round_type.id =:id', { id })
+      }
+
+      if (name) {
+        query.andWhere('round_type.name =:name', { name })
+      }
+
+      if (isEnabled) {
+        query.andWhere('round_type.isEnabled =:isEnabled', { isEnabled })
+      }
+
+      if (isActive) {
+        query.andWhere('round_type.isActive =:isActive', { isActive })
+      }
+
+      return await query.getOne()
     } catch (error) {
       this.logger.error(JSON.stringify(error))
       throw new InternalServerErrorException()

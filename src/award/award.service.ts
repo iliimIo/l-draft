@@ -104,6 +104,7 @@ export class AwardService {
       const data = await this.awardRepository.save(award)
       return { data }
     } catch (error) {
+      console.log(error)
       this.logger.error(JSON.stringify(error))
       throw error
     }
