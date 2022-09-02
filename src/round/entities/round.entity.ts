@@ -11,16 +11,16 @@ export class Round extends Base {
   name: string
 
   @ApiProperty()
-  @Column({ name: 'time', nullable: false })
-  time: string
+  @Column({ name: 'reward_time', nullable: false })
+  rewardTime: string
 
   @ApiProperty()
-  @Column({ nullable: true })
-  day: string
+  @Column({ name: 'reward_day', nullable: true })
+  rewardDay: string
 
-  @ApiProperty()
-  @Column({ nullable: true })
-  date: string
+  // @ApiProperty()
+  // @Column({ name: 'round_day', nullable: true })
+  // roundDay: string
 
   // ---------- start relation ----------//
 

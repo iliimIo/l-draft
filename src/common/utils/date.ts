@@ -39,3 +39,11 @@ export const changeTimeZone = (date: string, timeZone: string): Date => {
     })
   )
 }
+
+export const formatRoundDate = (roundDate: Date, hms: string): string => {
+  const year = roundDate.getFullYear()
+  const month = roundDate.getMonth() + 1
+  const date = roundDate.getDate()
+
+  return `${year}-${month}-${date} ${hms}`
+}

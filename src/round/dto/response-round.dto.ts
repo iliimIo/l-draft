@@ -10,7 +10,13 @@ export class RoundDto {
   name: string
 
   @ApiProperty({ type: String })
-  time: string
+  rewardTime: string
+
+  @ApiProperty({ type: String })
+  rewardDay: string
+
+  @ApiProperty({ type: String })
+  roundDay: string
 
   @ApiProperty({ type: Boolean })
   isEnabled: boolean

@@ -22,19 +22,19 @@ export class RoundTable1660975230274 implements MigrationInterface {
             isNullable: false
           },
           {
-            name: 'time',
+            name: 'reward_time',
             type: 'varchar',
             length: '255',
             isNullable: false
           },
           {
-            name: 'day',
+            name: 'reward_day',
             type: 'varchar',
             length: '255',
             isNullable: true
           },
           {
-            name: 'date',
+            name: 'round_day',
             type: 'varchar',
             length: '255',
             isNullable: true

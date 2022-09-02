@@ -12,6 +12,9 @@ export class ExchangeRateDto {
   @ApiProperty({ type: Number })
   exchange: number
 
+  @ApiProperty({ type: Number })
+  quantity: number
+
   @ApiProperty({ type: Boolean })
   isEnabled: boolean
 

@@ -1,4 +1,5 @@
 export enum ROUND_TYPE {
   DAY = 'วัน',
-  DATE = 'วันที่'
+  DATE = 'วันที่',
+  EVERYDAY = 'ทุกวัน'
 }

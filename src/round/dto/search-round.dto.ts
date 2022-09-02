@@ -28,7 +28,7 @@ export class SearchRoundDto extends PickType(BaseSearchDto, [
   @IsOptional()
   @IsString()
   @Type(() => String)
-  time: string
+  rewardTime: string
 
   @ApiProperty({ type: String })
   @IsString()

@@ -75,7 +75,7 @@ export class RoundService {
    */
   public async create(createRoundDto: CreateRoundDto) {
     try {
-      const { name, time, date, day, roundTypeId, groupId } = createRoundDto
+      const { name, rewardTime, rewardDay, roundTypeId, groupId } = createRoundDto
       const searchRoundTypeDto = new SearchRoundTypeDto()
       searchRoundTypeDto.id = roundTypeId
       searchRoundTypeDto.isActive = true
@@ -98,11 +98,11 @@ export class RoundService {
 
       const round = new Round()
       round.name = name
-      round.time = time
+      round.rewardTime = rewardTime
       round.roundType = roundType.data
       round.group = group.data
-      round.date = date
-      round.day = day
+      round.rewardDay = rewardDay
+      // round.roundDay = roundDay
 
       const data = await this.roundRepository.save(round)
       return { data }

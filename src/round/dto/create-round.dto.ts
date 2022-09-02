@@ -11,19 +11,19 @@ export class CreateRoundDto {
   @ApiProperty({ type: String })
   @IsString()
   @Type(() => String)
-  time: string
+  rewardTime: string
 
   @ApiProperty({ type: String })
   @IsString()
   @IsOptional()
   @Type(() => String)
-  day: string
+  rewardDay: string
 
-  @ApiProperty({ type: String })
-  @IsString()
-  @IsOptional()
-  @Type(() => String)
-  date: string
+  // @ApiProperty({ type: String })
+  // @IsString()
+  // @IsOptional()
+  // @Type(() => String)
+  // roundDay: string
 
   @ApiProperty({ type: String })
   @IsString()
