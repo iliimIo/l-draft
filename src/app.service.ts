@@ -33,6 +33,8 @@ export class AppService {
     const searchRoundDto = new SearchRoundDto()
     searchRoundDto.isEnabled = true
     searchRoundDto.isActive = true
+    searchRoundDto.exchangeIsEnabled = true
+    searchRoundDto.groupIsEnabled = true
     const { data } = await this.roundService.findAllAndPagination(searchRoundDto)
 
     if (data?.length > 0) {
@@ -56,6 +58,7 @@ export class AppService {
 
           if (round.rewardDay.split(',').includes(`${dayName}`)) {
             for (const exchange of JSON.parse(JSON.stringify(round.group.exchange))) {
+              if (!exchange.isEnabled) return
               const createAwardDto = new CreateAwardDto()
               createAwardDto.number = generateKeywordAward(exchange.quantity, exchange.type.digit)
               createAwardDto.rewardDate = formatRoundDate(nextDaily, round.rewardTime)
@@ -73,6 +76,7 @@ export class AppService {
           isDate.setDate(daily.getDate() + 10)
           if (round.rewardDay.split(',').includes(`${isDate.getDate()}`)) {
             for (const exchange of JSON.parse(JSON.stringify(round.group.exchange))) {
+              if (!exchange.isEnabled) return
               const createAwardDto = new CreateAwardDto()
               createAwardDto.number = generateKeywordAward(exchange.quantity, exchange.type.digit)
               createAwardDto.rewardDate = formatRoundDate(isDate, round.rewardTime)
@@ -87,6 +91,7 @@ export class AppService {
         // ex. every day
         if (round.roundType.name === ROUND_TYPE.EVERYDAY) {
           for (const exchange of JSON.parse(JSON.stringify(round.group.exchange))) {
+            if (!exchange.isEnabled) return
             const createAwardDto = new CreateAwardDto()
             createAwardDto.number = generateKeywordAward(exchange.quantity, exchange.type.digit)
             createAwardDto.rewardDate = formatRoundDate(toDay, round.rewardTime)

@@ -41,4 +41,14 @@ export class SearchRoundDto extends PickType(BaseSearchDto, [
   @IsOptional()
   @Type(() => String)
   roundTypeId: string
+
+  @ApiProperty({ type: Boolean })
+  @IsOptional()
+  @IsString()
+  groupIsEnabled: boolean
+
+  @ApiProperty({ type: Boolean })
+  @IsOptional()
+  @IsString()
+  exchangeIsEnabled: boolean
 }
