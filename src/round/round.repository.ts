@@ -12,7 +12,8 @@ export class RoundRepository extends Repository<Round> {
    * @param searchRoundDto SearchRoundDto
    */
   async getAllAndPagination(searchRoundDto: SearchRoundDto) {
-    const { id, name, page, limit, sort, isActive, isEnabled, groupIsEnabled, exchangeIsEnabled } = searchRoundDto
+    const { id, name, page, limit, sort, isActive, groupId, isEnabled, groupIsEnabled, exchangeIsEnabled } =
+      searchRoundDto
     try {
       const query = this.createQueryBuilder('round')
         .select(['round'])
@@ -27,6 +28,10 @@ export class RoundRepository extends Repository<Round> {
 
       if (name) {
         query.andWhere('round.name =:name', { name })
+      }
+
+      if (groupId) {
+        query.andWhere('group.id =:groupId', { groupId })
       }
 
       if (isEnabled) {
