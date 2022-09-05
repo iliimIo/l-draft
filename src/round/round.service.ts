@@ -127,12 +127,16 @@ export class RoundService {
         throw new NotFoundException(MESSAGE.ROUND.NOT_FOUND)
       }
 
-      const searchRoundNameDto = new SearchRoundDto()
-      searchRoundNameDto.name = updateRoundDto.name
-      const roundTypeName = await this.findOne(searchRoundNameDto)
+      if (updateRoundDto.roundTypeId) {
+        const searchRoundTypeDto = new SearchRoundTypeDto()
+        searchRoundTypeDto.id = updateRoundDto.roundTypeId
+        searchRoundTypeDto.isActive = true
+        searchRoundTypeDto.isEnabled = true
+        const roundType = await this.roundTypeService.findById(searchRoundTypeDto)
 
-      if (roundTypeName && roundTypeName.id !== round.id) {
-        throw new ConflictException(MESSAGE.ROUND_TYPE.DUPLICATE)
+        if (!roundType) {
+          throw new NotFoundException(MESSAGE.ROUND_TYPE.NOT_FOUND)
+        }
       }
 
       await this.roundRepository.update(round.id, {
