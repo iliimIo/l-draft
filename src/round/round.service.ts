@@ -82,19 +82,11 @@ export class RoundService {
       searchRoundTypeDto.isEnabled = true
       const roundType = await this.roundTypeService.findById(searchRoundTypeDto)
 
-      if (!roundType) {
-        throw new NotFoundException(MESSAGE.ROUND_TYPE.NOT_FOUND)
-      }
-
       const searchGroupDto = new SearchGroupDto()
       searchGroupDto.id = groupId
       searchGroupDto.isActive = true
       searchGroupDto.isEnabled = true
       const group = await this.groupService.findById(searchGroupDto)
-
-      if (!group) {
-        throw new NotFoundException(MESSAGE.GROUP.NOT_FOUND)
-      }
 
       const round = new Round()
       round.name = name
@@ -126,16 +118,13 @@ export class RoundService {
         throw new NotFoundException(MESSAGE.ROUND.NOT_FOUND)
       }
 
+      let roundType
       if (updateRoundDto.roundTypeId) {
         const searchRoundTypeDto = new SearchRoundTypeDto()
         searchRoundTypeDto.id = updateRoundDto.roundTypeId
         searchRoundTypeDto.isActive = true
         searchRoundTypeDto.isEnabled = true
-        const roundType = await this.roundTypeService.findById(searchRoundTypeDto)
-
-        if (!roundType) {
-          throw new NotFoundException(MESSAGE.ROUND_TYPE.NOT_FOUND)
-        }
+        roundType = await this.roundTypeService.findOne(searchRoundTypeDto)
       }
 
       if (updateRoundDto.groupId) {
@@ -143,15 +132,15 @@ export class RoundService {
         searchGroupDto.id = updateRoundDto.groupId
         searchGroupDto.isActive = true
         searchGroupDto.isEnabled = true
-        const group = await this.groupService.findById(searchGroupDto)
-
-        if (!group) {
-          throw new NotFoundException(MESSAGE.GROUP.NOT_FOUND)
-        }
+        await this.groupService.findOne(searchGroupDto)
       }
 
       await this.roundRepository.update(round.id, {
-        ...UpdateRoundDto,
+        ...round,
+        name: updateRoundDto.name || round.name,
+        rewardTime: updateRoundDto.rewardTime || round.rewardTime,
+        rewardDay: updateRoundDto.rewardDay || round.rewardDay,
+        roundType: roundType?.data || round.roundType,
         updatedAt: new Date()
       })
 
