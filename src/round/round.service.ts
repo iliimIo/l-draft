@@ -92,7 +92,7 @@ export class RoundService {
       searchGroupDto.isEnabled = true
       const group = await this.groupService.findById(searchGroupDto)
 
-      if (!roundType) {
+      if (!group) {
         throw new NotFoundException(MESSAGE.GROUP.NOT_FOUND)
       }
 
@@ -102,7 +102,6 @@ export class RoundService {
       round.roundType = roundType.data
       round.group = group.data
       round.rewardDay = rewardDay
-      // round.roundDay = roundDay
 
       const data = await this.roundRepository.save(round)
       return { data }
@@ -136,6 +135,18 @@ export class RoundService {
 
         if (!roundType) {
           throw new NotFoundException(MESSAGE.ROUND_TYPE.NOT_FOUND)
+        }
+      }
+
+      if (updateRoundDto.groupId) {
+        const searchGroupDto = new SearchGroupDto()
+        searchGroupDto.id = updateRoundDto.groupId
+        searchGroupDto.isActive = true
+        searchGroupDto.isEnabled = true
+        const group = await this.groupService.findById(searchGroupDto)
+
+        if (!group) {
+          throw new NotFoundException(MESSAGE.GROUP.NOT_FOUND)
         }
       }
 
