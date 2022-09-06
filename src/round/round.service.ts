@@ -1,4 +1,4 @@
-import { ConflictException, forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common'
+import { forwardRef, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { MESSAGE } from 'src/common/message/response'
 import { CreateRoundDto } from './dto/create-round.dto'
@@ -137,9 +137,9 @@ export class RoundService {
 
       await this.roundRepository.update(round.id, {
         ...round,
-        name: updateRoundDto.name || round.name,
-        rewardTime: updateRoundDto.rewardTime || round.rewardTime,
-        rewardDay: updateRoundDto.rewardDay || round.rewardDay,
+        name: updateRoundDto.name,
+        rewardTime: updateRoundDto.rewardTime,
+        rewardDay: updateRoundDto.rewardDay,
         roundType: roundType?.data || round.roundType,
         updatedAt: new Date()
       })
