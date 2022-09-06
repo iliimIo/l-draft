@@ -102,6 +102,7 @@ export class ExchangeRateService {
       const group = await this.groupService.findById(searchGroupDto)
 
       const data = await this.exchangeRateRepository.save({
+        quantity: Number(createExchangeRateDto.quantity),
         exchange: Number(createExchangeRateDto.exchange),
         type: awardType.data,
         group: group.data
@@ -143,6 +144,8 @@ export class ExchangeRateService {
 
       await this.exchangeRateRepository.update(exchange.id, {
         ...updateExchangeRateDto,
+        quantity: Number(updateExchangeRateDto.quantity),
+        exchange: Number(updateExchangeRateDto.exchange),
         updatedAt: new Date()
       })
       const data = await this.exchangeRateRepository.findOne(exchange.id)
