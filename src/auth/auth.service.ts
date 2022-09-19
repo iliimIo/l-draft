@@ -18,21 +18,21 @@ export class AuthService {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     }
-    try {
-      return await firstValueFrom(
-        this.httpService
-          .get(`${this.configService.get('AUTH_SERVICE')}/auth/profile`, { headers })
-          .pipe(map((response) => response.data.data))
-      )
-    } catch (error) {
-      throw new HttpException(
-        {
-          statusCode: error.response.data.statusCode,
-          message: error.response.data.message
-        },
-        error.status
-      )
-    }
+    // try {
+    //   return await firstValueFrom(
+    //     this.httpService
+    //       .get(`${this.configService.get('AUTH_SERVICE')}/auth/profile`, { headers })
+    //       .pipe(map((response) => response.data.data))
+    //   )
+    // } catch (error) {
+    //   throw new HttpException(
+    //     {
+    //       statusCode: error.response.data.statusCode,
+    //       message: error.response.data.message
+    //     },
+    //     error.status
+    //   )
+    // }
   }
 
   /**
